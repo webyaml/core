@@ -52,7 +52,6 @@ class Content(list):
 			
 		self.top = self.parent.top
 		
-		
 		# recurse - Build a tree of Content Objects (a list of lists)
 		self.tree(conf)
 		

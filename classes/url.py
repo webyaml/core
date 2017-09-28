@@ -73,6 +73,7 @@ class URL(object):
 		self.cache['includes'] = []
 		#self.error = None
 		self.raw = {}
+		self.attributes = {}
 		
 		return None
 	
@@ -296,6 +297,9 @@ class URL(object):
 					page_cache = False
 					if 'cache' in available_urls[i][available_url]:
 						page_cache = True
+						
+					if 'noindent' in available_urls[i][available_url]:
+						self.attributes['noindent'] = True						
 					
 		if page_cache:
 			
