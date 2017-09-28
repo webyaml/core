@@ -200,7 +200,7 @@ class Content(list):
 		if 'strip' in self.attributes:
 			output = output.strip()
 		
-		if 'noindent' in self.attributes or 'noindent' inself.top.attributes:
+		if 'noindent' in self.attributes or 'noindent' in self.top.attributes:
 			return  self.elementObj.fnr(self.elementObj.fnr(wrap[0]+output+wrap[1]))
 			
 		# Indent the output and wrap
