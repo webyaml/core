@@ -54,6 +54,8 @@ class Cache(classes.processor.Processor):
 class Kill(classes.processor.Processor):
 	
 	def run(self):
+		
+		print('lib.processors.session.Kill')
 
 		self.top.session.kill()
 		
