@@ -31,6 +31,8 @@ import classes.processor
 class Cache(classes.processor.Processor):
 	
 	def run(self):
+		
+		print('lib.processors.session.Cache')
 
 		cache = self.conf.get('cache',{})
 
@@ -65,6 +67,8 @@ class Kill(classes.processor.Processor):
 class Remove(classes.processor.Processor):
 	
 	def run(self):
+		
+		print('lib.processors.session.Remove')
 
 		items = self.conf.get('items',[])
 

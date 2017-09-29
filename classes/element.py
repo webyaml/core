@@ -70,6 +70,7 @@ class Element(object):
 			
 			# sanitizing
 			'escape': 'self.escape',
+			'escape_markers': 'self.escape_markers',
 			'html_escape': 'self.html_escape',
 
 			# URI
@@ -994,6 +995,19 @@ class Element(object):
 		
 		if isinstance(obj,str):
 			obj = obj.replace("'",r"\'").replace('"',r'\"')
+		
+		return obj
+
+	def escape_markers(self,obj):
+		
+		''' escape single and double qoutes in strings.
+		'''
+
+		# debug
+		#print('escape_markers')
+		
+		if isinstance(obj,str):
+			obj = obj.replace("{{",r"\{\{").replace('}}',r'\}\}')
 		
 		return obj
 	
