@@ -61,7 +61,7 @@ class Input(classes.element.Element):
 			# debug
 			print('loading data')
 			
-			if not self.load_data(conf['data']):
+			if not self.load_data(self.conf['data']):
 				print('data failed to load')
 				
 			else:
