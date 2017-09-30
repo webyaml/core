@@ -137,3 +137,80 @@ class Read(classes.processor.Processor):
 				return False
 
 		return True
+
+
+class List(classes.processor.Processor):
+	
+	def run(self):
+		
+		# debug
+		print("lib.processrs.file.List")
+		
+		# vars
+		conf = self.conf
+		
+		if not conf.get('path'):
+			
+			print('path not in conf')
+			return False
+		
+		# markup filename	
+		conf["path"] = self.element.fnr(conf["path"])
+		
+		# debug
+		#print(conf["path"])
+		
+		if not os.path.isdir(conf["path"]):
+			
+			# debug
+			print("path '%s' is not a directory." %conf["path"])
+			
+			return False
+			
+		# debug
+		print("found dir '%s'." %conf["path"])
+		
+		ls = os.path.list(conf["path"])
+		
+		output = []
+		for item in ls:
+			
+			tmp_item = {}
+			tmp_item['name'] = item
+			
+			
+			if os.path.isdir('%s/%s'%(conf["path"],item)):
+				
+				tmp_item['type'] = 'dir'
+				
+				
+			if os.path.isfile('%s/%s'%(conf["path"],item)):
+				
+				tmp_item['type'] = 'file'
+				
+				
+			if os.path.islink('%s/%s'%(conf["path"],item)):
+				
+				tmp_item['type'] = 'link'
+			
+			output.append(tmp_item)
+			
+		
+		
+		# debug
+		#print(contents)
+		
+		# handle the returned data
+		if conf.get('data'):
+			
+			conf['data']['value'] = output
+			conf['data']['format'] = 'raw'
+			
+			# load data
+			if not self.load_data(conf['data']):
+				
+				print('data failed to save')
+					
+				return False
+
+		return True
