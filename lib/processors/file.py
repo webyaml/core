@@ -158,7 +158,7 @@ class List(classes.processor.Processor):
 		conf["path"] = self.element.fnr(conf["path"])
 		
 		# debug
-		#print(conf["path"])
+		print(conf["path"])
 		
 		if not os.path.isdir(conf["path"]):
 			
@@ -170,44 +170,52 @@ class List(classes.processor.Processor):
 		# debug
 		print("found dir '%s'." %conf["path"])
 		
-		ls = os.path.list(conf["path"])
+		ls = os.listdir(conf["path"])
+		ls.sort()
 		
+		dirs = []
+		files = []
 		output = []
+		
 		for item in ls:
 			
 			tmp_item = {}
 			tmp_item['name'] = item
+
+			if os.path.islink('%s/%s'%(conf["path"],item)):
+				
+				tmp_item['link'] = True
+			else:
+				tmp_item['link'] = False
 			
 			
 			if os.path.isdir('%s/%s'%(conf["path"],item)):
 				
 				tmp_item['type'] = 'dir'
+				dirs.append(tmp_item)
+				continue
 				
 				
 			if os.path.isfile('%s/%s'%(conf["path"],item)):
 				
 				tmp_item['type'] = 'file'
+				files.append(tmp_item)
 				
-				
-			if os.path.islink('%s/%s'%(conf["path"],item)):
-				
-				tmp_item['type'] = 'link'
-			
-			output.append(tmp_item)
-			
+		output.extend(dirs)
+		output.extend(files)	
 		
 		
 		# debug
 		#print(contents)
 		
 		# handle the returned data
-		if conf.get('data'):
+		if conf.get('result'):
 			
-			conf['data']['value'] = output
-			conf['data']['format'] = 'raw'
+			conf['result']['value'] = output
+			conf['result']['format'] = 'raw'
 			
 			# load data
-			if not self.load_data(conf['data']):
+			if not self.load_data(conf['result']):
 				
 				print('data failed to save')
 					

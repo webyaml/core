@@ -198,11 +198,27 @@ class Content(list):
 		
 		if 'strip' in self.attributes:
 			output = output.strip()
+
+		if 'nomarkup' in self.attributes:
+			
+			print('nomarkup')
+			
+			return  wrap[0]+output+wrap[1]
+
+		if 'singlemarkup' in self.attributes:
+			
+			print('singlemarkup')
+			
+			return  self.elementObj.fnr(wrap[0]+output+wrap[1])
 		
 		if 'noindent' in self.attributes or 'noindent' in self.top.attributes:
+			
+			print('noindent')
+			
 			return  self.elementObj.fnr(self.elementObj.fnr(wrap[0]+output+wrap[1]))
 			
 		# Indent the output and wrap
+		print('indent')
 		return  self.elementObj.fnr(self.elementObj.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1]))))
 	
 

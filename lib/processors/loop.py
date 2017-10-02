@@ -55,7 +55,7 @@ class Loop(classes.processor.Processor):
 		key = conf.setdefault('key', 'i')
 		
 		# do we load content or a subprocess for each item
-		if conf.get('subprocess') and conf.get('content'):
+		if conf.get('process') and conf.get('content'):
 			
 			print('error - subprocess and content defined')
 			return False
@@ -77,7 +77,7 @@ class Loop(classes.processor.Processor):
 		# debug
 		print('starting loop')
 		
-		if conf.get('subprocess'):
+		if conf.get('process'):
 
 			print('calling subprocessors')
 
@@ -106,7 +106,7 @@ class Loop(classes.processor.Processor):
 				# update attributes to include item
 				#self.content.attributes.update(item)
 				
-				if not self.element.process(conf['subprocess']):
+				if not self.element.process(conf['process']):
 					
 					return False
 		

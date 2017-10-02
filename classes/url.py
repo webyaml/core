@@ -300,6 +300,9 @@ class URL(object):
 						
 					if 'noindent' in available_urls[i][available_url]:
 						self.attributes['noindent'] = True						
+
+					if 'keepmarkers' in available_urls[i][available_url]:
+						self.attributes['keepmarkers'] = True
 					
 		if page_cache:
 			
@@ -383,14 +386,18 @@ class URL(object):
 		# render all elements in the tree
 		output = c.render()
 		
+		
+		
+		
 		'''Post-Processing
 		'''
-		# cleanup - remove any markers from output before returning
-		pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
-		markers = list(set(pattern.findall(output)))
+		if not self.attributes.get('keepmarkers'):
+			# cleanup - remove any markers from output before returning
+			pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
+			markers = list(set(pattern.findall(output)))
 
-		for marker in markers:
-			output = output.replace(marker,'')
+			for marker in markers:
+				output = output.replace(marker,'')
 
 		
 		'''Debugging

@@ -98,6 +98,8 @@ class Processor(object):
 			# add to top fnr_types
 			self.top.fnr_types.update({objName: 'self.top.%s' %objName})
 
+	'''
+
 	def read_csv(self,input,delimiter=","):
 		
 		import csv
@@ -152,7 +154,7 @@ class Processor(object):
 			print(e)
 			
 			return False
-			
+	'''
 			
 	# data handling
 	def load_data(self,conf):
@@ -202,7 +204,7 @@ class Processor(object):
 		# data
 		data = conf['value']
 		
-		if isinstance(data,str):
+		if isinstance(data,str) and 'nomarkup' not in conf:
 			
 			# markup data
 			data = self.element.fnr(data)

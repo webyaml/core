@@ -443,6 +443,9 @@ class Element(object):
 			# run processor
 			try:
 				output = self.processorObj.run()
+				
+				# debug
+				print('Processor Output: - %s' %str(output))
 			
 				if output == True:
 					
@@ -461,10 +464,10 @@ class Element(object):
 							# debug
 							#print('found content')
 							
-							self.content.tree({'content': item['true']['content']})
+							self.content.tree(item['true'])
 							continue
 						
-						self.process(item.get('true')) #recurse
+						self.process(item['true']) #recurse
 						
 					else:
 						
@@ -481,14 +484,15 @@ class Element(object):
 
 						if isinstance(item['false'], dict) and item['false'].get('content'):
 							
-							self.content.tree({'content': item['false']['content']})
+							self.content.tree(item['false'])
 							return False
 							
-						self.process(item.get('false')) #recurse
+						self.process(item['false']) #recurse
 						
 					else:
 						
-						return False		
+						return False
+						
 				else:
 					
 					return False			
@@ -936,6 +940,7 @@ class Element(object):
 		#print('remove')		
 		
 		return ''
+
 
 
 	def exists(self,obj):
