@@ -440,6 +440,7 @@ class Element(object):
 			# instanciate element object
 			self.processorObj = _class(item,self)
 
+
 			# run processor
 			try:
 				output = self.processorObj.run()
@@ -448,11 +449,16 @@ class Element(object):
 				print('Processor Output: - %s' %str(output))
 			
 				if output == True:
-					
+
 					# log
 					if item.get('log'):
 						
 						print(item['log'])
+						
+					
+					if item.get( True ):
+						item['true']	= item[True]			
+						
 					
 					if item.get('true'):
 						
@@ -478,7 +484,10 @@ class Element(object):
 					# log
 					if item.get('log'):
 						
-						print(item['log'])					
+						print(item['log'])
+
+					if item.get( False ):
+						item['false'] = item[False]	
 				
 					if item.get('false'):
 
@@ -657,7 +666,7 @@ class Element(object):
 		# data
 		data = conf['value']
 		
-		if  'nofnr' not in conf and isinstance(data,str):
+		if  isinstance(data,str) and 'nomarkup' not in conf:
 			
 			# markup data
 			data = self.fnr(data)

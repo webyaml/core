@@ -64,13 +64,15 @@ class Write(classes.processor.Processor):
 			
 			return False
 		
-		value = self.element.fnr(value)
+		if isinstance(value,str) and 'nomarkup' not in self.conf:
+		
+			value = self.element.fnr(value)
 		
 		# markup path
 		path = self.element.fnr(path)
 		
 		# backup file if it already exists
-		if os.path.isfile(path):
+		if os.path.isfile(path) and 'nobackup' not in self.conf:
 			shutil.move(path,path+"."+str(int(time.time()))+".bak")
 		
 		# create directories if they do not exist
@@ -79,7 +81,7 @@ class Write(classes.processor.Processor):
 			os.makedirs(directory, 0775)	
 		
 		# write
-		file_obj = open(path, "a")
+		file_obj = open(path, "w+")
 		file_obj.write(value)
 		file_obj.close()
 				
