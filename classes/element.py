@@ -325,7 +325,10 @@ class Element(object):
 					except KeyError:
 						pass
 					except TypeError:
-						pass						
+						pass
+						
+					except: traceback.print_exc()
+					
 					continue
 				
 				# attribute object (or raw)
