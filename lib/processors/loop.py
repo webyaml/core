@@ -55,7 +55,7 @@ class Loop(classes.processor.Processor):
 		key = conf.setdefault('key', 'i')
 		
 		# do we load content or a subprocess for each item
-		if conf.get('process') and conf.get('content'):
+		if conf.get('subprocess') and conf.get('subcontent'):
 			
 			print('error - subprocess and content defined')
 			return False
@@ -77,7 +77,7 @@ class Loop(classes.processor.Processor):
 		# debug
 		print('starting loop')
 		
-		if conf.get('process'):
+		if conf.get('subprocess'):
 
 			print('calling subprocessors')
 
@@ -106,13 +106,13 @@ class Loop(classes.processor.Processor):
 				# update attributes to include item
 				#self.content.attributes.update(item)
 				
-				if not self.element.process(conf['process']):
+				if not self.element.process(conf['subprocess']):
 					
 					return False
 		
-		if conf.get('content'):	
+		if conf.get('subcontent'):	
 			
-			print('rendering content')
+			print('rendering subcontent')
 			
 			#for each element in data create an content item
 			#content = []
@@ -147,10 +147,10 @@ class Loop(classes.processor.Processor):
 				
 				# add the content
 				
-				if isinstance(conf['content'],list):
-					tmp_content.update({'content': conf['content']})
+				if isinstance(conf['subcontent'],list):
+					tmp_content.update({'content': conf['subcontent']})
 				else:
-					tmp_content.update(conf['content'])
+					tmp_content.update(conf['subcontent'])
 				
 				#print(tmp_content)
 				
