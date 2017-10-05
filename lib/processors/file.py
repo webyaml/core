@@ -160,14 +160,28 @@ class List(classes.processor.Processor):
 		conf["path"] = self.element.fnr(conf["path"])
 		
 		# debug
-		print(conf["path"])
+		#print(conf["path"])
+		
+		#basename = os.path.basename(conf["path"])
+		#relpath = os.path.dirname(conf["path"])		
+
+		#debug
+		#print(relpath, basename)
+		
+		#if relpath == "":			
+		#	relpath = "."
+
+		#debug
+		#print(relpath, basename)
+		
 		
 		if not os.path.isdir(conf["path"]):
 			
 			# debug
 			print("path '%s' is not a directory." %conf["path"])
-			
+				
 			return False
+			
 			
 		# debug
 		print("found dir '%s'." %conf["path"])

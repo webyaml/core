@@ -57,7 +57,7 @@ class Loop(classes.processor.Processor):
 		# do we load content or a subprocess for each item
 		if conf.get('subprocess') and conf.get('subcontent'):
 			
-			print('error - subprocess and content defined')
+			print('error - subprocess and subcontent defined')
 			return False
 		
 		# load data
