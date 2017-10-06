@@ -335,9 +335,13 @@ class Element(object):
 				if item in self.fnr_types:
 					
 					#debug
-					#print('object found in fnr types')
+					print('object found in fnr types')
 					
 					markup_value = eval(self.fnr_types[item])
+					
+					#debug
+					print(markup_value)
+					
 					continue
 				
 				# if this attribute is for the local scope (this)

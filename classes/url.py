@@ -148,6 +148,12 @@ class URL(object):
 		
 		post_vars = web.webapi.rawinput("POST")
 		
+		#convert to dict
+		tmp_post_vars = {}
+		for key in post_vars:
+			tmp_post_vars[key] = post_vars[key]
+		post_vars = tmp_post_vars
+		
 		'''
 		for key in post_vars:
 			
