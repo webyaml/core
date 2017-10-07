@@ -98,64 +98,7 @@ class Processor(object):
 			# add to top fnr_types
 			self.top.fnr_types.update({objName: 'self.top.%s' %objName})
 
-	'''
 
-	def read_csv(self,input,delimiter=","):
-		
-		import csv
-		
-		try: 
-			return csv.DictReader(input,delimiter)
-			
-		except Exception as e:
-			
-			print(e)
-			
-			return False
-			
-	
-	def read_json(self,input):
-		
-		import json
-		
-		try: 
-			return json.loads(input)
-			
-		except Exception as e:
-			
-			print(e)
-			
-			return False
-	
-	
-	def read_xml(self,input):
-		
-		import xmltodict
-		
-		try: 
-			return xmltodict.parse(input)
-			
-		except Exception as e:
-			
-			print(e)
-			
-			return False
-	
-
-	def read_yaml(self,input):
-
-		import yaml
-		
-		try: 
-			return yaml.load(input)
-			
-		except Exception as e:
-			
-			print(e)
-			
-			return False
-	'''
-			
 	# data handling
 	def load_data(self,conf):
 		
@@ -379,15 +322,22 @@ class Processor(object):
 				entry = self.element.colon_seperated_to_brackets(conf['entry'].lstrip('{{').rstrip('}}'))
 				
 				exec('self.data = self.data%s' %entry)
-
-		
 		
 		# store
 		if conf.get('store'):
 			
+			if conf.get('update'):
+				# add to top
+				exec('self.top.%s.update(self.data)' %conf['store'])
+				
+				# debug
+				print('updated top.%s with self.data' %conf['store'])
+				
+				return True
+
 			# add to top
 			exec('self.top.%s = self.data' %conf['store'])
-
+			
 			# add to top fnr_types
 			self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
 

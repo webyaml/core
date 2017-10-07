@@ -855,6 +855,16 @@ class Element(object):
 		
 		# store
 		if conf.get('store'):
+
+			if conf.get('update'):
+				# add to top
+				exec('self.top.%s.update(self.data)' %conf['store'])
+				
+				# debug
+				print('updated top.%s with self.data' %conf['store'])
+				
+				return True
+
 			
 			# add to top
 			exec('self.top.%s = self.data' %conf['store'])
@@ -862,7 +872,7 @@ class Element(object):
 			# add to top fnr_types
 			self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
 
-			print('stored self.data as %s' %conf['store'])
+			print('stored self.data as top.%s' %conf['store'])
 		
 		
 		print('reached the end')
