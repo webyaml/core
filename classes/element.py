@@ -856,26 +856,42 @@ class Element(object):
 		# store
 		if conf.get('store'):
 
-			if conf.get('update'):
-				# add to top
-				exec('self.top.%s.update(self.data)' %conf['store'])
+			if 'merge' in conf and conf['store'] in dir(self.top):				
 				
-				# debug
-				print('updated top.%s with self.data' %conf['store'])
+				if eval('isinstance(self.top.%s, dict)' %conf['store']):
 				
-				return True
+					# merge with top item
+					exec('self.top.%s.update(self.data)' %conf['store'])
+					
+					# debug
+					print('updated top.%s with self.data' %conf['store'])
 
+				if eval('isinstance(self.top.%s, list)' %conf['store']):
+				
+					# merge with top item
+					exec('self.top.%s.extend(self.data)' %conf['store'])
+					
+					# debug
+					print('extended top.%s with self.data' %conf['store'])
+
+				if eval('isinstance(self.top.%s, str)' %conf['store']):
+				
+					# merge with top item
+					exec('self.top.%s += self.data' %conf['store'])
+					
+					# debug
+					print('concatonated top.%s and self.data' %conf['store'])
+				
+			else:
 			
-			# add to top
-			exec('self.top.%s = self.data' %conf['store'])
+				# add to top
+				exec('self.top.%s = self.data' %conf['store'])
 
-			# add to top fnr_types
-			self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
+				# add to top fnr_types
+				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
 
-			print('stored self.data as top.%s' %conf['store'])
+				print('stored self.data as top.%s' %conf['store'])
 		
-		
-		print('reached the end')
 		
 		return True
 

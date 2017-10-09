@@ -314,33 +314,74 @@ class File(Input):
 		
 		# upload?
 		if self.top.post_vars and self.name in self.top.post_vars:
-		
-			if self.top.post_vars[self.name].filename and self.top.post_vars[self.name].value:
+			
+			if 'multiple' in self.attrs:
 				
-				#debug
-				#print('found filename and value')
+				# single or many?
+				'''
+				# single
+				FieldStorage('files', 'file1.txt', 'file1content')
+				'''
 				
-				# store filename and file
-				data = {
-					"name": self.top.post_vars[self.name].filename,
-					"value": self.top.post_vars[self.name].value,
-				}
+				'''
+				# many
+				[
+					FieldStorage('files', 'file1.txt', 'file1content'), 
+					FieldStorage('files', 'file2.txt', 'file2content')
+				]
+				'''
+				# Convert single to many
+				if not isinstance(self.top.post_vars[self.name],list):
+					
+					self.top.post_vars[self.name] = [self.top.post_vars[self.name]]
+				
+				data = []
+				filenames = []
+				for item in self.top.post_vars[self.name]:				
+					data.append({
+						"name": item.filename,
+						"value": item.value,
+					})
+					
+					filenames.append(item.filename)
 				
 				# save filename and file in session
 				self.top.session.vars[self.name] = data
 
 				# replace value from postvars with just filename
-				self.top.post_vars[self.name] = self.top.post_vars[self.name].filename
-
+				self.top.post_vars[self.name] = ",".join(filenames)
+				
 				# add filename to attributes
 				self.conf.setdefault('filename','<label>Uploaded Filename:</label> %s'%self.top.post_vars[self.name])
-				
-				# this has no useful value
-				#self.store([data], name=self.name,format='record')				
 			
-			'''#debug
 			else:
-				print('filename and value not found')
-			'''
+		
+				if self.top.post_vars[self.name].filename and self.top.post_vars[self.name].value:
+					
+					#debug
+					#print('found filename and value')
+					
+					# store filename and file
+					data = {
+						"name": self.top.post_vars[self.name].filename,
+						"value": self.top.post_vars[self.name].value,
+					}
+					
+					# save filename and file in session
+					self.top.session.vars[self.name] = data
+
+					# replace value from postvars with just filename
+					self.top.post_vars[self.name] = self.top.post_vars[self.name].filename
+
+					# add filename to attributes
+					self.conf.setdefault('filename','<label>Uploaded Filename:</label> %s'%self.top.post_vars[self.name])
+					
+					# this has no useful value
+					#self.store([data], name=self.name,format='record')				
+				
+				'''#debug
+				else:
+					print('filename and value not found')
+				'''
 		
 		return None
