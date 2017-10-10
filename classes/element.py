@@ -1020,9 +1020,11 @@ class Element(object):
 	def strip(self,obj):
 
 		# debug
-		#print('strip')
+		print('strip')
 		
 		char = self.content.attributes.get('char', "")
+		
+		print(char)
 		
 		if isinstance(obj,str):
 			
