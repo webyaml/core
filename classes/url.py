@@ -183,7 +183,10 @@ class URL(object):
 	def run(self):
 		
 		# cache the path for use by fnr
-		self.cache['path'] = "/"+self.path
+		
+		''' This needs to be moved somewhere else
+		'''
+		#self.cache['path'] = "/"+self.path
 		self.cache['rurl'] = web.ctx.env.get('HTTP_REFERER')
 		
 		# convert the requested url into a  "/" delimited list

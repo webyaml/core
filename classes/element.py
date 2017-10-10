@@ -335,12 +335,12 @@ class Element(object):
 				if item in self.fnr_types:
 					
 					#debug
-					print('object found in fnr types')
+					#print('object found in fnr types')
 					
 					markup_value = eval(self.fnr_types[item])
 					
 					#debug
-					print(markup_value)
+					#print(markup_value)
 					
 					continue
 				
@@ -1022,9 +1022,11 @@ class Element(object):
 		# debug
 		#print('strip')
 		
+		char = self.content.attributes.get('char', "")
+		
 		if isinstance(obj,str):
 			
-			return obj.strip()
+			return obj.strip(char)
 			
 		return obj
 

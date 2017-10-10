@@ -105,7 +105,13 @@ class Read(classes.processor.Processor):
 		
 		# markup filename	
 		conf["path"] = self.element.fnr(conf["path"])
-		
+		'''
+		if conf["path"].startswith("./"):
+			
+			print("found ./")
+			
+			conf["path"] = conf["path"].replace("./","")
+		'''
 		# debug
 		#print(conf["path"])
 		
