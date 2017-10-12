@@ -91,15 +91,15 @@ class Resize(classes.processor.Processor):
 		
 		print(conf['path'])
 		
-		conf['path'] = self.element.fnr(conf['path'])
+		path = self.element.fnr(conf['path'])
 		
-		print(conf['path'])
+		print(path)
 		
-		fd_img = open(conf['path'], 'r')
+		fd_img = open(path, 'r')
 		img = Image.open(fd_img)	
 		img = resizeimage.resize_cover(img, [conf['width'],conf['height']] )
 		
-		filename = '%s%s.%s' %("".join(conf['path'].split('.')[:-1]),conf['suffix'],conf['path'].split('.')[-1])
+		filename = '%s%s.%s' %("".join(conf['path'].split('.')[:-1]),conf['suffix'],path.split('.')[-1])
 		
 		img.save(filename, img.format, quality=conf.get('quality',80))
 		fd_img.close()
