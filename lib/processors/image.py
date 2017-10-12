@@ -95,7 +95,30 @@ class Resize(classes.processor.Processor):
 		fd_img = open(conf['path'], 'r')
 		img = Image.open(fd_img)	
 		img = resizeimage.resize_cover(img, [conf['width'],conf['height']] )
-		img.save('%s%s.%s' %("".join(conf['path'].split('.')[:-1]),conf['suffix'],conf['path'].split('.')[-1]), img.format, quality=conf.get('quality',80))
+		
+		filename = '%s%s.%s' %("".join(conf['path'].split('.')[:-1]),conf['suffix'],conf['path'].split('.')[-1])
+		
+		img.save(filename, img.format, quality=conf.get('quality',80))
 		fd_img.close()
+		
+		
+			# debug
+			print('image filename')
+			
+			# handle the stdout
+			if conf.get('result'):
+				
+				conf['result']['value'] = filename
+				conf['result']['format'] = 'string'
+				
+				# load data
+				if not self.load_data(conf['result']):
+					
+					print('failed to save - data failed to load')
+						
+					return False
+			
+			return True	
+		
 		
 		return True
