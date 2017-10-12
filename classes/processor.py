@@ -97,7 +97,7 @@ class Processor(object):
 				
 				print('created new object')
 				
-				print(exec('self.top.%s' %objName))
+				print(eval('self.top.%s' %objName))
 			
 			# add to top fnr_types
 			self.top.fnr_types.update({objName: 'self.top.%s' %objName})
