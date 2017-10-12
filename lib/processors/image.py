@@ -88,6 +88,9 @@ class Resize(classes.processor.Processor):
 			return False
 		
 		# markup path
+		
+		print(conf['path'])
+		
 		conf['path'] = self.element.fnr(conf['path'])
 		
 		print(conf['path'])
