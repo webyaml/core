@@ -94,6 +94,8 @@ class Processor(object):
 			else:
 				# create top level object to store the output
 				exec('self.top.%s = records' %objName)
+				
+				print('created new object')
 			
 			# add to top fnr_types
 			self.top.fnr_types.update({objName: 'self.top.%s' %objName})
