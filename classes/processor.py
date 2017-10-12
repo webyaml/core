@@ -24,6 +24,7 @@
 import traceback
 import datetime
 from decimal import Decimal
+import copy
 
 ''' internal imports
 '''
@@ -36,7 +37,7 @@ class Processor(object):
 	def __init__(self,conf,element):
 		
 		# vars
-		self.conf = conf
+		self.conf = copy.copy(conf)
 		# the caller object of this Processor
 		self.element = element
 		self.content = self.element.content
