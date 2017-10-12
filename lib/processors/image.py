@@ -102,23 +102,20 @@ class Resize(classes.processor.Processor):
 		fd_img.close()
 		
 		
-			# debug
-			print('image filename')
+		# debug
+		print('image filename')
+		
+		# handle the stdout
+		if conf.get('result'):
 			
-			# handle the stdout
-			if conf.get('result'):
+			conf['result']['value'] = filename
+			conf['result']['format'] = 'string'
+			
+			# load data
+			if not self.load_data(conf['result']):
 				
-				conf['result']['value'] = filename
-				conf['result']['format'] = 'string'
-				
-				# load data
-				if not self.load_data(conf['result']):
+				print('failed to save - data failed to load')
 					
-					print('failed to save - data failed to load')
-						
-					return False
-			
-			return True	
+				return False
 		
-		
-		return True
+		return True	
