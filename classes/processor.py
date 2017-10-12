@@ -96,6 +96,8 @@ class Processor(object):
 				exec('self.top.%s = records' %objName)
 				
 				print('created new object')
+				
+				print(records)
 			
 			# add to top fnr_types
 			self.top.fnr_types.update({objName: 'self.top.%s' %objName})

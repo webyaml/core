@@ -91,7 +91,7 @@ class Loop(classes.processor.Processor):
 					break
 				
 				# store the item to be used by fnr functions
-				self.store(item,format='python',name=key)			
+				self.store(item,format='python',name=key)
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
