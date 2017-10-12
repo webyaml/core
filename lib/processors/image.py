@@ -89,17 +89,17 @@ class Resize(classes.processor.Processor):
 		
 		# markup path
 		
-		print(conf['path'])
+		#print(conf['path'])
 		
 		path = self.element.fnr(conf['path'])
 		
-		print(path)
+		#print(path)
 		
 		fd_img = open(path, 'r')
 		img = Image.open(fd_img)	
 		img = resizeimage.resize_cover(img, [conf['width'],conf['height']] )
 		
-		filename = '%s%s.%s' %("".join(conf['path'].split('.')[:-1]),conf['suffix'],path.split('.')[-1])
+		filename = '%s%s.%s' %("".join(path.split('.')[:-1]),conf['suffix'],path.split('.')[-1])
 		
 		img.save(filename, img.format, quality=conf.get('quality',80))
 		fd_img.close()
