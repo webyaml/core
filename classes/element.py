@@ -87,6 +87,9 @@ class Element(object):
 			'dollar': 'self.dollar',
 			'title_case': 'self.title_case',
 			
+			'lower': 'lower',
+			'upper': 'upper',
+			
 			# object formating
 			'uuid': 'self.uuid',
 			'date': 'self.date',
@@ -460,7 +463,7 @@ class Element(object):
 					# log
 					if item.get('log'):
 						
-						print(item['log'])
+						print(self.fnr(item['log']))
 						
 					
 					if item.get( True ):
@@ -491,7 +494,7 @@ class Element(object):
 					# log
 					if item.get('log'):
 						
-						print(item['log'])
+						print(self.fnr(item['log']))
 
 					if item.get( False ):
 						item['false'] = item[False]	
