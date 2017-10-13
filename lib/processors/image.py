@@ -243,7 +243,7 @@ class Resize2(classes.processor.Processor):
 			
 			# Store path
 			if destination.get('store'):
-				self.load_data({'format': 'python', 'store': destination['store'], 'value': src_path})
+				self.load_data({'format': 'string', 'store': destination['store'], 'value': src_path})
 
 			# resize and save image
 			dst_img = methods[method](src_img, size)
