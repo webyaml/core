@@ -253,6 +253,7 @@ class Resize2(classes.processor.Processor):
 		# close the source image file
 		src_img.close()
 
+		return True
 
 
 
