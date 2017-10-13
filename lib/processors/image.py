@@ -154,7 +154,7 @@ class Resize2(classes.processor.Processor):
 			print('no source path given')
 			return False
 		
-		src_path = self.element.fnr(conf['path'])
+		src_path = self.element.fnr(conf['source']['path'])
 		
 		if not os.path.isfile(src_path):
 			print("source not found: '%s'" %src_path)
