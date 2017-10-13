@@ -157,7 +157,7 @@ class Resize2(classes.processor.Processor):
 		src_path = self.element.fnr(conf['path'])
 		
 		if not os.path.isfile(src_path):
-			print("source not found: '%s'" conf['source']['path'] %src_path)
+			print("source not found: '%s'" %src_path)
 			return False
 		
 		# break down path into components
