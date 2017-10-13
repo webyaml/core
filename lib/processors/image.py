@@ -162,7 +162,7 @@ class Resize2(classes.processor.Processor):
 		
 		# break down path into components
 		src_dir,  src_bn = os.path.split(src_path)
-		src_bn_no_ext, src_ext = os.path.splitext(src_basename)
+		src_bn_no_ext, src_ext = os.path.splitext(src_bn)
 		
 		# store
 		self.load_data({'format': 'python', 'store': 'src_path', 'value': src_path})
