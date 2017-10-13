@@ -165,11 +165,11 @@ class Resize2(classes.processor.Processor):
 		src_bn_no_ext, src_ext = os.path.splitext(src_bn)
 		
 		# store
-		self.load_data({'format': 'python', 'store': 'src_path', 'value': src_path})
-		self.load_data({'format': 'python', 'store': 'src_dir', 'value': src_dir})
-		self.load_data({'format': 'python', 'store': 'src_bn', 'value': src_bn})
-		self.load_data({'format': 'python', 'store': 'src_bn_no_ext', 'value': src_bn_no_ext})
-		self.load_data({'format': 'python', 'store': 'src_ext', 'value': src_ext.lower()})	
+		self.load_data({'format': 'string', 'store': 'src_path', 'value': src_path})
+		self.load_data({'format': 'string', 'store': 'src_dir', 'value': src_dir})
+		self.load_data({'format': 'string', 'store': 'src_bn', 'value': src_bn})
+		self.load_data({'format': 'string', 'store': 'src_bn_no_ext', 'value': src_bn_no_ext})
+		self.load_data({'format': 'string', 'store': 'src_ext', 'value': src_ext.lower()})	
 		
 		#destination
 		if not conf.get('destination'):
