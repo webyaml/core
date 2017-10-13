@@ -177,7 +177,7 @@ class Resize2(classes.processor.Processor):
 			return False
 
 		# open the source image file
-		f = open(path, 'r')
+		f = open(src_path, 'r')
 		src_img = Image.open(f)		
 		
 		# force destination into a list
