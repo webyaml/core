@@ -87,8 +87,8 @@ class Element(object):
 			'dollar': 'self.dollar',
 			'title_case': 'self.title_case',
 			
-			'lower': 'lower',
-			'upper': 'upper',
+			'lower': 'self.lower',
+			'upper': 'self.upper',
 			
 			# object formating
 			'uuid': 'self.uuid',
@@ -1323,4 +1323,17 @@ class Element(object):
 		#print('string')
 		
 		return str(obj)
-	
+
+	def upper(self,obj):
+
+		# debug
+		#print('string')
+		
+		return str(obj).upper()
+
+	def lower(self,obj):
+
+		# debug
+		#print('string')
+		
+		return str(obj).lower()
