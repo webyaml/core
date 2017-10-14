@@ -52,20 +52,18 @@ class Resize(classes.processor.Processor):
 	def run(self):
 
 		'''
-		Description:
+		Description: |
 			
 			Resize an image
-		'''
-		
-		'''
-		from the docs at https://pypi.python.org/pypi/python-resize-image/1.1.3
-		
-		* `resize_crop` crop the image with a centered rectangle of the specified size.
-		* `resize_cover` resize the image the fill the specified area, crop as needed (same behavior as `background-size: cover`).
-		* `resize_contain` resize the image to can fit in the specified area, keeping the ratio and without crop (same behavior as `background-size: contain`). 
-		* `resize_height` resize the image to the specified height ajusting width to keep the ratio the same.
-		* `resize_width` resize the image to the specified width ajusting height to keep the ratio the same.
-		* `resize_thumbnail` resize image while keeping the ratio trying its best to match the specified size.			
+			
+			from the docs at https://pypi.python.org/pypi/python-resize-image/1.1.3
+			
+			* `resize_crop` crop the image with a centered rectangle of the specified size.
+			* `resize_cover` resize the image the fill the specified area, crop as needed (same behavior as `background-size: cover`).
+			* `resize_contain` resize the image to can fit in the specified area, keeping the ratio and without crop (same behavior as `background-size: contain`). 
+			* `resize_height` resize the image to the specified height ajusting width to keep the ratio the same.
+			* `resize_width` resize the image to the specified width ajusting height to keep the ratio the same.
+			* `resize_thumbnail` resize image while keeping the ratio trying its best to match the specified size.			
 		'''		
 
 		print('lib.processrs.image.Resize')
@@ -111,7 +109,7 @@ class Resize(classes.processor.Processor):
 
 		# open the source image file
 		f = open(src_path, 'r')
-		src_img = Image.open(f)		
+		src_img = Image.open(f)
 		
 		# force destination into a list
 		if isinstance(conf['destination'], dict):
@@ -206,22 +204,18 @@ class ResizeOld(classes.processor.Processor):
 		# config checks
 		if not conf.get('path'):
 			print('no path given')
-			
 			return False
 
 		if not conf.get('width'):
 			print('no width given')
-			
 			return False
 
 		if not conf.get('height'):
 			print('no height given')
-			
 			return False
 
 		if not conf.get('suffix'):
 			print('no suffix given')
-			
 			return False
 		
 		# markup path

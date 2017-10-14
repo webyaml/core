@@ -80,18 +80,22 @@ class Loop(classes.processor.Processor):
 		if conf.get('subprocess'):
 
 			print('calling subprocessors')
+			
+			count = 0
 
 			#for each element in data perform a process
 			for item in self.data:
-				
-				print(item)
+				#debug
+				#print(item)
+				print('count: %d' &count)
 				
 				# stop loop if limit has been reached
 				if conf.get('limit') and conf['limit'] == len(items):
 					break
 				
 				# store the item to be used by fnr functions
-				self.store(item,format='python',name=key)
+				#self.store(item,format='python',name=key)
+				self.load_data({'format': 'python', 'store': key, 'value': item})	
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
