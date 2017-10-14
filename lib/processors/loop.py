@@ -81,17 +81,23 @@ class Loop(classes.processor.Processor):
 
 			print('calling subprocessors')
 			
-			count = 0
-
 			#for each element in data perform a process
+			
+			count = 0
+			
 			for item in self.data:
+				
 				#debug
 				#print(item)
-				print('count: %d' &count)
+				#print('count: %d' &count)
 				
 				# stop loop if limit has been reached
 				if conf.get('limit') and conf['limit'] == len(items):
 					break
+					
+				# store count				
+				self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				count +=1
 				
 				# store the item to be used by fnr functions
 				#self.store(item,format='python',name=key)
@@ -119,19 +125,21 @@ class Loop(classes.processor.Processor):
 			print('rendering subcontent')
 			
 			#for each element in data create an content item
-			#content = []
+			
+			count = 0
 			
 			for item in self.data:
 
-				print(item)
-				print(type(item))
+				# dbug
+				#print(item)
 				
 				# stop loop if limit has been reached
 				if conf.get('limit') and conf['limit'] == len(items):
 					break
 				
-				# store the item to be used by fnr functions
-				#self.store(item,format='python',name=key)			
+				# store count				
+				self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				count +=1
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
@@ -156,18 +164,6 @@ class Loop(classes.processor.Processor):
 				else:
 					tmp_content.update(conf['subcontent'])
 				
-				#print(tmp_content)
-				
 				self.content.tree({'content': tmp_content})
-				
-				# append to content
-				#content.append(tmp_content)
-			'''
-			if content:
-				# continue Content Tree true content
-				self.content.tree({'content': content})
-				
-				return True
-			'''
 			
 		return True

@@ -167,6 +167,10 @@ class Resize(classes.processor.Processor):
 			if destination.get('store'):
 				self.load_data({'format': 'string', 'store': destination['store'], 'value': dst_path})
 
+			# make sure destination directory exists
+			if not os.path.isdir(os.path.dirname(dst_path)):
+				os.makedirs(os.path.dirname(dst_path), 0775)	
+
 			# resize and save image
 			dst_img = methods[method](src_img, size)
 			dst_img.save(dst_path, dst_img.format, quality=conf.get('quality',80))
