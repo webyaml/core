@@ -99,7 +99,7 @@ class Resize(classes.processor.Processor):
 		self.load_data({'format': 'string', 'store': 'src_ext', 'value': src_ext.lower()})	
 
 		# Store src_path as specific key
-		if conf.get('store'):
+		if conf['source'].get('store'):
 			self.load_data({'format': 'string', 'store': conf['source']['store'], 'value': src_path})
 		
 		#destination
