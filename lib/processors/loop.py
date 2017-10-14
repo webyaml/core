@@ -96,12 +96,12 @@ class Loop(classes.processor.Processor):
 					break
 					
 				# store count				
-				self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
 				count +=1
 				
 				# store the item to be used by fnr functions
 				#self.store(item,format='python',name=key)
-				self.load_data({'format': 'python', 'store': key, 'value': item})	
+				self.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
@@ -138,7 +138,7 @@ class Loop(classes.processor.Processor):
 					break
 				
 				# store count				
-				self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
 				count +=1
 				
 				# evaluate filter
