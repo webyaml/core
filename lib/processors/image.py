@@ -111,6 +111,10 @@ class Resize(classes.processor.Processor):
 		f = open(src_path, 'r')
 		src_img = Image.open(f)
 		
+		# store size
+		self.load_data({'format': 'string', 'store': 'src_width', 'value': src_img.size[0]})
+		self.load_data({'format': 'string', 'store': 'src_height', 'value': src_img.size[1]})
+		
 		# force destination into a list
 		if isinstance(conf['destination'], dict):
 			conf['destination'] = [conf['destination']]

@@ -131,15 +131,16 @@ class Loop(classes.processor.Processor):
 			for item in self.data:
 
 				# dbug
-				#print(item)
+				print(item)
+				print(type(item))
 				
 				# stop loop if limit has been reached
 				if conf.get('limit') and conf['limit'] == len(items):
 					break
 				
 				# store count				
-				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
-				count +=1
+				#self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
+				#count +=1
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
@@ -157,12 +158,16 @@ class Loop(classes.processor.Processor):
 				# add the key with item to the content attributes
 				tmp_content[key] = item
 				
+				
+				
 				# add the content
 				
 				if isinstance(conf['subcontent'],list):
 					tmp_content.update({'content': conf['subcontent']})
 				else:
 					tmp_content.update(conf['subcontent'])
+				
+				print(tmp_content)
 				
 				self.content.tree({'content': tmp_content})
 			

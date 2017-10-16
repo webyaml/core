@@ -282,15 +282,11 @@ class Element(object):
 				# attributes
 				if ":"  in item:
 					
-					# is it an attribute with a list or dictionary in the the local scope (this)
-					if item.split(":")[0] in eval(self.fnr_types['this']):
+					if item.split(":")[0] in self.content.attributes:
 						
-						#debug
-						#print('attribute found in local scope')
-						
-						pass
-						
-					elif item.split(":")[0] not in self.fnr_types:
+						item = "this:%s" %item
+					
+					if item.split(":")[0] not in self.fnr_types:
 					
 						# search for attribute in fnr_types
 						
