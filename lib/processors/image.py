@@ -102,6 +102,10 @@ class Resize(classes.processor.Processor):
 		if conf['source'].get('store'):
 			self.load_data({'format': 'string', 'store': conf['source']['store'], 'value': src_path})
 		
+		# dryrun
+		if conf.get('dryrun'):
+			conf['destination'] = []
+		
 		#destination
 		if not conf.get('destination'):
 			print('no destination given')	
