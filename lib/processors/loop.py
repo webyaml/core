@@ -139,8 +139,8 @@ class Loop(classes.processor.Processor):
 					break
 				
 				# store count				
-				#self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
-				#count +=1
+				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
+				count +=1
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
