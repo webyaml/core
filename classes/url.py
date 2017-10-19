@@ -448,8 +448,8 @@ class URL(object):
 		
 		''' page headers
 		'''
-		print(self.attributes)
-		print(self.conf)
+		#print(self.attributes)
+		#print(self.conf)
 		if self.attributes.get('header'):
 			
 			if not isinstance(self.attributes['header'], list):
