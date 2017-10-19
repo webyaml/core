@@ -312,6 +312,9 @@ class URL(object):
 
 					if 'keepmarkers' in available_urls[i][available_url]:
 						self.attributes['keepmarkers'] = True
+
+					if 'header' in available_urls[i][available_url]:
+						self.attributes['header'] = available_urls[i][available_url]['header']					
 					
 		if page_cache:
 			
@@ -395,9 +398,6 @@ class URL(object):
 		# render all elements in the tree
 		output = c.render()
 		
-		
-		
-		
 		'''Post-Processing
 		'''
 		if not self.attributes.get('keepmarkers'):
@@ -445,6 +445,22 @@ class URL(object):
 			except IOError:
 				
 				print("could not write cache file '%s' not found" %cache_file)
+		
+		''' page headers
+		'''
+		print(self.attributes)
+		print(self.conf)
+		if self.attributes.get('header'):
+			
+			if not isinstance(self.attributes['header'], list):
+			
+				self.attributes['header'] = [self.attributes['header']]
+		
+			for header in self.attributes['header']:
+				
+				print(header)
+				
+				eval('web.header(%s)' %header)
 		
 		return output
 		
