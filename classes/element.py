@@ -107,6 +107,7 @@ class Element(object):
 			# god only knows
 			'join': 'self._join',
 			'split': 'self.split',
+			'list': 'self.list',
 		
 		}		
 		
@@ -1341,3 +1342,12 @@ class Element(object):
 		#print('string')
 		
 		return str(obj).lower()
+		
+	def list(self, obj):
+		
+		# if the obj is not a list, make it the first element of a list
+		if not isinstance(obj, list):
+			obj = [obj]
+			
+		return obj
+
