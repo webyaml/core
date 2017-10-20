@@ -699,17 +699,10 @@ class Element(object):
 					tmp_data = csv.reader(data.split('\n'),**kwargs)
 					self.data = []
 					for item in tmp_data:
-	
-						# clean up dictionary keys
-						tmp_dict = {}
-						for key in item:
-							tmp_dict[key.strip()] = item[key].strip()
-							
-						self.data.append(tmp_dict)	
-
-
+						if item:
+							self.data.append(item)
 				
-				except: traceback.print_exc()						
+				except: traceback.print_exc()			
 				
 			else:
 
@@ -724,8 +717,13 @@ class Element(object):
 						
 						#print(item)
 						
-						self.data.append(item)					
-					
+						# clean up dictionary keys
+						tmp_dict = {}
+						for key in item:
+							tmp_dict[key.strip()] = item[key].strip()
+							
+						self.data.append(tmp_dict)	
+				
 				except: traceback.print_exc()
 		
 		
