@@ -1027,7 +1027,9 @@ class Element(object):
 		
 		if isinstance(obj,str):
 			
-			return obj.strip(char)
+			return obj.strip("\n").strip("\r").strip(char).strip()
+			
+			#return obj.strip(char)
 			
 		return obj
 
