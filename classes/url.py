@@ -337,7 +337,7 @@ class URL(object):
 		
 		# assign path_vars as dict with keys arg0, arg1, etc...
 		for i in range(0, len(path_vars)):
-			self.path_vars['arg'+str(i)] = [path_vars[i]]
+			self.path_vars['arg'+str(i)] = path_vars[i]
 			
 		# check for configuration files
 		if len(path_config_files) == 0:

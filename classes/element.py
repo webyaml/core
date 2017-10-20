@@ -318,9 +318,9 @@ class Element(object):
 						markup_value = eval(self.fnr_types[object]+keys)
 						
 						# this may come back to haunt me
-						if isinstance(markup_value, list):
-							
-							markup_value = ", ".join(markup_value)
+						#if isinstance(markup_value, list):
+						#	
+						#	markup_value = ", ".join(markup_value)
 						
 					except KeyError:
 						pass
