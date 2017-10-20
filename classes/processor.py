@@ -196,7 +196,12 @@ class Processor(object):
 						
 						#print(item)
 						
-						self.data.append(item)					
+						# clean up dictionary keys
+						tmp_dict = {}
+						for key in item:
+							tmp_dict[key.strip()] = item[key]
+							
+						self.data.append(tmp_dict)	
 				
 				except: traceback.print_exc()	
 				
