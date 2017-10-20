@@ -699,7 +699,15 @@ class Element(object):
 					tmp_data = csv.reader(data.split('\n'),**kwargs)
 					self.data = []
 					for item in tmp_data:
-						self.data.append(item)
+	
+						# clean up dictionary keys
+						tmp_dict = {}
+						for key in item:
+							tmp_dict[key.strip()] = item[key].strip()
+							
+						self.data.append(tmp_dict)	
+
+
 				
 				except: traceback.print_exc()						
 				

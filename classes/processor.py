@@ -199,7 +199,7 @@ class Processor(object):
 						# clean up dictionary keys
 						tmp_dict = {}
 						for key in item:
-							tmp_dict[key.strip()] = item[key]
+							tmp_dict[key.strip()] = item[key].strip()
 							
 						self.data.append(tmp_dict)	
 				
