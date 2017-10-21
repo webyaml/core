@@ -103,7 +103,8 @@ class Find(Mongo):
 					record['_id'] = str(record['_id'])
 				
 				# store record as 'record'
-				self.store([record],format='record',name='record')
+				#self.store([record],format='record',name='record')
+				self.load_data({'format': 'raw', 'store': 'record', 'value': record})	
 				
 				#print(loop)
 				
@@ -118,7 +119,8 @@ class Find(Mongo):
 				records.append(loop_result)
 
 			'''Store'''
-			self.store(records)	
+			#self.store(records)
+			self.load_data({'format': 'raw', 'store': 'records', 'value': records})
 			
 		else:
 		
@@ -131,7 +133,8 @@ class Find(Mongo):
 				records.append(record)
 			
 			'''Store'''
-			self.store(records)
+			#self.store(records)
+			self.load_data({'format': 'raw', 'store': 'records', 'value': records})
 		
 		return True
 			

@@ -118,10 +118,11 @@ class Loop(classes.element.Element):
 				'''
 				
 				# store the item to be used by fnr functions
-				self.store(item,format='python',name='i')					
+				#self.store(item,format='python',name='i')				
+				self.load_data({'format': 'raw', 'store': 'i', 'value': item})
 					
 				# debug
-				print(self.fnr(conf.get('filter')))
+				#print(self.fnr(conf.get('filter')))
 				
 				# filter must be True to show item
 				if not eval(self.fnr(conf.get('filter'))):

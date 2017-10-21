@@ -38,7 +38,7 @@ class Element(object):
 	def __init__(self,content):
 		
 		''' 	Default Content Element Class
-		'''		
+		'''
 		
 		# vars
 		self.content = content
@@ -163,13 +163,11 @@ class Element(object):
 			# truncate template
 			template_copy = template_copy[end+2:]
 		
-		
-		'''	Parse each marker into a stack.
-		'''		
-
 		# debug
 		#print('markers: %s' %str(markers))
-		
+
+		'''	Parse each marker into a stack.
+		'''
 		for marker in markers:
 			
 			# vars
@@ -181,6 +179,8 @@ class Element(object):
 			
 			value = []
 			stack = []
+			
+			markup_value = None
 			
 			# parse this marker character by character
 			for i in range(0,len(marker)):
@@ -238,23 +238,17 @@ class Element(object):
 					value = []
 					continue
 				
-				# debug
-				#print(marker[i])
-				
 				# otherwise 
 				value.append(marker[i])
-				#i +=1
+				
+				# debug
+				#print(marker[i])
 				
 			# reached the end of the marker
 			if value:
 				stack.append(''.join(value))
 			
-			
 			# perform markup on input using markers
-			
-			# vars
-			markup_value = None
-			
 			for item in stack:
 				
 				# debug
@@ -262,7 +256,6 @@ class Element(object):
 				
 				# string literals
 				if item.startswith("|"):
-					
 					markup_value = item.lstrip("|")
 					continue
 				
@@ -271,26 +264,23 @@ class Element(object):
 					
 					# search for function in fnr_types
 					if item.rstrip("()") not in self.fnr_types:
-					#if item.rstrip("()") not in self.fnr_types_fn:
-						
 						print("Error - '%s' is not a valid fnr function" %item)
 						break
 					
 					markup_value = eval(self.fnr_types[item.rstrip("()")])(markup_value)
-					#markup_value = eval(self.fnr_types_fn[item.rstrip("()")])(markup_value)
 					continue
 					
 				# attributes
 				if ":"  in item:
 					
+					# is this a marker for a local attribute?
 					if item.split(":")[0] in self.content.attributes:
 						
+						# yes prepend this: to marker
 						item = "this:%s" %item
 					
+					# is there a type for this marker
 					if item.split(":")[0] not in self.fnr_types:
-					
-						# search for attribute in fnr_types
-						
 						print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
 						break						
 					
@@ -299,9 +289,7 @@ class Element(object):
 					object = items[0]
 					keys = ""
 					for part in items[1:]:
-						
 						if part.startswith('|') and part.strip('|').isdigit():
-						#if part.startswith('|') and part.strip('|').isdigit():  ##change to slash
 							
 							# int literal
 							keys += "[%s]"%part.strip('|')
@@ -317,11 +305,6 @@ class Element(object):
 					try:
 						markup_value = eval(self.fnr_types[object]+keys)
 						
-						# this may come back to haunt me
-						#if isinstance(markup_value, list):
-						#	
-						#	markup_value = ", ".join(markup_value)
-						
 					except KeyError:
 						pass
 					except TypeError:
@@ -333,34 +316,18 @@ class Element(object):
 				
 				# attribute object (or raw)
 				if item in self.fnr_types:
-					
-					#debug
-					#print('object found in fnr types')
-					
 					markup_value = eval(self.fnr_types[item])
-					
-					#debug
-					#print(markup_value)
-					
 					continue
 				
 				# if this attribute is for the local scope (this)
 				if item in eval(self.fnr_types['this']):
-					
-					#debug
-					#print('attribute found in local scope')
-					
 					markup_value = eval(self.fnr_types['this'])[item]
+					continue
 				
+				# end of loop
 			
 			# replace marker with markup_value
 			if markup_value or markup_value == '' or markup_value == 0:
-				try:
-					start = template.index(marker)
-				except ValueError:
-					#print('Error - Could not find marker in template')
-					continue
-				
 				template = template.replace("{{%s}}" %marker,str(markup_value))
 				
 			'''debug - warning: lots of output, but this is useful if you need to see
@@ -376,8 +343,6 @@ class Element(object):
 
 	def process(self,conf):
 		
-		import sys		
-		
 		if isinstance(conf,dict):
 			
 			conf = [conf]
@@ -390,21 +355,23 @@ class Element(object):
 			
 		for item in conf:
 			
+			# log
+			if item.get('log'):
+				print(self.fnr(item['log']))
+			
 			#vars
 			processor_type = item.get('type')
 			
 			if not processor_type:
-				
 				return False
 			
 			''' Dynamically load processors
 			'''
 			m = ".".join(processor_type.split('.')[:-1])
+			c = ".".join(processor_type.split('.')[-1:])
+			
 			# debug
 			#print(m)
-		
-			c = ".".join(processor_type.split('.')[-1:])
-			# debug 
 			#print(c)
 			
 			# does the module exist in site directory
@@ -430,7 +397,7 @@ class Element(object):
 			else:
 				print("Could not find the the module '%s'." %m)
 				
-				return None
+				return False
 
 			# load class
 			try:
@@ -440,14 +407,13 @@ class Element(object):
 				
 				print("Could not find the class '%s' in the module '%s'." %(c,m))
 				
-				return None
+				return False
 			
 			except: traceback.print_exc()
 			
 			# instanciate element object
 			self.processorObj = _class(item,self)
-
-
+			
 			# run processor
 			try:
 				output = self.processorObj.run()
@@ -456,48 +422,32 @@ class Element(object):
 				print('Processor Output: - %s' %str(output))
 			
 				if output == True:
-
-					# log
-					if item.get('log'):
-						
-						print(self.fnr(item['log']))
-						
 					
-					if item.get( True ):
-						item['true']	= item[True]			
-						
+					# convert bool True to string
+					if item.get(True):
+						item['true']	= item[True]	
 					
 					if item.get('true'):
 						
-						#debug
-						#print('found true')
-						
+						# sub content
 						if isinstance(item['true'], dict) and item['true'].get('content'):
-							
-							# debug
-							#print('found content')
-							
+					
 							self.content.tree(item['true'])
 							continue
 						
+						# sub process
 						self.process(item['true']) #recurse
 						
 					else:
-						
 						continue
 						
 				elif output == False:
 					
-					# log
-					if item.get('log'):
-						
-						print(self.fnr(item['log']))
-
+					# convert bool False to string
 					if item.get( False ):
 						item['false'] = item[False]	
 				
 					if item.get('false'):
-
 						if isinstance(item['false'], dict) and item['false'].get('content'):
 							
 							self.content.tree(item['false'])
@@ -506,11 +456,10 @@ class Element(object):
 						self.process(item['false']) #recurse
 						
 					else:
-						
 						return False
 						
+				# if process returns something other than false make it false
 				else:
-					
 					return False			
 			
 			except: traceback.print_exc()
@@ -523,13 +472,13 @@ class Element(object):
 		return self.content.attributes.get('value',"")
 
 
-	'''This needs to be depricated at some point
-	use load_data instead
-	'''
-
 	def store(self,records,**kwargs):
-		
-		print('Store')
+
+		'''This needs to be depricated at some point
+		use load_data instead
+		'''
+
+		print('DANGER USING STORE - REPLACE ASAP')
 		
 		#print(kwargs)
 		
@@ -661,8 +610,8 @@ class Element(object):
 		
 		# value
 		if not conf.get('value'):
-			
 			print("error value not given")
+			return False
 		
 		# format
 		conf.setdefault('format','string')
@@ -673,7 +622,7 @@ class Element(object):
 		# data
 		data = conf['value']
 		
-		if  isinstance(data,str) and 'nomarkup' not in conf:
+		if isinstance(data,str) and 'nomarkup' not in conf:
 			
 			# markup data
 			data = self.fnr(data)
@@ -711,12 +660,8 @@ class Element(object):
 				
 					tmp_data = csv.DictReader(data.split('\n'),**kwargs)
 					
-					#print(tmp_data)
-					
 					self.data = []
 					for item in tmp_data:
-						
-						#print(item)
 						
 						# clean up dictionary keys
 						tmp_dict = {}
@@ -726,7 +671,6 @@ class Element(object):
 						self.data.append(tmp_dict)	
 				
 				except: traceback.print_exc()
-		
 		
 		# dict
 		if conf['format'] == 'dict':
@@ -741,7 +685,6 @@ class Element(object):
 					print('warning data not a dictionary')
 					
 			except: traceback.print_exc()
-		
 		
 		# int
 		if conf['format'] == 'int':
@@ -836,9 +779,7 @@ class Element(object):
 			try:
 				self.data = yaml.load(data)
 			
-			except Error as e:
-				
-				print(e)		
+			except: traceback.print_exc()	
 			
 		# default (string)
 		if not self.data:
@@ -856,8 +797,6 @@ class Element(object):
 				entry = self.colon_seperated_to_brackets(conf['entry'].lstrip('{{').rstrip('}}'))
 				
 				exec('self.data = self.data%s' %entry)
-
-		
 		
 		# store
 		if conf.get('store'):
@@ -870,7 +809,7 @@ class Element(object):
 					exec('self.top.%s.update(self.data)' %conf['store'])
 					
 					# debug
-					print('updated top.%s with self.data' %conf['store'])
+					#print('updated top.%s with self.data' %conf['store'])
 
 				if eval('isinstance(self.top.%s, list)' %conf['store']):
 				
@@ -878,7 +817,7 @@ class Element(object):
 					exec('self.top.%s.extend(self.data)' %conf['store'])
 					
 					# debug
-					print('extended top.%s with self.data' %conf['store'])
+					#print('extended top.%s with self.data' %conf['store'])
 
 				if eval('isinstance(self.top.%s, str)' %conf['store']):
 				
@@ -886,7 +825,7 @@ class Element(object):
 					exec('self.top.%s += self.data' %conf['store'])
 					
 					# debug
-					print('concatonated top.%s and self.data' %conf['store'])
+					#print('concatonated top.%s and self.data' %conf['store'])
 				
 			else:
 			
@@ -896,8 +835,7 @@ class Element(object):
 				# add to top fnr_types
 				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
 
-				print('stored self.data as top.%s' %conf['store'])
-		
+				#print('stored self.data as top.%s' %conf['store'])
 		
 		return True
 
@@ -1059,7 +997,8 @@ class Element(object):
 
 	def escape_markers(self,obj):
 		
-		''' escape single and double qoutes in strings.
+		''' escape braces in strings.
+			this was added for dcoumetnation - it may not be needed
 		'''
 
 		# debug

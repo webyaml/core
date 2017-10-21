@@ -71,7 +71,7 @@ class URL(object):
 		self.fnr_types = {}
 		self.cache = {}
 		self.cache['includes'] = []
-		#self.error = None
+		self.error = None
 		self.raw = {}
 		self.attributes = {}
 		
@@ -133,14 +133,6 @@ class URL(object):
 		
 		get_vars = web.webapi.rawinput("GET")
 		
-		'''
-		for key in get_vars:
-			
-			# convert string to list
-			if isinstance(get_vars[key],str):
-				get_vars[key] = [get_vars[key]]
-		'''
-		
 		return get_vars
 	
 	
@@ -153,14 +145,6 @@ class URL(object):
 		for key in post_vars:
 			tmp_post_vars[key] = post_vars[key]
 		post_vars = tmp_post_vars
-		
-		'''
-		for key in post_vars:
-			
-			# convert string to list
-			if isinstance(post_vars[key],str):
-				post_vars[key] = [post_vars[key]]
-		'''
 		
 		return post_vars
 	
@@ -211,7 +195,6 @@ class URL(object):
 		
 		#debug
 		#print(available_urls)
-		
 		
 		# modify urls to include aliases
 		tmp_available_urls = []
@@ -302,7 +285,9 @@ class URL(object):
 					# remove the available url from the requested url to get the path vars
 					path_vars = requested_url_list[len(available_url_list):]
 					
-					# does this url allow caching?
+					''' Need to fid a way to abstract this
+					'''
+					# config hacks
 					page_cache = False
 					if 'cache' in available_urls[i][available_url]:
 						page_cache = True
@@ -314,7 +299,10 @@ class URL(object):
 						self.attributes['keepmarkers'] = True
 
 					if 'header' in available_urls[i][available_url]:
-						self.attributes['header'] = available_urls[i][available_url]['header']					
+						self.attributes['header'] = available_urls[i][available_url]['header']
+
+					''' Will be resolved in future release
+					'''
 					
 		if page_cache:
 			
@@ -358,6 +346,8 @@ class URL(object):
 		#print(result)
 		
 		if not result:
+			
+			# YAML ERRORS
 			if self.error: 
 				return self.error
 			return False
@@ -387,10 +377,12 @@ class URL(object):
 		'''Mid-processing
 			Some content elements may request a function to be executed
 			after the content tree is created.
-		'''
+		
 		if 'functions' in self.cache:
 			for function in self.cache['functions']:
 				function()
+		'''
+		
 		
 		'''Processing
 			Render all elements in the Content Tree
@@ -543,9 +535,6 @@ class URL(object):
 			
 			if line.strip().startswith("include "):
 				
-				# debug
-				#print("FOUND an INCLUDE")
-				
 				result = self.read_files(line.strip().split()[1:])
 				
 				# debug
@@ -580,12 +569,9 @@ class URL(object):
 		
 		for line in input.split('\n'):
 			
-			#line =  line.replace("\t","     ")
-			
 			if line.strip().startswith("**"):
-				
 				line = line.replace("**", "<<: *")
-				
+			
 			output += '%s\n' % line
 
 		return output
@@ -635,12 +621,7 @@ class URL(object):
 		#debug
 		#print(result)
 		
-		# replace simple anchor syntax with yaml syntax
-		
-		# **anchor:
-		#     vs
-		# <<: *anchor
-		
+		# replace simple anchor syntax with yaml syntax	
 		result = self.simple_anchor_syntax(result)
 		#debug
 		#print(result)

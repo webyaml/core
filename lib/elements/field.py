@@ -375,9 +375,6 @@ class File(Input):
 
 					# add filename to attributes
 					self.conf.setdefault('filename','<label>Uploaded Filename:</label> %s'%self.top.post_vars[self.name])
-					
-					# this has no useful value
-					#self.store([data], name=self.name,format='record')				
 				
 				'''#debug
 				else:

@@ -100,7 +100,6 @@ class Loop(classes.processor.Processor):
 				count +=1
 				
 				# store the item to be used by fnr functions
-				#self.store(item,format='python',name=key)
 				self.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter

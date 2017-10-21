@@ -72,7 +72,7 @@ class Content(list):
 			
 			try:
 				''' This is the new way to load modules.  
-				'''				
+				'''		
 				_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
 				
 			except: traceback.print_exc()
@@ -85,24 +85,6 @@ class Content(list):
 				'''
 				__import__(m)
 				_module = sys.modules[m]  #load module
-				
-				'''	When tring the new way in this instance, some errors occoured:
-	
-						core/lib/elements/field.py:23: RuntimeWarning: Parent module 'lib.elements' not found while handling absolute import
-						  import web
-						core/lib/elements/field.py:24: RuntimeWarning: Parent module 'lib.elements' not found while handling absolute import
-						  import traceback
-						core/lib/elements/field.py:28: RuntimeWarning: Parent module 'lib.elements' not found while handling absolute import
-						  import classes.element
-						core/lib/elements/field.py:29: RuntimeWarning: Parent module 'lib.elements' not found while handling absolute import
-						  import field_dropdown
-						Traceback (most recent call last):
-						  File "/home/mark/development/WebYAML/core/classes/content.py", line 82, in __init__
-						    _module = imp.load_source(m,"core/%s.py" %m.replace('.','/'))
-						  File "core/lib/elements/field.py", line 29, in <module>
-						    import field_dropdown
-						ImportError: No module named field_dropdown
-				'''
 				
 			except: traceback.print_exc()
 			
@@ -177,27 +159,12 @@ class Content(list):
 		# render this element
 		output = self.elementObj.render()+output
 		
-		# fnr the output
-		#output = self.elementObj.fnr(output)
-		
-		# Wrap for this element
-		
-		# fnr wrap
-		#wrap = self.elementObj.fnr(self.attributes.get('wrap','|'))
-		
 		# split wrap
 		wrap = self.attributes.get('wrap','|').split("|",1)
 		if len(wrap) == 1:
-			wrap.append('')		
+			wrap.append('')
 		
-
 		# Helpers for API formating
-
-		if 'rstrip' in self.attributes:
-			output = output.rstrip('\n')
-		
-		if 'strip' in self.attributes:
-			output = output.strip()
 
 		if 'nomarkup' in self.attributes:
 			
@@ -215,10 +182,13 @@ class Content(list):
 			
 			#print('noindent')
 			
+			# double markup
 			return  self.elementObj.fnr(self.elementObj.fnr(wrap[0]+output+wrap[1]))
 			
 		# Indent the output and wrap
 		#print('indent')
+		
+		# double markup with indent
 		return  self.elementObj.fnr(self.elementObj.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1]))))
 	
 
@@ -227,11 +197,10 @@ class Content(list):
 		# vars
 		output = ''
 		
-		if not self.parent:
+		if self.top == self.parent:
 			return input
 		
 		for line in input.split('\n'):
-			
 			output += prefix+str(line)+"\n"		
 		
 		return output.rstrip("\n")	
