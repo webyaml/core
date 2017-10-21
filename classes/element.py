@@ -471,68 +471,6 @@ class Element(object):
 		
 		return self.content.attributes.get('value',"")
 
-
-	def store(self,records,**kwargs):
-
-		'''This needs to be depricated at some point
-		use load_data instead
-		'''
-
-		print('DANGER USING STORE - REPLACE ASAP')
-		
-		#print(kwargs)
-		
-		if 'format' in kwargs:
-			
-			# debug
-			#print('format found in kwargs')
-			
-			format = kwargs['format']
-			
-		else:
-			format = self.conf.get('format', 'list')
-		
-		#print('format: %s' %format)
-		
-		
-		if 'name' in kwargs:
-			
-			#print('name found in kwargs')
-			
-			objName = kwargs['name']
-		else:
-			objName = self.conf.get('name')
-		
-		#print('objName: %s' %objName)
-		
-		if objName:
-			
-			if format == 'record':
-				'''
-				if objName in dir(self.top):
-					# create top level object to store the output
-					exec('self.top.%s.update(records[0])' %objName)
-					
-					print('cache object found')
-					
-				else:
-					# create top level object to store the output
-					exec('self.top.%s = records[0]' %objName)
-					
-					print('created new object')
-				'''
-				
-				exec('self.top.%s = records[0]' %objName)
-				
-				print('created new object')					
-				
-			else:
-				# create top level object to store the output
-				exec('self.top.%s = records' %objName)
-			
-			# add to top fnr_types
-			self.top.fnr_types.update({objName: 'self.top.%s' %objName})	
-
 	
 	def colon_seperated_to_brackets(self,input):
 
