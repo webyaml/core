@@ -66,6 +66,9 @@ class Loop(classes.processor.Processor):
 			print('failed to loop - data failed to load')
 				
 			return False
+			
+		# just to be safe
+		self.data = self.element.data
 		
 		# data must be a list to loop
 		if not isinstance(self.data,list):

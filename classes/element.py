@@ -70,7 +70,7 @@ class Element(object):
 			
 			# sanitizing
 			'escape': 'self.escape',
-			'escape_markers': 'self.escape_markers',
+			'escape_markers': 'self.escape_markers', #undocumented
 			'html_escape': 'self.html_escape',
 
 			# URI
@@ -83,8 +83,8 @@ class Element(object):
 			'last4': 'self.last4',
 			'strip': 'self.strip',
 			'singleline': 'self.singleline',
-			'remove': 'self.remove',
-			'dollar': 'self.dollar',
+			'remove': 'self.remove', #undocumented
+			'dollar': 'self.dollar', #undocumented
 			'title_case': 'self.title_case',
 			
 			'lower': 'self.lower',
@@ -655,15 +655,15 @@ class Element(object):
 			
 			print('format is list')
 			
-			self.data = eval(data)
-			print('here')
+			#self.data = eval(data)
+			#print('here')
 			
 			try:
 				self.data = eval(data)
 			
 				if not isinstance(self.data,list):
 				
-					print('warning - data not a list')
+					print('element - warning - data not a list')
 					
 			except: traceback.print_exc()
 		
@@ -774,6 +774,9 @@ class Element(object):
 				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
 
 				#print('stored self.data as top.%s' %conf['store'])
+				
+				
+		print(self.data)
 		
 		return True
 

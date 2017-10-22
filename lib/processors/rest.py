@@ -67,7 +67,8 @@ class GET(Rest):
 		
 		# store args
 		#self.store(conf['args'],name='args')
-		self.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
+		if conf['args']:
+			self.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
 		
 		# Markup URL
 		conf['url'] = self.element.fnr(conf['url'])
@@ -165,8 +166,12 @@ class POST(Rest):
 					
 				return False
 				
+		''' If this is not working add 
+			self.data = self.element.data
+		'''
 		#debug
 		print(self.data)
+		
 		
 		try:
 		
