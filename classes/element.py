@@ -431,8 +431,9 @@ class Element(object):
 						
 						# sub content
 						if isinstance(item['true'], dict) and item['true'].get('content'):
-					
-							self.content.tree(item['true'])
+							
+							self.content.tree({'content': item['true']})
+							
 							continue
 						
 						# sub process
@@ -450,7 +451,7 @@ class Element(object):
 					if item.get('false'):
 						if isinstance(item['false'], dict) and item['false'].get('content'):
 							
-							self.content.tree(item['false'])
+							self.content.tree({'content': item['false']})
 							return False
 							
 						self.process(item['false']) #recurse

@@ -118,11 +118,10 @@ class Content(list):
 		
 		''' Create Content And Element Objects
 		'''
-
-		# Vars
-		''' WOW this seems bad!
-		'''
-		self.attributes = conf
+		
+		# Vars		
+		if not self.attributes:
+			self.attributes = conf
 		
 		if self.attributes.get('content'):
 
@@ -135,7 +134,7 @@ class Content(list):
 				try:
 					self.append( type(self)(item,self) )
 				except: traceback.print_exc()
-			
+		
 		return None			
 
 	
@@ -184,7 +183,7 @@ class Content(list):
 			
 			# double markup
 			return  self.elementObj.fnr(self.elementObj.fnr(wrap[0]+output+wrap[1]))
-			
+		
 		# Indent the output and wrap
 		#print('indent')
 		
