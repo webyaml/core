@@ -615,29 +615,35 @@ class Element(object):
 		if conf['format'] == 'dict':
 			
 			print('format is dict')
-			
-			try:
-				self.data = eval(data)
-			
-				if not isinstance(self.data,dict):
+
+			if isinstance(data, dict):
+				self.data = data
+			else:			
+				try:
+					self.data = eval(data)
 				
-					print('warning data not a dictionary')
+					if not isinstance(self.data,dict):
 					
-			except: traceback.print_exc()
+						print('warning data not a dictionary')
+						
+				except: traceback.print_exc()
 		
 		# int
 		if conf['format'] == 'int':
 			
 			print('format is int')
-			
-			try:
-				self.data = eval(data)
-			
-				if not isinstance(self.data,int):
+
+			if isinstance(data, int):
+				self.data = data
+			else:
+				try:
+					self.data = eval(data)
 				
-					print('warning data not a int')
+					if not isinstance(self.data,int):
 					
-			except: traceback.print_exc()
+						print('warning data not a int')
+						
+				except: traceback.print_exc()
 
 		# json
 		if conf['format'] == 'json':
@@ -659,14 +665,17 @@ class Element(object):
 			#self.data = eval(data)
 			#print('here')
 			
-			try:
-				self.data = eval(data)
-			
-				if not isinstance(self.data,list):
+			if isinstance(data, list):
+				self.data = data
+			else:
+				try:
+					self.data = eval(data)
 				
-					print('element - warning - data not a list')
+					if not isinstance(self.data,list):
 					
-			except: traceback.print_exc()
+						print('warning - data not a list')
+						
+				except: traceback.print_exc()
 		
 		# python
 		if conf['format'] == 'python':

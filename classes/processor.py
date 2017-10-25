@@ -50,7 +50,7 @@ class Processor(object):
 	# data handling
 	def load_data(self,conf):
 
-		self.element.load_data(conf)
+		result = self.element.load_data(conf)
 		self.data = self.element.data
 
-		return 
+		return result

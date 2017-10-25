@@ -122,6 +122,23 @@ class Content(list):
 		# Vars		
 		if not self.attributes:
 			self.attributes = conf
+			'''
+			This allows for configuration files to be parsed normally
+			But let processors or content elements add new content
+			without changing the attributes of the parent.
+			
+			To continue a content tree using this function the 
+			conf should be sent in this format
+			
+			content: # will be ignored
+				-
+					#new content block
+				-
+					# another new content block
+					
+			If content is a dict it will be converted into a list.
+			'''
+			
 		
 		if self.attributes.get('content'):
 

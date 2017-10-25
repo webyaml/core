@@ -40,25 +40,10 @@ class Evaluate(classes.processor.Processor):
 			#debug
 			print(expression)
 			
-			if 'messages' not in self.top.session:				
-				self.top.session.messages = []
-			
 			if eval(expression):
 				
 				#debug
 				print("True")
-
-				if self.conf.get('messages'):
-					
-					if 'true' in self.conf['messages']:
-						
-						for message in self.conf['messages']['true']:
-						
-							msg = self.element.fnr(self.conf['messages']['true'][message])
-					
-							self.element.messages.append([message,msg])
-							
-							self.top.session.messages.append([message,msg])
 				
 				return True
 				
@@ -66,15 +51,5 @@ class Evaluate(classes.processor.Processor):
 				
 				#debug
 				print("False")
-				
-				if self.conf.get('messages'):
-					
-					if 'false' in self.conf['messages']:
-					
-						for message in self.conf['messages']['false']:
-						
-							msg = self.element.fnr(self.conf['messages']['false'][message])
-					
-							self.element.messages.append([message,msg])
 				
 				return False
