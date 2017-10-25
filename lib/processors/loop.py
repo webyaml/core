@@ -54,6 +54,9 @@ class Loop(classes.processor.Processor):
 		# get the incrementor key
 		key = conf.setdefault('key', 'i')
 		
+		# data format
+		conf['data'].setdefault('format', 'list')
+		
 		# do we load content or a subprocess for each item
 		if conf.get('subprocess') and conf.get('subcontent'):
 			
@@ -68,7 +71,7 @@ class Loop(classes.processor.Processor):
 			return False
 			
 		# just to be safe
-		self.data = self.element.data
+		#self.data = self.element.data
 		
 		# data must be a list to loop
 		if not isinstance(self.data,list):
@@ -132,9 +135,9 @@ class Loop(classes.processor.Processor):
 			
 			for item in self.data:
 
-				# dbug
-				print(item)
-				print(type(item))
+				# debug
+				#print(item)
+				#print(type(item))
 				
 				# stop loop if limit has been reached
 				if conf.get('limit') and conf['limit'] == len(items):

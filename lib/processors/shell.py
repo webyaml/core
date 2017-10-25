@@ -59,6 +59,8 @@ class Shell(classes.processor.Processor):
 				
 				conf['stdout']['value'] = result
 				
+				conf['stdout']['format'] = conf['stdout'].get('format','string')
+				
 				# load data
 				if not self.load_data(conf['stdout']):
 					
@@ -80,6 +82,8 @@ class Shell(classes.processor.Processor):
 			if conf.get('stderr'):
 				
 				conf['stderr']['value'] = e
+				
+				conf['stderr']['format'] = conf['stderr'].get('format','string')
 				
 				# load data
 				if not self.load_data(conf['stderr']):

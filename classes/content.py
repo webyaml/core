@@ -138,9 +138,11 @@ class Content(list):
 					
 			If content is a dict it will be converted into a list.
 			'''
+		else:
+			print(conf)
 			
 		
-		if self.attributes.get('content'):
+		if conf.get('content'):
 
 			# convert dict to list
 			if isinstance(conf['content'],dict):

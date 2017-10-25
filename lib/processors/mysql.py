@@ -100,7 +100,7 @@ class Select(classes.processor.Processor):
 				if conf['reader'] == 'record':
 					conf['result']['entry'] = '{{0}}'
 				
-				conf['result']['format'] = 'raw'
+				conf['result']['format'] = 'list'
 				
 				# load data
 				if not self.load_data(conf['result']):
