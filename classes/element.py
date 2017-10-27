@@ -548,7 +548,7 @@ class Element(object):
 		#print(conf)
 		
 		# value
-		if not conf.get('value'):
+		if not conf.get('value') and conf['value'] != 0 and conf['value'] != '':
 			print("error value not given")
 			return False
 		

@@ -151,7 +151,7 @@ class Content(list):
 			# recurse
 			for item in conf['content']:
 				try:
-					self.append( type(self)(item,self) )
+					self.append( Content(item,self) )
 				except: traceback.print_exc()
 		
 		return None			

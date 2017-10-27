@@ -139,7 +139,7 @@ class Form(classes.element.Element):
 		# debug
 		#print('lib.elelments.form.Form render()')
 		
-		return '<input type="hidden" name="form_name" value="%s">' % self.conf['name']
+		return '<input type="hidden" name="form_name" value="%s">\n' % self.conf['name']
 
 
 

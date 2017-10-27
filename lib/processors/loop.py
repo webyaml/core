@@ -143,10 +143,6 @@ class Loop(classes.processor.Processor):
 				if conf.get('limit') and conf['limit'] == len(items):
 					break
 				
-				# store count				
-				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
-				count +=1
-				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
 					
@@ -163,6 +159,10 @@ class Loop(classes.processor.Processor):
 				# add the key with item to the content attributes
 				tmp_content[key] = item
 				
+				# store count in tmp_content
+				#self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				tmp_content['%s_count' %key] = count
+				count +=1		
 				
 				
 				# add the content
