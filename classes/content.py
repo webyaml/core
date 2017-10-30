@@ -119,7 +119,12 @@ class Content(list):
 		''' Create Content And Element Objects
 		'''
 		
-		# Vars		
+		# Vars
+		
+		if isinstance(conf,str) :
+			conf = eval(conf)
+		
+		
 		if not self.attributes:
 			self.attributes = conf
 			'''
@@ -138,9 +143,6 @@ class Content(list):
 					
 			If content is a dict it will be converted into a list.
 			'''
-		else:
-			print(conf)
-			
 		
 		if conf.get('content'):
 

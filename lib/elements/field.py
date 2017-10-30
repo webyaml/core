@@ -55,8 +55,8 @@ class Input(classes.element.Element):
 		# args (data)
 		if self.conf.get('data'):
 			
-			self.conf['data'].get('format','list')
-			self.conf['data'].get('value',[])
+			self.conf['data'].setdefault('format','list')
+			self.conf['data'].setdefault('value',[])
 			
 			# debug
 			print('loading data')
@@ -124,6 +124,13 @@ class Input(classes.element.Element):
 			self.attrs['class_'] = self.conf['class_']			
 		'''	DEPRICATED - End
 		'''
+		
+		if not self.attrs.get('class_'):
+			self.attrs['class_']  = ""
+		
+		if 'baseclass' in self.conf:
+			self.attrs['class_'] = "%s %s" %(self.conf['baseclass'], self.attrs['class_'])
+		
 		
 		# value hacks
 		if 'value' in self.conf:

@@ -166,11 +166,12 @@ class Loop(classes.processor.Processor):
 				
 				
 				# add the content
-				
 				if isinstance(conf['subcontent'],list):
 					tmp_content.update({'content': conf['subcontent']})
 				else:
 					tmp_content.update(conf['subcontent'])
+				
+				# check for content in tmp_content
 				
 				print(tmp_content)
 				
