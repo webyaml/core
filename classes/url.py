@@ -300,10 +300,15 @@ class URL(object):
 
 					if 'header' in available_urls[i][available_url]:
 						self.attributes['header'] = available_urls[i][available_url]['header']
+						
+					if 'debug' in available_urls[i][available_url]:
+						self.attributes['debug'] = True						
 
 					''' Will be resolved in future release
 					'''
-					
+		
+		'''Page Caching - Load this page if required
+		'''
 		if page_cache:
 			
 			# is page in cache?
@@ -321,23 +326,23 @@ class URL(object):
 			except IOError:
 				
 				print("cache file '%s' not found" %cache_file)
+				# the page will still be generated and saved.
 
 		
 		# assign path_vars as dict with keys arg0, arg1, etc...
 		for i in range(0, len(path_vars)):
 			self.path_vars['arg'+str(i)] = path_vars[i]
 			
+		''' add error handling
+		'''
+		
 		# check for configuration files
 		if len(path_config_files) == 0:
 			
 			return "Config Error:  No configuration files were found for the url '%s'." %url_string
-		
-		
+	
 		# load core config files
-		
-		# add error handling
 		path_config_files.insert(0,"conf/processors/core.cfg")
-		
 		
 		# concatenate and read configuration files
 		result =  self.load_conf(*path_config_files)
@@ -403,7 +408,7 @@ class URL(object):
 		
 		'''Debugging
 		'''
-		if 'debug' in self.conf and self.conf['debug']:
+		if self.attributes.get('debug'):
 			
 			# add debugging information
 			length = len(output)
@@ -414,17 +419,16 @@ class URL(object):
 			duration_seconds = (self.end_time-self.start_time).seconds
 			duration_microseconds = ((self.end_time-self.start_time).microseconds)/float(1000000)
 			debug = '''
-				<pre>
-					Size: %d
-					Duration: %s
-				</pre>
-				''' %(length, duration_seconds+duration_microseconds)
+<div><pre>
+	Size: %d
+	Time: %s
+<div></pre>
+''' %(length, duration_seconds+duration_microseconds)
 
-			output += debug
+			output = debug+output
 		
-		'''Page Caching
+		'''Page Caching - Cache this page if required
 		'''
-		
 		if page_cache:
 			
 			try:
@@ -450,7 +454,8 @@ class URL(object):
 		
 			for header in self.attributes['header']:
 				
-				print(header)
+				# debug
+				#print(header)
 				
 				eval('web.header(%s)' %header)
 		

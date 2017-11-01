@@ -34,7 +34,7 @@ class Form(classes.element.Element):
 
 	def __init__(self,content):
 		
-		print('lib.elelments.form.Form')
+		#print('lib.elelments.form.Form')
 		
 		# super class Element
 		super(Form, self).__init__(content)

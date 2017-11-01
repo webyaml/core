@@ -35,7 +35,7 @@ class Input(classes.element.Element):
 	
 	def __init__(self,content,definition="web.form.Textbox(name,*validators,**attrs)"):
 		
-		print('lib.elements.field.Input')
+		#print('lib.elements.field.Input')
 		
 		# super class Element
 		super(Input, self).__init__(content)
@@ -59,7 +59,7 @@ class Input(classes.element.Element):
 			self.conf['data'].setdefault('value',[])
 			
 			# debug
-			print('loading data')
+			#print('loading data')
 			
 			if not self.load_data(self.conf['data']):
 				print('data failed to load')

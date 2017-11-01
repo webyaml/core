@@ -419,7 +419,7 @@ class Element(object):
 				output = self.processorObj.run()
 				
 				# debug
-				print('Processor Output: - %s' %str(output))
+				#print('Processor Output: - %s' %str(output))
 			
 				if output == True:
 					
@@ -540,7 +540,7 @@ class Element(object):
 		'''
 		
 		# debug
-		print('clases.element.Element.load_data')	
+		#print('clases.element.Element.load_data')	
 		
 		# conf check
 		
@@ -574,7 +574,7 @@ class Element(object):
 		# CSV
 		if conf['format'] == 'csv':
 			
-			print('format is csv')
+			#print('format is csv')
 			
 			import csv
 			
@@ -614,7 +614,7 @@ class Element(object):
 		# dict
 		if conf['format'] == 'dict':
 			
-			print('format is dict')
+			#print('format is dict')
 
 			if isinstance(data, dict):
 				self.data = data
@@ -631,7 +631,7 @@ class Element(object):
 		# int
 		if conf['format'] == 'int':
 			
-			print('format is int')
+			#print('format is int')
 
 			if isinstance(data, int):
 				self.data = data
@@ -648,7 +648,7 @@ class Element(object):
 		# json
 		if conf['format'] == 'json':
 			
-			print('format is json')
+			#print('format is json')
 			
 			import json
 			
@@ -660,7 +660,7 @@ class Element(object):
 		# list
 		if conf['format'] == 'list':
 			
-			print('format is list')
+			#print('format is list')
 			
 			#self.data = eval(data)
 			#print('here')
@@ -680,7 +680,7 @@ class Element(object):
 		# python
 		if conf['format'] == 'python':
 			
-			print('format is python')
+			#print('format is python')
 			
 			try:
 				self.data = eval(data)
@@ -692,14 +692,14 @@ class Element(object):
 		# raw
 		if conf['format'] == 'raw':
 			
-			print('format is raw')
+			#print('format is raw')
 			
 			self.data = data
 			
 		# string
 		if conf['format'] == 'string':
 			
-			print('format is string')
+			#print('format is string')
 			
 			self.data = str(data)
 		
@@ -707,7 +707,7 @@ class Element(object):
 		# yaml
 		if conf['format'] == 'xml':
 			
-			print('format is xml')
+			#print('format is xml')
 			
 			import xmltodict
 			
@@ -720,7 +720,7 @@ class Element(object):
 		# yaml
 		if conf['format'] == 'yaml':
 			
-			print('format is yaml')
+			#print('format is yaml')
 			
 			import yaml
 			
@@ -732,7 +732,7 @@ class Element(object):
 		# default (string)
 		if not self.data:
 			
-			print('format is default')
+			#print('format is default')
 			
 			self.data = str(data)
 
@@ -786,7 +786,7 @@ class Element(object):
 				#print('stored self.data as top.%s' %conf['store'])
 				
 				
-		print(self.data)
+		#print(self.data)
 		
 		return True
 

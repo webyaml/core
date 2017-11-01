@@ -38,18 +38,18 @@ class Evaluate(classes.processor.Processor):
 			expression = self.element.fnr(expression)
 			
 			#debug
-			print(expression)
+			#print(expression)
 			
 			if eval(expression):
 				
 				#debug
-				print("True")
+				#print("True")
 				
 				return True
 				
 			else:
 				
 				#debug
-				print("False")
+				#print("False")
 				
 				return False
