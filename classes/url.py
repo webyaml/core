@@ -513,6 +513,8 @@ class URL(object):
 				
 				return False
 			
+			''' Begin depricated
+			'''
 			if content.startswith('cache'):
 
 				# add file to cache
@@ -520,6 +522,11 @@ class URL(object):
 				
 				# remove first line from file
 				content = "\n".join(content.split('\n')[1:])
+			''' End depricated
+			'''
+			
+			# add file to cache
+			self.cache['includes'].append(file)	
 			
 			output += "%s\n" %content
 			

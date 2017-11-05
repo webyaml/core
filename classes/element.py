@@ -72,6 +72,7 @@ class Element(object):
 			'escape': 'self.escape',
 			'escape_markers': 'self.escape_markers', #undocumented
 			'html_escape': 'self.html_escape',
+			'escape_script': 'self.escape_script',
 
 			# URI
 			'url_quote': 'self.url_quote',
@@ -926,6 +927,10 @@ class Element(object):
 			return obj.strip("\n").strip("\r").strip(char).strip()
 			
 			#return obj.strip(char)
+		
+		''' #consider adding the following
+		if isinstance(obj,list):
+		'''
 			
 		return obj
 
@@ -969,7 +974,7 @@ class Element(object):
 		if isinstance(obj,list):
 			obj = ", ".join(obj)
 		
-		return string
+		return obj
 	
 
 	def _json(self,obj):
@@ -1094,7 +1099,7 @@ class Element(object):
 		
 		import cgi
 		
-		return cgi.escape(string,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','')
+		return cgi.escape(string,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','').replace('/','\/')
 	
 	
 	def uuid(self,obj):
@@ -1240,4 +1245,11 @@ class Element(object):
 			obj = [obj]
 			
 		return obj
+		
+	def escape_script(self,obj):
+		
+		if not isinstance(obj,str):
+			return obj
+		
+		return obj.replace('</script>','<\\/script>')
 
