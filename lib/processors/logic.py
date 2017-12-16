@@ -31,6 +31,8 @@ class Evaluate(classes.processor.Processor):
 	
 	def run(self):
 		
+		print('lib.processors.logic.Evaluate')
+		
 		expression = self.conf.get('expression')
 
 		if expression:
@@ -38,7 +40,7 @@ class Evaluate(classes.processor.Processor):
 			expression = self.element.fnr(expression)
 			
 			#debug
-			#print(expression)
+			print(expression)
 			
 			if eval(expression):
 				

@@ -71,6 +71,7 @@ class Element(object):
 			# sanitizing
 			'escape': 'self.escape',
 			'escape_markers': 'self.escape_markers', #undocumented
+			'html_markers': 'self.html_markers', #undocumented
 			'html_escape': 'self.html_escape',
 			'escape_script': 'self.escape_script',
 
@@ -109,6 +110,9 @@ class Element(object):
 			'join': 'self._join',
 			'split': 'self.split',
 			'list': 'self.list',
+			
+			# clean chinese crap
+			'cleanup': 'self.cleanup',
 		
 		}		
 		
@@ -1100,7 +1104,18 @@ class Element(object):
 		import cgi
 		
 		return cgi.escape(string,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','').replace('/','\/')
-	
+
+
+	def html_markers(self,string):
+
+		# debug
+		#print('html_markers')
+
+		if not string:
+			return string
+		
+		return string.replace("{","&#123;").replace("}","&#125;")
+		
 	
 	def uuid(self,obj):
 
@@ -1213,7 +1228,7 @@ class Element(object):
 		
 		string = []
 		for part in parts:
-			string.append("%s%s" %(part[0].upper(),part[1:]))
+			string.append("%s%s" %(part[0].upper(),part[1:].lower()))
 		
 		return " ".join(string)
 		
@@ -1252,4 +1267,12 @@ class Element(object):
 			return obj
 		
 		return obj.replace('</script>','<\\/script>')
+
+
+	def cleanup(self,obj):
+		
+		if not isinstance(obj,str):
+			return obj
+		
+		return obj.decode("utf-8").replace(u"\e2u3F3F",'')
 

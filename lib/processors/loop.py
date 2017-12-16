@@ -96,9 +96,10 @@ class Loop(classes.processor.Processor):
 				#debug
 				#print(item)
 				#print('count: %d' &count)
+				#print(conf['limit'])
 				
 				# stop loop if limit has been reached
-				if conf.get('limit') and conf['limit'] == len(items):
+				if conf.get('limit') and int(conf['limit']) == count:
 					break
 					
 				# store count				
@@ -140,7 +141,7 @@ class Loop(classes.processor.Processor):
 				#print(type(item))
 				
 				# stop loop if limit has been reached
-				if conf.get('limit') and conf['limit'] == len(items):
+				if conf.get('limit') and int(conf['limit']) == count:
 					break
 				
 				# evaluate filter

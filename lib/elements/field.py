@@ -389,3 +389,21 @@ class File(Input):
 				'''
 		
 		return None
+
+
+class Generic(Input):
+	
+	def __init__(self,content):
+		
+		#debug
+		#print("lib.elements.field.File")
+
+		# super class Input
+		super(Generic, self).__init__(content,"web.form.File(name,*validators,**attrs)")
+		
+		# upload?
+		if self.top.post_vars and self.name in self.top.post_vars:
+			self.conf['attributes'].setdefault('value', self.top.post_vars[self.name])
+			
+		return None
+			
