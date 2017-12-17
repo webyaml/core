@@ -16,6 +16,18 @@ class Radio(Input):
 
 	def render(self):
 		
+		if 'wrap' not in self.attrs:
+			self.attrs['wrap'] = '''
+				<div class="form-check">
+					<label class="form-check-label">
+					|
+					</label>
+				</div>		
+			'''
+		
+		wrap = self.attrs['wrap'].split("|",1)
+		del self.attrs['wrap']
+		
 		x = ''
 		for arg in self.args:
 			if isinstance(arg, (tuple, list)):
@@ -31,15 +43,8 @@ class Radio(Input):
 			if self.value == value:
 				attrs['checked'] = 'checked'
 			#x += '<input %s/> %s' % (attrs, net.websafe(desc))
-			x += '''
-				<div class="form-check">
-				  <label class="form-check-label">
-				    <input %s/>
-				    %s
-				  </label>
-				</div>
-			''' % (attrs, net.websafe(desc))			
-			
-			
+			x += "%s<input %s/>%s%s"% (wrap[0], attrs, net.websafe(desc), wrap[1])
+		
+		
 		return x
 

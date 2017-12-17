@@ -140,11 +140,13 @@ class Input(classes.element.Element):
 		if 'value' in self.attrs:
 			self.attrs['value'] = self.fnr(self.attrs['value'])
 
+		'''
 		# instanciate fieldObj
 		try:
 			self.fieldObj()
 			
 		except: traceback.print_exc()
+		'''
 		
 		return None
 
@@ -208,6 +210,12 @@ class Button(Input):
 		# super class Input
 		super(Button, self).__init__(content,"web.form.Button(name,*validators,**attrs)")
 		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
 		return None
 
 
@@ -220,6 +228,12 @@ class Hidden(Input):
 		
 		# super class Input
 		super(Hidden, self).__init__(content,"web.form.Hidden(name,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
 
 		return None
 
@@ -234,6 +248,12 @@ class Textbox(Input):
 		# super class Input
 		super(Textbox, self).__init__(content,"web.form.Textbox(name,*validators,**attrs)")
 		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
 		return None
 
 
@@ -246,6 +266,12 @@ class Textarea(Input):
 		
 		# super class Input
 		super(Textarea, self).__init__(content,"web.form.Textarea(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
 
 		return None
 
@@ -260,6 +286,12 @@ class Password(Input):
 		# super class Input
 		super(Password, self).__init__(content,"web.form.Password(name,*validators,**attrs)")
 		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
 		return None
 
 
@@ -273,6 +305,12 @@ class Dropdown(Input):
 		# super class Input
 		super(Dropdown, self).__init__(content,"field_dropdown.Dropdown(name,args,*validators,**attrs)")
 		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
 		return None
 
 
@@ -285,6 +323,15 @@ class Radio(Input):
 		
 		# super class Input
 		super(Radio, self).__init__(content,"field_radio.Radio(name,args,*validators,**attrs)")
+		
+		if 'innerwrap' in self.conf:
+			self.attrs['wrap'] = self.conf['innerwrap']		
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
 		
 		return None
 
@@ -306,6 +353,12 @@ class Checkbox(Input):
 		# super class Input
 		super(Checkbox, self).__init__(content,"web.form.Checkbox(name,*validators,**attrs)")
 		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
 		return None
 	
 
@@ -318,6 +371,12 @@ class File(Input):
 
 		# super class Input
 		super(File, self).__init__(content,"web.form.File(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
 		
 		# upload?
 		if self.top.post_vars and self.name in self.top.post_vars:
@@ -400,6 +459,12 @@ class Generic(Input):
 
 		# super class Input
 		super(Generic, self).__init__(content,"web.form.File(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
 		
 		# upload?
 		if self.top.post_vars and self.name in self.top.post_vars:
