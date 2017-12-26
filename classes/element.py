@@ -67,6 +67,8 @@ class Element(object):
 	
 			# functions
 			'exists': 'self.exists',
+			#'count': 'self.count',
+			'len': 'self.count',
 			
 			# sanitizing
 			'escape': 'self.escape',
@@ -96,7 +98,9 @@ class Element(object):
 			'uuid': 'self.uuid',
 			'date': 'self.date',
 			'int': 'self.int',
-			'string': 'self.string',	
+			'string': 'self.string',
+			
+			'key_val_list': 'self.key_val_list',
 
 			# hashing
 			'sha256': 'self.sha256',
@@ -122,7 +126,7 @@ class Element(object):
 		return None
 	
 	
-	def fnr(self,template):
+	def fnr(self,template,limit=10):
 		
 		''' 	Find and Replace method.  This the core of the framework
 		'''
@@ -133,217 +137,230 @@ class Element(object):
 		# update find and replace types
 		self.fnr_types.update(self.top.fnr_types)
 		
-		# copy the template.  this copy will be destroyed searching for markers
-		template_copy = template
+		count = 0
 		
-		'''	find all the markers 
-			This does not support nested markers!
-		'''
-		
-		# does this template include any markers?
-		try:
-			start = str(template_copy).index('{{')
-			end = str(template_copy).index('}}',start)
-		except ValueError:
-			
-			# no markers found, return input
-			return template
-		
-		# identify the markers
-		markers = []
 		while True:
+		
+			# copy the template.  this copy will be destroyed searching for markers
+			template_copy = template
+			template_original = template # second copy for caparision later
 			
-			# find the next marker's endpoints
+			'''	find all the markers 
+				This does not support nested markers!
+			'''
+			
+			# does this template include any markers?
 			try:
-				start = template_copy.index('{{')
-				end = template_copy.index('}}',start)
+				start = str(template_copy).index('{{')
+				end = str(template_copy).index('}}',start)
 			except ValueError:
 				
-				# all markers found
-				break
+				# no markers found, return input
+				return template
 			
-			# add the marker to list
-			markers.append(template_copy[start+2:end])
+			# identify the markers
+			markers = []
+			while True:
+				
+				# find the next marker's endpoints
+				try:
+					start = template_copy.index('{{')
+					end = template_copy.index('}}',start)
+				except ValueError:
+					
+					# all markers found
+					break
+				
+				# add the marker to list
+				markers.append(template_copy[start+2:end])
+				
+				# truncate template
+				template_copy = template_copy[end+2:]
 			
-			# truncate template
-			template_copy = template_copy[end+2:]
-		
-		# debug
-		#print('markers: %s' %str(markers))
+			# debug
+			#print('markers: %s' %str(markers))
 
-		'''	Parse each marker into a stack.
-		'''
-		for marker in markers:
-			
-			# vars
-			quote_state = False
-			nested_state = False
-			quote_chr = None
-			quote_characters = ["'",'"']
-			escape_characters = ["\\"]
-			
-			value = []
-			stack = []
-			
-			markup_value = None
-			
-			# parse this marker character by character
-			for i in range(0,len(marker)):
+			'''	Parse each marker into a stack.
+			'''
+			for marker in markers:
 				
-				# debug
-				#print("".join(value))
+				# vars
+				quote_state = False
+				nested_state = False
+				quote_chr = None
+				quote_characters = ["'",'"']
+				escape_characters = ["\\"]
 				
-				# skip escape characters
-				if marker[i] in escape_characters:
-					continue
+				value = []
+				stack = []
 				
-				# record charater after escpae character
-				if i > 0 and marker[i-1] in escape_characters:
-					value.append(marker[i])
-					continue
+				markup_value = None
 				
-				# start quote
-				if not quote_state and marker[i] in quote_characters:
-					quote_state = True
-					quote_chr = marker[i]
-					
-					# record litteral character
-					value.append("|")
-					continue
-
-				# end quote
-				if quote_state and marker[i] == quote_chr:
-					quote_state = False
-					quote_chr = None
-					continue				
-
-				# data inside of functions
-				if i < len(marker)-1 and not quote_state and marker[i] == "(" and marker[i+1] != ")":
-					if value:
-						stack.append(''.join(value))
-					value = []
-					nested_state = True
-					continue
-				
-				# data inside of functions
-				if nested_state and i < len(marker) and not quote_state and marker[i] == ")":
-					if value:
-						stack.insert(0, ''.join(value))
-					value = []
-					
-					# syntax errrs may cause '()()' in item
-					stack[1] += "()"
-					nested_state = False
-					continue
-				
-				# seperators
-				if not quote_state and marker[i] == ".":
-					if value:
-						stack.append(''.join(value))
-					value = []
-					continue
-				
-				# otherwise 
-				value.append(marker[i])
-				
-				# debug
-				#print(marker[i])
-				
-			# reached the end of the marker
-			if value:
-				stack.append(''.join(value))
-			
-			# perform markup on input using markers
-			for item in stack:
-				
-				# debug
-				#print(item)
-				
-				# string literals
-				if item.startswith("|"):
-					markup_value = item.lstrip("|")
-					continue
-				
-				# functions
-				if item.endswith("()"):
-					
-					# search for function in fnr_types
-					if item.rstrip("()") not in self.fnr_types:
-						print("Error - '%s' is not a valid fnr function" %item)
-						break
-					
-					markup_value = eval(self.fnr_types[item.rstrip("()")])(markup_value)
-					continue
-					
-				# attributes
-				if ":"  in item:
-					
-					# is this a marker for a local attribute?
-					if item.split(":")[0] in self.content.attributes:
-						
-						# yes prepend this: to marker
-						item = "this:%s" %item
-					
-					# is there a type for this marker
-					if item.split(":")[0] not in self.fnr_types:
-						print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
-						break						
-					
-					# search for interger literals in fnr_types
-					items = item.split(":")
-					object = items[0]
-					keys = ""
-					for part in items[1:]:
-						if part.startswith('|') and part.strip('|').isdigit():
-							
-							# int literal
-							keys += "[%s]"%part.strip('|')
-							continue
-						
-						keys += "['%s']"%part
+				# parse this marker character by character
+				for i in range(0,len(marker)):
 					
 					# debug
-					#print(self.fnr_types[object])
-					#print(keys)
-					#print(markup_value)
+					#print("".join(value))
 					
-					try:
-						markup_value = eval(self.fnr_types[object]+keys)
-						
-					except KeyError:
-						pass
-					except TypeError:
-						pass
-						
-					except: traceback.print_exc()
+					# skip escape characters
+					if marker[i] in escape_characters:
+						continue
 					
-					continue
+					# record charater after escpae character
+					if i > 0 and marker[i-1] in escape_characters:
+						value.append(marker[i])
+						continue
+					
+					# start quote
+					if not quote_state and marker[i] in quote_characters:
+						quote_state = True
+						quote_chr = marker[i]
+						
+						# record litteral character
+						value.append("|")
+						continue
+
+					# end quote
+					if quote_state and marker[i] == quote_chr:
+						quote_state = False
+						quote_chr = None
+						continue				
+
+					# data inside of functions
+					if i < len(marker)-1 and not quote_state and marker[i] == "(" and marker[i+1] != ")":
+						if value:
+							stack.append(''.join(value))
+						value = []
+						nested_state = True
+						continue
+					
+					# data inside of functions
+					if nested_state and i < len(marker) and not quote_state and marker[i] == ")":
+						if value:
+							stack.insert(0, ''.join(value))
+						value = []
+						
+						# syntax errrs may cause '()()' in item
+						stack[1] += "()"
+						nested_state = False
+						continue
+					
+					# seperators
+					if not quote_state and marker[i] == ".":
+						if value:
+							stack.append(''.join(value))
+						value = []
+						continue
+					
+					# otherwise 
+					value.append(marker[i])
+					
+					# debug
+					#print(marker[i])
+					
+				# reached the end of the marker
+				if value:
+					stack.append(''.join(value))
 				
-				# attribute object (or raw)
-				if item in self.fnr_types:
-					markup_value = eval(self.fnr_types[item])
-					continue
+				# perform markup on input using markers
+				for item in stack:
+					
+					# debug
+					#print(item)
+					
+					# string literals
+					if item.startswith("|"):
+						markup_value = item.lstrip("|")
+						continue
+					
+					# functions
+					if item.endswith("()"):
+						
+						# search for function in fnr_types
+						if item.rstrip("()") not in self.fnr_types:
+							print("Error - '%s' is not a valid fnr function" %item)
+							break
+						
+						markup_value = eval(self.fnr_types[item.rstrip("()")])(markup_value)
+						continue
+						
+					# attributes
+					if ":"  in item:
+						
+						# is this a marker for a local attribute?
+						if item.split(":")[0] in self.content.attributes:
+							
+							# yes prepend this: to marker
+							item = "this:%s" %item
+						
+						# is there a type for this marker
+						if item.split(":")[0] not in self.fnr_types:
+							print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
+							break						
+						
+						# search for interger literals in fnr_types
+						items = item.split(":")
+						object = items[0]
+						keys = ""
+						for part in items[1:]:
+							if part.startswith('|') and part.strip('|').isdigit():
+								
+								# int literal
+								keys += "[%s]"%part.strip('|')
+								continue
+							
+							keys += "['%s']"%part
+						
+						# debug
+						#print(self.fnr_types[object])
+						#print(keys)
+						#print(markup_value)
+						
+						try:
+							markup_value = eval(self.fnr_types[object]+keys)
+							
+						except KeyError:
+							pass
+						except TypeError:
+							pass
+							
+						except: traceback.print_exc()
+						
+						continue
+					
+					# attribute object (or raw)
+					if item in self.fnr_types:
+						markup_value = eval(self.fnr_types[item])
+						continue
+					
+					# if this attribute is for the local scope (this)
+					if item in eval(self.fnr_types['this']):
+						markup_value = eval(self.fnr_types['this'])[item]
+						continue
+					
+					# end of loop
 				
-				# if this attribute is for the local scope (this)
-				if item in eval(self.fnr_types['this']):
-					markup_value = eval(self.fnr_types['this'])[item]
-					continue
+				# replace marker with markup_value
+				if markup_value or markup_value == '' or markup_value == 0:
+					template = template.replace("{{%s}}" %marker,str(markup_value))
+					
+				'''debug - warning: lots of output, but this is useful if you need to see
+					markups at this granular level.
+				'''
+				#print(marker,markup_value)
 				
-				# end of loop
-			
-			# replace marker with markup_value
-			if markup_value or markup_value == '' or markup_value == 0:
-				template = template.replace("{{%s}}" %marker,str(markup_value))
-				
-			'''debug - warning: lots of output, but this is useful if you need to see
-				markups at this granular level.
+			''' Can we make some sort of check here to see if there are markers that can still be replaced?
 			'''
-			#print(marker,markup_value)
 			
-		''' Can we make some sort of check here to see if there are markers that can still be replaced?
-		'''
-		
-		return template
+			if template == template_original:
+				
+				return template
+				
+			# increment count
+			count += 1
+			
+			if limit == count:
+				return template
 
 
 	def process(self,conf):
@@ -656,9 +673,10 @@ class Element(object):
 			#print('format is json')
 			
 			import json
+			from decimal import Decimal
 			
 			try:
-				self.data = json.loads(data)
+				self.data = json.loads(data, parse_float=Decimal)
 			
 			except: traceback.print_exc()		
 		
@@ -871,6 +889,33 @@ class Element(object):
 			return 'fix me - dollar was not float'
 			
 		return "%.2f" %f
+
+
+	def key_val_list(self,d):
+		
+		#debug
+		#print('key_val_list')
+		
+		if not isinstance(d,dict):
+			return d
+		
+		output = []
+		for key in d:
+			
+			output.append({'key': key, 'val': d[key]})
+		
+		return output
+
+
+	def count(self,l):
+		
+		#debug
+		#print('count')
+		
+		if not isinstance(l,list):
+			return l
+		
+		return len(l)
 	
 
 	def remove(self,string):

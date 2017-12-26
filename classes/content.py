@@ -196,20 +196,20 @@ class Content(list):
 			
 			#print('singlemarkup')
 			
-			return  self.elementObj.fnr(wrap[0]+output+wrap[1])
+			return  self.elementObj.fnr(wrap[0]+output+wrap[1],1)
 		
 		if 'noindent' in self.attributes or 'noindent' in self.top.attributes:
 			
 			#print('noindent')
 			
 			# double markup
-			return  self.elementObj.fnr(self.elementObj.fnr(wrap[0]+output+wrap[1]))
+			return  self.elementObj.fnr(wrap[0]+output+wrap[1])
 		
 		# Indent the output and wrap
 		#print('indent')
 		
 		# double markup with indent
-		return  self.elementObj.fnr(self.elementObj.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1]))))
+		return  self.elementObj.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1])))
 	
 
 	def indent(self,input,prefix="  "):

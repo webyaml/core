@@ -119,6 +119,8 @@ class Send(classes.processor.Processor):
 		else:
 		
 			s = smtplib.SMTP(self.element.fnr(conf['host']),self.element.fnr(conf['port']),socket.gethostname())
+			
+		#s.ehlo()
 		
 		if conf['security'] == 'starttls':
 			

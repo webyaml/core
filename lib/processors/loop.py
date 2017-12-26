@@ -143,16 +143,33 @@ class Loop(classes.processor.Processor):
 				# stop loop if limit has been reached
 				if conf.get('limit') and int(conf['limit']) == count:
 					break
+					
+				# store the item to be used by fnr functions
+				#self.load_data({'format': 'raw', 'store': key, 'value': item})						
+					
+				'''
+				print(conf.get('filter'))
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(filter,str):
 					
-					# debug
-					#print(self.fnr(conf.get('filter')))
+
 					
 					# filter must be True to show item
 					if not eval(self.element.fnr(conf.get('filter'))):
 						continue
+				
+						
+				# debug
+				print(conf.get('filter'))
+				print(self.element.fnr(conf.get('filter')))						
+
+
+				'''							
+				# filter must be True to show item
+				if conf.get('filter') and not eval(self.element.fnr(conf['filter'])):
+					continue					
+					
 				
 				# make a new empty content element in items
 				tmp_content = {}
@@ -164,6 +181,10 @@ class Loop(classes.processor.Processor):
 				#self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
 				tmp_content['%s_count' %key] = count
 				count +=1		
+				
+				
+				
+				
 				
 				
 				# add the content

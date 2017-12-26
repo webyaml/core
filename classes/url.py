@@ -589,6 +589,39 @@ class URL(object):
 		return output
 
 
+	def fix_redeclared_anchors(self,input):
+
+		''' Attempt to support redeclaring an anchor
+			without getting found duplicate anchor error
+		
+			Starting from the bottom of the document
+			rename duplicate anchors above
+		'''		
+		
+		# search yaml for imports
+		output = ""
+		
+		#debug
+		#print(input)
+		
+		for line in input.split('\n'):
+			
+			m = re.search('([^\s]+):\ &([^\s](.*))$', line)
+			if m:
+				
+				#print(m.group(1))
+				print(m.group(2))
+				
+				if len(m.group(2).split('#')[0].strip().split(" ")) > 1:
+					print('named anchor is a string')
+					
+				
+
+		return input		
+		
+	
+
+
 
 	def yaml_error_display(self,e,content):
 
@@ -646,6 +679,17 @@ class URL(object):
 		
 		#debug
 		#print(content)
+		
+		
+		''' Attempt to support redeclaring an anchor
+			without getting found duplicate anchor error
+		
+			Starting from the bottom of the document
+			rename duplicate anchors above
+		'''
+		
+		#self.fix_redeclared_anchors(content)
+		
 		
 		try:
 			conf = yaml.load(content)
