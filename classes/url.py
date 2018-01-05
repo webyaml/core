@@ -166,12 +166,16 @@ class URL(object):
 
 	def run(self):
 		
-		# cache the path for use by fnr
+		# vars
+		path_config_files = []
 		
 		''' This needs to be moved somewhere else
 		'''
+		# cache the path for use by fnr
 		#self.cache['path'] = "/"+self.path
 		self.cache['rurl'] = web.ctx.env.get('HTTP_REFERER')
+		''' end need to move
+		'''
 		
 		# convert the requested url into a  "/" delimited list
 		url_list = self.path.split('/')
@@ -254,6 +258,7 @@ class URL(object):
 		
 		#debug 
 		#print("Full URL: "+str(requested_url))
+		#print("Type: "+ str(type(requested_url)))
 		
 		for i in range(0,len(available_urls)):
 			
@@ -262,12 +267,16 @@ class URL(object):
 				
 				#debug
 				#print(available_url)
+				#print("Type: "+ str(type(available_url)))
+				
+				r = "%s/"%requested_url.lower()
+				a = "%s/"%available_url.lower()
 				
 				# if the requested url starts with the available url it is a hit
-				if requested_url.lower().startswith(available_url.lower()):
+				if r.startswith(a):
 					
 					#debug
-					#print("hit")
+					print("hit")
 					
 					# get a list of configuration files to load for this url
 					path_config_files = available_urls[i][available_url].get('conf',[])
@@ -277,9 +286,11 @@ class URL(object):
 						path_config_files = [path_config_files]
 					
 					# convert the requested url into a list delmitied by a slash (/)
+					# filter removes and empty items casued by multiple slashes (//)
 					requested_url_list = filter(None, requested_url.split("/"))
 					
 					# convert the available url into a list delmitied by a slash (/)
+					
 					available_url_list = filter(None, available_url.split("/"))
 					
 					# remove the available url from the requested url to get the path vars
@@ -306,6 +317,26 @@ class URL(object):
 
 					''' Will be resolved in future release
 					'''
+
+
+		# check for configuration files
+		if len(path_config_files) == 0:
+			
+			print("Config Error:  No configuration files were found for the url '%s'." %url_string)
+			
+			message_404 = '''<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL %s was not found on this server.</p>
+<hr>
+<address>WebYAML Application Server</address>
+</body></html>''' %requested_url
+			
+			raise web.notfound(message_404)
+			
+
 		
 		'''Page Caching - Load this page if required
 		'''
@@ -336,10 +367,7 @@ class URL(object):
 		''' add error handling
 		'''
 		
-		# check for configuration files
-		if len(path_config_files) == 0:
-			
-			return "Config Error:  No configuration files were found for the url '%s'." %url_string
+
 	
 		# load core config files
 		path_config_files.insert(0,"conf/processors/core.cfg")
