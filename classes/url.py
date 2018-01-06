@@ -323,8 +323,22 @@ class URL(object):
 		if len(path_config_files) == 0:
 			
 			print("Config Error:  No configuration files were found for the url '%s'." %url_string)
+
+
+			gfx_agents = [
+				"Chrome",
+				"MSIE",
+				"Firefox",
+				"Safari",
+				"AppleWebKit",
+				"Gecko",
+				"Dalvik",
+			]
+
+			for item in gfx_agents:
+				if item in web.ctx.env['HTTP_USER_AGENT']:
 			
-			message_404 = '''<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+					message_404 = '''<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>404 Not Found</title>
 </head><body>
@@ -334,8 +348,9 @@ class URL(object):
 <address>WebYAML Application Server</address>
 </body></html>''' %requested_url
 			
-			raise web.notfound(message_404)
-			
+					raise web.notfound(message_404)
+					
+			raise web.notfound()
 
 		
 		'''Page Caching - Load this page if required
