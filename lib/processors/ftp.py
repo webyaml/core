@@ -74,7 +74,50 @@ class Upload(classes.processor.Processor):
 		return True
 
 
+class Download(classes.processor.Processor):
 
+	def run(self):
+	
+		#debug
+		print('lib.processors.ftp.Download')
+		
+		
+		# FTP connection settings
+		conf = self.conf['conf']
+
+		if 'host' not in conf:
+			print('missing smtp host')
+			
+			return False
+		
+		conf['port'] = int(conf.get('port',"21"))
+			
+		if 'user' not in conf:
+			
+			print('missing smtp user')
+			
+			return False			
+
+		if 'pass' not in conf:
+			
+			print('missing smtp pass')
+			
+			return False
+			
+		# debug
+		#print(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+
+		ftp = ftplib.FTP(self.element.fnr(conf['host'])) #,self.element.fnr(conf['port'])
+		ftp.login(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+		
+		if 'remotepath' in self.conf:
+			ftp.cwd(self.element.fnr(self.conf['remotepath']))
+
+		localpath = self.element.fnr(self.conf.get('localpath','.'))	
+		
+		ftp.retrbinary("RETR " +  self.element.fnr(self.conf['file']) ,open("%s/%s"%(localpath,self.element.fnr(os.path.split(self.conf['file'])[1])), 'wb').write)
+		
+		return True
 
  
 
