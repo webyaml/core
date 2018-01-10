@@ -233,7 +233,7 @@ class URL(object):
 		# create an index of the urls
 		url_index = []
 		for item in available_urls:
-			url_index.append(item.keys()[0])
+			url_index.append(list(item.keys())[0])
 		
 		# sort the index
 		sorted_url_index = sorted(url_index)
@@ -287,11 +287,11 @@ class URL(object):
 					
 					# convert the requested url into a list delmitied by a slash (/)
 					# filter removes and empty items casued by multiple slashes (//)
-					requested_url_list = filter(None, requested_url.split("/"))
+					requested_url_list = list(filter(None, requested_url.split("/")))
 					
 					# convert the available url into a list delmitied by a slash (/)
 					
-					available_url_list = filter(None, available_url.split("/"))
+					available_url_list = list(filter(None, available_url.split("/")))
 					
 					# remove the available url from the requested url to get the path vars
 					path_vars = requested_url_list[len(available_url_list):]

@@ -96,9 +96,15 @@ web.config.debug = True
 # favicon handler
 class favicon:
 	def GET(self):
-		f = open('static/images/favicon.ico')
+		#f = open('static/images/favicon.ico')
 		web.header('Content-type', 'image/x-icon')
-		return f.read()
+		#return f.read()
+
+		path = 'static/images/favicon.ico'
+		with open(path, 'rb') as f:
+			content = f.read()
+		return content
+
 
 # webpy urls to webyaml classes
 urls = (
