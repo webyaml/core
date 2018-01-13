@@ -20,10 +20,12 @@
 
 ''' external imports
 '''
-import json
 import requests
+'''
+import json
 import xmltodict
 import yaml
+'''
 
 ''' internal imports
 '''
@@ -49,6 +51,7 @@ class GET(Rest):
 
 		#vars
 		conf = self.conf
+		cookiejar = requests.cookies.RequestsCookieJar()
 		
 		# Target URL
 		if 'url' not in conf:
@@ -85,16 +88,30 @@ class GET(Rest):
 		# debug
 		print("url is '%s'" %conf['url'])
 		
+		if 'cookie' in conf:
+			
+			# does the cookie exist in the current session?
+			
+			if "cookies" not in self.top.session.vars:
+				self.top.session.vars["cookies"] = {}
+			
+			if conf['cookie'] in self.top.session.vars["cookies"]:
+				cookiejar = self.top.session.vars["cookies"][conf['cookie']]		
+		
 		#make request
 		
 		#debug
 		print('making request')
 		
-		r = requests.get(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'])
+		r = requests.get(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], cookies=cookiejar)
 
 		# debug
 		print('request complete')
-		print(r)
+		print(r.text)
+		
+		# store cookies in session
+		if 'cookie' in conf:
+			self.top.session.vars["cookies"][conf['cookie']] = r.cookies		
 		
 		# handle the returned data
 		if conf.get('receive'):
@@ -122,6 +139,7 @@ class POST(Rest):
 
 		#vars
 		conf = self.conf
+		cookiejar = requests.cookies.RequestsCookieJar()
 		
 		# Target URL
 		if 'url' not in conf:
@@ -172,20 +190,42 @@ class POST(Rest):
 		#debug
 		print(self.data)
 		
+		# cookies
+		
+		if 'cookie' in conf:
+			
+			# does the cookie exist in the current session?
+			
+			if "cookies" not in self.top.session.vars:
+				self.top.session.vars["cookies"] = {}
+			
+			if conf['cookie'] in self.top.session.vars["cookies"]:
+				cookiejar = self.top.session.vars["cookies"][conf['cookie']]
+		
 		
 		try:
 		
 			#make request
-			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.data)
+			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.data, cookies=cookiejar)
 				
 			# debug
 			print(r.text)
+			'''
+			Is this even relevant?  dont we consume errors in url.py?
+			'''
 		
 		except Exception as e:
 			
 			print(e)
 			
 			return False
+				
+			''' end relevant
+			'''
+		
+		# store cookies in session
+		if 'cookie' in conf:
+			self.top.session.vars["cookies"][conf['cookie']] = r.cookies
 			
 		
 		# handle the returned data
