@@ -48,3 +48,86 @@ class Create(classes.processor.Processor):
 			return False
 	
 		return True
+		
+		
+class Modify(classes.processor.Processor):
+	
+	def run(self):
+		
+		print('lib.processors.dataObj.Modify')
+		
+		conf = self.conf
+
+		if not conf.get('source'):
+			
+			print('source not in conf')
+			return False
+
+		if not conf.get('data'):
+			
+			print('data not in conf')
+			return False
+		
+		# load dataObj into self.data
+		try:
+			exec('self.dataObj = self.top.%s'%conf["source"]["dataObj"])
+			
+		except AttributeError:
+			
+			print('Error: dataObj %s not found'%conf["source"]["dataObj"])
+			
+			return False
+		
+		# debug
+		#print(self.dataObj)
+		
+		
+		# load the new data
+		if not self.load_data(conf['data']):
+			
+			print('data failed to load')
+			
+			return False
+		
+		
+		# get the entry point
+		entry = ''
+		if conf["source"].get('entry'):
+		
+		
+			if conf["source"]['entry'].startswith('{{') and conf["source"]['entry'].endswith('}}'):
+				
+				entry = self.element.colon_seperated_to_brackets(conf["source"]['entry'].lstrip('{{').rstrip('}}'))
+			else:
+				print('Error: entry not in the form of a marker')
+				return False
+			
+			#print(entry)
+		
+		
+		# do we replace or append new data?
+		
+		if 'merge' in conf['source']:
+			
+			print('merge')
+			
+			if eval('isinstance(self.dataObj%s, dict)' %entry):
+			
+				# merge with top item
+				exec('self.dataObj%s.update(self.data)' %entry)
+				
+			if eval('isinstance(self.dataObj%s, list)' %entry):
+				# merge with top item
+				exec('self.dataObj%s.extend(self.data)' %entry)
+				
+			if eval('isinstance(self.dataObj%s, str)' %entry):
+				# merge with top item
+				exec('self.dataObj%s += self.data' %entry)
+			
+		else:
+			# replace data
+			
+			exec('self.dataObj%s = self.data' %entry)
+		
+		
+		return True
