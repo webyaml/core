@@ -110,7 +110,7 @@ class GET(Rest):
 		print(r.text)
 		
 		# store cookies in session
-		if 'cookie' in conf:
+		if 'cookie' in conf and conf['cookie'] not in self.top.session.vars["cookies"]:
 			self.top.session.vars["cookies"][conf['cookie']] = r.cookies		
 		
 		# handle the returned data
@@ -209,6 +209,7 @@ class POST(Rest):
 			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.data, cookies=cookiejar)
 				
 			# debug
+			print("POST return")
 			print(r.text)
 			'''
 			Is this even relevant?  dont we consume errors in url.py?
@@ -224,7 +225,7 @@ class POST(Rest):
 			'''
 		
 		# store cookies in session
-		if 'cookie' in conf:
+		if 'cookie' in conf and r.cookies:
 			self.top.session.vars["cookies"][conf['cookie']] = r.cookies
 			
 		
