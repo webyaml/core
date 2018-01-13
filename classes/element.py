@@ -69,6 +69,7 @@ class Element(object):
 			'exists': 'self.exists',
 			#'count': 'self.count',
 			'len': 'self.count',
+			'random': 'self.random_choice',
 			
 			# sanitizing
 			'escape': 'self.escape',
@@ -99,7 +100,6 @@ class Element(object):
 			'date': 'self.date',
 			'int': 'self.int',
 			'string': 'self.string',
-			
 			'key_val_list': 'self.key_val_list',
 
 			# hashing
@@ -1320,4 +1320,14 @@ class Element(object):
 			return obj
 		
 		return obj.decode("utf-8").replace(u"\e2u3F3F",'')
+		
+		
+	def random_choice(self,obj):
+		
+		if not isinstance(obj,list):
+			return obj
+
+		import random
+		
+		return random.choice(obj)
 
