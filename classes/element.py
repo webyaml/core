@@ -95,6 +95,7 @@ class Element(object):
 			'upper': 'self.upper',
 			
 			'us_phone': 'self.us_phone',
+			'us_ssn': 'self.us_ssn',
 			
 			# object formating
 			'uuid': 'self.uuid',
@@ -1334,3 +1335,13 @@ class Element(object):
 		
 		return out
 
+	def us_ssn(self,obj):
+		
+		if not isinstance(obj,str):
+			
+			obj = str(obj)
+		
+
+		out = "%s-%s-%s"%(obj[0:3],obj[3:5],obj[5:9])
+		
+		return out
