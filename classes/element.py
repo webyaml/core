@@ -1326,7 +1326,8 @@ class Element(object):
 	def us_phone(self,obj):
 		
 		if not isinstance(obj,str):
-			return obj
+			
+			obj = str(obj)
 		
 
 		out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
