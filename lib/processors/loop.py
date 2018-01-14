@@ -110,13 +110,13 @@ class Loop(classes.processor.Processor):
 				self.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter
-				if conf.get('filter') and isinstance(filter,str):
+				if conf.get('filter') and isinstance(conf['filter'],str):
 					
 					# debug
 					#print(self.fnr(conf.get('filter')))
 					
 					# filter must be True to show item
-					if not eval(self.element.fnr(conf.get('filter'))):
+					if not eval(self.element.fnr(conf['filter'])):
 						continue
 				
 				# update attributes to include item
