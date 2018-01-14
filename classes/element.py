@@ -69,7 +69,6 @@ class Element(object):
 			'exists': 'self.exists',
 			#'count': 'self.count',
 			'len': 'self.count',
-			'random': 'self.random_choice',
 			
 			# sanitizing
 			'escape': 'self.escape',
@@ -95,11 +94,14 @@ class Element(object):
 			'lower': 'self.lower',
 			'upper': 'self.upper',
 			
+			'us_phone': 'self.us_phone',
+			
 			# object formating
 			'uuid': 'self.uuid',
 			'date': 'self.date',
 			'int': 'self.int',
 			'string': 'self.string',
+			
 			'key_val_list': 'self.key_val_list',
 
 			# hashing
@@ -1321,13 +1323,13 @@ class Element(object):
 		
 		return obj.decode("utf-8").replace(u"\e2u3F3F",'')
 		
+	def us_phone(self,obj):
 		
-	def random_choice(self,obj):
-		
-		if not isinstance(obj,list):
+		if not isinstance(obj,str):
 			return obj
-
-		import random
 		
-		return random.choice(obj)
+
+		out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
+		
+		return out
 
