@@ -69,6 +69,7 @@ class Element(object):
 			'exists': 'self.exists',
 			#'count': 'self.count',
 			'len': 'self.count',
+			'random': 'self.random_choice',
 			
 			# sanitizing
 			'escape': 'self.escape',
@@ -1347,3 +1348,12 @@ class Element(object):
 		out = "%s-%s-%s"%(obj[0:3],obj[3:5],obj[5:9])
 		
 		return out
+
+	def random_choice(self,obj):
+		
+		if not isinstance(obj,list):
+			return obj
+
+		import random
+		
+		return random.choice(obj)
