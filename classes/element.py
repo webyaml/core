@@ -1330,8 +1330,10 @@ class Element(object):
 			
 			obj = str(obj)
 		
-
-		out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
+		out = obj
+		if obj != "":
+		
+			out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
 		
 		return out
 
