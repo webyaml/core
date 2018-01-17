@@ -172,7 +172,7 @@ class URL(object):
 		''' This needs to be moved somewhere else
 		'''
 		# cache the path for use by fnr
-		#self.cache['path'] = "/"+self.path
+		self.cache['url'] = "/"+self.path
 		self.cache['rurl'] = web.ctx.env.get('HTTP_REFERER')
 		''' end need to move
 		'''
