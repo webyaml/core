@@ -174,7 +174,8 @@ class URL(object):
 		# cache the path for use by fnr
 		
 		
-		self.cache['url'] = web.ctx.home #"/"+self.path
+		self.cache['url'] = '%s/%s' %(web.ctx.home,self.path)
+		self.cache['path'] = '/%s' %self.path
 		self.cache['rurl'] = web.ctx.env.get('HTTP_REFERER')
 		''' end need to move
 		'''
