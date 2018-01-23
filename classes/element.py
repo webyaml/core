@@ -91,6 +91,7 @@ class Element(object):
 			'remove': 'self.remove', #undocumented
 			'dollar': 'self.dollar', #undocumented
 			'title_case': 'self.title_case',
+			'tab': 'self.tab',
 			
 			'lower': 'self.lower',
 			'upper': 'self.upper',
@@ -113,6 +114,7 @@ class Element(object):
 			# object conversion
 			'json': 'self._json',
 			'yaml': 'self._yaml',
+			'csv': 'self.csv',
 			
 			# god only knows
 			'join': 'self._join',
@@ -1357,3 +1359,7 @@ class Element(object):
 		import random
 		
 		return random.choice(obj)
+		
+	def tab(self,obj):
+		
+		return '\t'
