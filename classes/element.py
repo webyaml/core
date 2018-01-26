@@ -27,6 +27,8 @@ import os.path
 import imp
 import sys
 
+from decimal import Decimal
+
 ''' internal imports
 '''
 #import
@@ -679,7 +681,7 @@ class Element(object):
 			#print('format is json')
 			
 			import json
-			from decimal import Decimal
+			
 			
 			try:
 				self.data = json.loads(data, parse_float=Decimal)
