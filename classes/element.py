@@ -1237,6 +1237,14 @@ class Element(object):
 				return False
 				
 			obj = int(obj)	
+
+		if isinstance(obj,unicode):
+			
+			if not obj.isdigit():
+				
+				return False
+				
+			obj = int(obj)	
 			
 		if not isinstance(obj,int):
 			
