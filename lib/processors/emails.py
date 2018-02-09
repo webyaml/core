@@ -106,7 +106,7 @@ class Send(classes.processor.Processor):
 			
 			rcptos.extend(self.element.fnr(self.conf['bcc']).split(','))
 		
-		msg['Date'] = datetime.datetime.now().strftime( "%a, %d %b %Y %H:%M:%S %z" )
+		msg['Date'] = datetime.datetime.now().strftime( "%a, %d %b %Y %H:%M:%S %z %Z" )
 		
 		#debug
 		#print(rcptos)
