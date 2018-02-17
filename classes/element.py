@@ -684,7 +684,7 @@ class Element(object):
 			
 			
 			try:
-				self.data = json.loads(data, parse_float=Decimal)
+				self.data = json.loads(data, parse_float=Decimal, strict=False)
 			
 			except: traceback.print_exc()		
 		
