@@ -201,8 +201,12 @@ class Content(list):
 						self.process(item['false']) #recurse
 						
 					else:
+						#return False
 						
-						return False
+						# are we in a list?  how to handle differntly
+						continue
+						
+						
 						
 				# if process returns something other than false make it false
 				else:
