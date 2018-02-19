@@ -215,7 +215,7 @@ class Write(classes.processor.Processor):
 		service = apiclient.discovery.build('sheets', 'v4', http=http,discoveryServiceUrl=discoveryUrl)
 		
 		body = {
-			'values': self.data
+			'values': self.content.data
 		}		
 		
 		try:

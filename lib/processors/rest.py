@@ -194,10 +194,10 @@ class POST(Rest):
 				return False
 				
 		''' If this is not working add 
-			self.data = self.element.data
+			self.content.data = self.element.data
 		'''
 		#debug
-		print(self.data)
+		print(self.content.data)
 		
 		# cookies
 		
@@ -215,7 +215,7 @@ class POST(Rest):
 		try:
 		
 			#make request
-			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.data, cookies=cookiejar)
+			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data, cookies=cookiejar)
 				
 			# debug
 			print("POST return")

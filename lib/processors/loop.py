@@ -78,13 +78,13 @@ class Loop(classes.processor.Processor):
 			return False
 			
 		# just to be safe
-		#self.data = self.element.data
+		#self.content.data = self.element.data
 		
 		# data must be a list to loop
-		if not isinstance(self.data,list):
+		if not isinstance(self.content.data,list):
 			
 			print('warning - data is not a list')
-			self.data = [self.data]
+			self.content.data = [self.content.data]
 			print('warning - data was converted to a list')
 		
 		# debug
@@ -98,7 +98,7 @@ class Loop(classes.processor.Processor):
 			
 			count = 0
 			
-			for item in self.data:
+			for item in self.content.data:
 				
 				#debug
 				#print(item)
@@ -141,7 +141,7 @@ class Loop(classes.processor.Processor):
 			
 			count = 0
 			
-			for item in self.data:
+			for item in self.content.data:
 
 				# debug
 				#print(item)

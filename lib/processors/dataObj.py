@@ -76,9 +76,9 @@ class Modify(classes.processor.Processor):
 			print('data not in conf')
 			return False
 		
-		# load dataObj into self.data
+		# load dataObj into self.content.data
 		try:
-			exec('self.dataObj = self.top.%s'%conf["source"]["dataObj"])
+			exec('self.content.dataObj = self.top.%s'%conf["source"]["dataObj"])
 			
 		except AttributeError:
 			
@@ -87,7 +87,7 @@ class Modify(classes.processor.Processor):
 			return False
 		
 		# debug
-		#print(self.dataObj)
+		#print(self.content.dataObj)
 		
 		
 		# load the new data
@@ -119,23 +119,23 @@ class Modify(classes.processor.Processor):
 			
 			print('merge')
 			
-			if eval('isinstance(self.dataObj%s, dict)' %entry):
+			if eval('isinstance(self.content.dataObj%s, dict)' %entry):
 			
 				# merge with top item
-				exec('self.dataObj%s.update(self.data)' %entry)
+				exec('self.content.dataObj%s.update(self.content.data)' %entry)
 				
-			if eval('isinstance(self.dataObj%s, list)' %entry):
+			if eval('isinstance(self.content.dataObj%s, list)' %entry):
 				# merge with top item
-				exec('self.dataObj%s.extend(self.data)' %entry)
+				exec('self.content.dataObj%s.extend(self.content.data)' %entry)
 				
-			if eval('isinstance(self.dataObj%s, str)' %entry):
+			if eval('isinstance(self.content.dataObj%s, str)' %entry):
 				# merge with top item
-				exec('self.dataObj%s += self.data' %entry)
+				exec('self.content.dataObj%s += self.content.data' %entry)
 			
 		else:
 			# replace data
 			
-			exec('self.dataObj%s = self.data' %entry)
+			exec('self.content.dataObj%s = self.content.data' %entry)
 		
 		
 		return True

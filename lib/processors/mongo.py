@@ -44,13 +44,13 @@ class Mongo(classes.processor.Processor):
 		# super class Element
 		super(Mongo, self).__init__(conf,element)
 		
-		self.database_name = self.conf.get('database')
-		if not self.database_name:
+		self.content.database_name = self.conf.get('database')
+		if not self.content.database_name:
 			print("config error - missing 'database'")
 			
-		self.database_name = self.content.fnr(self.database_name)
+		self.content.database_name = self.content.fnr(self.content.database_name)
 		
-		print(self.database_name)
+		print(self.content.database_name)
 		
 		self.collection_name = self.conf.get('collection')
 		if not self.collection_name:
@@ -62,7 +62,7 @@ class Mongo(classes.processor.Processor):
 		
 		'''Connect to database'''
 		self.client = pymongo.MongoClient()
-		self.database = self.client[self.database_name]
+		self.content.database = self.client[self.content.database_name]
 		
 		return None
 		
@@ -90,7 +90,7 @@ class Find(Mongo):
 			
 			
 		'''Query'''
-		results = self.database[self.collection_name].find(filter)
+		results = self.content.database[self.collection_name].find(filter)
 		if not results.count():
 			
 			return False
