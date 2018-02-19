@@ -75,13 +75,13 @@ class Input(classes.element.Element):
 			else:
 				
 				# debug
-				#print(self.data)
+				#print(self.content.data)
 					
-				if not isinstance(self.data,list):
+				if not isinstance(self.content.data,list):
 					print('warning - data is not a list')
 					
 				else:
-					self.args.extend(self.data)
+					self.args.extend(self.content.data)
 		
 		'''	Needed by dropdown, hope to find a better solution
 		'''
