@@ -868,7 +868,7 @@ class Content(list):
 	
 	def escape_script(self,obj):
 		
-		if not isinstance(obj,str):
+		if isinstance(obj,str):
 			
 			return obj.replace('</script>','<\\/script>')
 		
