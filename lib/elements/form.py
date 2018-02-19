@@ -2,6 +2,14 @@
 # filename: form.py
 # description: WSGI application html form elements
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -92,7 +100,7 @@ class Form(classes.element.Element):
 				print('Form validates')
 				
 				# do processing here
-				self.process(self.conf.get('postprocess',{}))
+				self.content.process(self.conf.get('postprocess',{}))
 				
 			else:
 				
@@ -116,20 +124,20 @@ class Form(classes.element.Element):
 		# debug
 		#print('lib.elelments.form.Form field_search()')
 		
-		for element in content:
+		for item in content:
 			
 			# debug
 			#print('recurse')
 			
 			try:
-				self.field_search(element) # recurse
+				self.field_search(item) # recurse
 				
 			except: traceback.print_exc()
 			
-			if 'fieldObj' in dir(element):
+			if 'fieldObj' in dir(item):
 				
-				self.fields.append(element.fieldObj)
-				self.elements.append(element)
+				self.fields.append(item.fieldObj)
+				self.elements.append(item)
 			
 		return self.fields
 	

@@ -2,6 +2,14 @@
 # filename: dataObj.py
 # description: WSGI application data store processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -41,7 +49,7 @@ class Create(classes.processor.Processor):
 			return False
 			
 		# load data
-		if not self.load_data(conf['data']):
+		if not self.content.load_data(conf['data']):
 			
 			print('data failed to load')
 			
@@ -83,7 +91,7 @@ class Modify(classes.processor.Processor):
 		
 		
 		# load the new data
-		if not self.load_data(conf['data']):
+		if not self.content.load_data(conf['data']):
 			
 			print('data failed to load')
 			

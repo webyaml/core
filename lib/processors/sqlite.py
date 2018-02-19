@@ -2,6 +2,14 @@
 # filename: sqlite.py
 # description: WSGI application SQLite database processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -51,8 +59,8 @@ class Insert(classes.processor.Processor):
 
 		cache = self.conf.get('cache',{})
 			
-		db = self.element.fnr(db)
-		sql = self.element.fnr(sql)
+		db = self.content.fnr(db)
+		sql = self.content.fnr(sql)
 
 		try:
 			con = sqlite3.connect(db)
@@ -103,8 +111,8 @@ class Delete(classes.processor.Processor):
 			print('no sql was given')
 			return False
 		
-		db = self.element.fnr(db)
-		sql = self.element.fnr(sql)
+		db = self.content.fnr(db)
+		sql = self.content.fnr(sql)
 
 		try:
 			con = sqlite3.connect(db)
@@ -149,8 +157,8 @@ class Update(classes.processor.Processor):
 			print('no sql was given')
 			return False
 		
-		db = self.element.fnr(db)
-		sql = self.element.fnr(sql)
+		db = self.content.fnr(db)
+		sql = self.content.fnr(sql)
 
 		try:
 			con = sqlite3.connect(db)
@@ -197,8 +205,8 @@ class Select(classes.processor.Processor):
 
 		cache = self.conf.get('cache',{})
 			
-		db = self.element.fnr(db)
-		sql = self.element.fnr(sql)
+		db = self.content.fnr(db)
+		sql = self.content.fnr(sql)
 
 		try:
 			con = sqlite3.connect(db)

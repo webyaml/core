@@ -1,6 +1,14 @@
 # filename: lib/processors/googlesheet.py
 # description: GoogleSheet datasource processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -134,7 +142,7 @@ class Read(classes.processor.Processor):
 			if conf.get('result'):
 				
 				# load data
-				if not self.load_data(conf['result']):
+				if not self.content.load_data(conf['result']):
 					
 					print('failed to read - data failed to load')
 						
@@ -193,7 +201,7 @@ class Write(classes.processor.Processor):
 			return False
 
 		# load data
-		if not self.load_data(conf['data']):
+		if not self.content.load_data(conf['data']):
 			
 			print('failed to Write - data failed to load')
 			
@@ -343,7 +351,7 @@ class Function(classes.processor.Processor):
 			if conf.get('result'):
 				
 				# load data
-				if not self.load_data(conf['result']):
+				if not self.content.load_data(conf['result']):
 					
 					print('failed to read - data failed to load')
 						

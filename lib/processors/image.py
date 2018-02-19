@@ -2,6 +2,14 @@
 # filename: image.py
 # description: WSGI application image file processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -81,7 +89,7 @@ class Resize(classes.processor.Processor):
 			print('no source path given')
 			return False
 		
-		src_path = self.element.fnr(conf['source']['path'])
+		src_path = self.content.fnr(conf['source']['path'])
 		
 		if not os.path.isfile(src_path):
 			print("source not found: '%s'" %src_path)
@@ -92,15 +100,15 @@ class Resize(classes.processor.Processor):
 		src_bn_no_ext, src_ext = os.path.splitext(src_bn)
 		
 		# store
-		self.load_data({'format': 'string', 'store': 'src_path', 'value': src_path})
-		self.load_data({'format': 'string', 'store': 'src_dir', 'value': src_dir})
-		self.load_data({'format': 'string', 'store': 'src_bn', 'value': src_bn})
-		self.load_data({'format': 'string', 'store': 'src_bn_no_ext', 'value': src_bn_no_ext})
-		self.load_data({'format': 'string', 'store': 'src_ext', 'value': src_ext.lower()})	
+		self.content.load_data({'format': 'string', 'store': 'src_path', 'value': src_path})
+		self.content.load_data({'format': 'string', 'store': 'src_dir', 'value': src_dir})
+		self.content.load_data({'format': 'string', 'store': 'src_bn', 'value': src_bn})
+		self.content.load_data({'format': 'string', 'store': 'src_bn_no_ext', 'value': src_bn_no_ext})
+		self.content.load_data({'format': 'string', 'store': 'src_ext', 'value': src_ext.lower()})	
 
 		# Store src_path as specific key
 		if conf['source'].get('store'):
-			self.load_data({'format': 'string', 'store': conf['source']['store'], 'value': src_path})
+			self.content.load_data({'format': 'string', 'store': conf['source']['store'], 'value': src_path})
 		
 		# dryrun
 		if conf.get('dryrun'):
@@ -116,8 +124,8 @@ class Resize(classes.processor.Processor):
 		src_img = Image.open(f)
 		
 		# store size
-		self.load_data({'format': 'string', 'store': 'src_width', 'value': src_img.size[0]})
-		self.load_data({'format': 'string', 'store': 'src_height', 'value': src_img.size[1]})
+		self.content.load_data({'format': 'string', 'store': 'src_width', 'value': src_img.size[0]})
+		self.content.load_data({'format': 'string', 'store': 'src_height', 'value': src_img.size[1]})
 		
 		# force destination into a list
 		if isinstance(conf['destination'], dict):
@@ -169,11 +177,11 @@ class Resize(classes.processor.Processor):
 				return False
 			
 			# Markup path
-			dst_path = self.element.fnr(destination['path'])
+			dst_path = self.content.fnr(destination['path'])
 			
 			# Store path
 			if destination.get('store'):
-				self.load_data({'format': 'string', 'store': destination['store'], 'value': dst_path})
+				self.content.load_data({'format': 'string', 'store': destination['store'], 'value': dst_path})
 
 			# make sure destination directory exists
 			if not os.path.isdir(os.path.dirname(dst_path)):

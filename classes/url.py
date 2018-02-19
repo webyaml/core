@@ -2,6 +2,14 @@
 # filename: url.py
 # description: application URL class
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -21,13 +29,11 @@
 ''' external imports
 '''
 import web
-import os
-#import sys
 import yaml
-import re
-#import copy
 
 import datetime
+import os
+import re
 
 ''' internal imports
 '''
@@ -74,6 +80,84 @@ class URL(object):
 		self.error = None
 		self.raw = {}
 		self.attributes = {}
+
+		# marker attributes and functions
+		self.fnr_types = {
+
+			# Configuration markers
+			'this': 'self.attributes',	
+			'parent': 'self.parent.attributes',
+			'top': 'self.top.attributes',
+			
+			# Cached markers
+			'cache': 'self.top.cache',
+			'session': 'self.top.session.vars',
+			
+			# URI/GET/POST markers
+			'path': 'self.top.path_vars',
+			'get': 'self.top.get_vars',
+			'post': 'self.top.post_vars',
+			'getpost': 'self.top.getpost_vars',
+			'raw': 'self.top.raw',
+	
+			# functions
+			'exists': 'self.exists',
+			#'count': 'self.count',
+			'len': 'self.count',
+			'random': 'self.random_choice',
+			
+			# sanitizing
+			'escape': 'self.escape',
+			'escape_markers': 'self.escape_markers', #undocumented
+			'html_markers': 'self.html_markers', #undocumented
+			'html_escape': 'self.html_escape',
+			'escape_script': 'self.escape_script',
+
+			# URI
+			'url_quote': 'self.url_quote',
+			'url_unquote': 'self.url_unquote',
+
+			# decoration
+			'keyword': 'self.keyword',
+			'truncate': 'self.truncate',
+			'last4': 'self.last4',
+			'strip': 'self.strip',
+			'singleline': 'self.singleline',
+			#'remove': 'self.remove', #undocumented
+			'dollar': 'self.dollar', #undocumented
+			'title_case': 'self.title_case',
+			'tab': 'self.tab',
+			
+			'lower': 'self.lower',
+			'upper': 'self.upper',
+			
+			'us_phone': 'self.us_phone',
+			'us_ssn': 'self.us_ssn',
+			
+			# object formating
+			'uuid': 'self.uuid',
+			'date': 'self.date',
+			'int': 'self.int',
+			'string': 'self.string',
+			
+			'key_val_list': 'self.key_val_list',
+
+			# hashing
+			'sha256': 'self.sha256',
+			'md5': 'self.md5',
+			
+			# object conversion
+			'json': 'self._json',
+			'yaml': 'self._yaml',
+			'csv': 'self.csv',
+			
+			# god only knows
+			'join': 'self._join',
+			'split': 'self.split',
+			'list': 'self.list',
+			'cleanup': 'self.cleanup', # clean chinese crap
+		
+		}
 		
 		return None
 	
@@ -664,9 +748,6 @@ class URL(object):
 				
 
 		return input		
-		
-	
-
 
 
 	def yaml_error_display(self,e,content):

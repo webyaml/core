@@ -2,6 +2,14 @@
 # filename: mongo.py
 # description: WSGI application mongoDB processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -40,7 +48,7 @@ class Mongo(classes.processor.Processor):
 		if not self.database_name:
 			print("config error - missing 'database'")
 			
-		self.database_name = self.element.fnr(self.database_name)
+		self.database_name = self.content.fnr(self.database_name)
 		
 		print(self.database_name)
 		
@@ -48,7 +56,7 @@ class Mongo(classes.processor.Processor):
 		if not self.collection_name:
 			print("config error - missing 'collection'")
 		
-		self.collection_name = self.element.fnr(self.collection_name)
+		self.collection_name = self.content.fnr(self.collection_name)
 		
 		print(self.collection_name)
 		
@@ -75,7 +83,7 @@ class Find(Mongo):
 			filter =  filter.replace("\t","     ")
 
 			# markup
-			filter = self.element.fnr(filter)
+			filter = self.content.fnr(filter)
 			
 			# parse yaml
 			filter = yaml.load(filter)
@@ -104,12 +112,12 @@ class Find(Mongo):
 				
 				# store record as 'record'
 				#self.store([record],format='record',name='record')
-				self.load_data({'format': 'raw', 'store': 'record', 'value': record})	
+				self.content.load_data({'format': 'raw', 'store': 'record', 'value': record})	
 				
 				#print(loop)
 				
 				# markup
-				loop_result = self.element.fnr(loop)
+				loop_result = self.content.fnr(loop)
 				
 				#print(loop_result)
 				
@@ -120,7 +128,7 @@ class Find(Mongo):
 
 			'''Store'''
 			#self.store(records)
-			self.load_data({'format': 'raw', 'store': 'records', 'value': records})
+			self.content.load_data({'format': 'raw', 'store': 'records', 'value': records})
 			
 		else:
 		
@@ -134,7 +142,7 @@ class Find(Mongo):
 			
 			'''Store'''
 			#self.store(records)
-			self.load_data({'format': 'raw', 'store': 'records', 'value': records})
+			self.content.load_data({'format': 'raw', 'store': 'records', 'value': records})
 		
 		return True
 			

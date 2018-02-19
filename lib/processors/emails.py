@@ -2,6 +2,14 @@
 # filename: email.py
 # description: WSGI application sugar api processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -89,22 +97,22 @@ class Send(classes.processor.Processor):
 		conf.setdefault('security', 'none')
 			
 			
-		rcptos = self.element.fnr(self.conf['to']).split(',')
+		rcptos = self.content.fnr(self.conf['to']).split(',')
 			
-		msg = MIMEText(self.element.fnr(self.conf['body']))
-		msg['Subject'] = self.element.fnr(self.conf['subject'])
-		msg['From'] = self.element.fnr(self.conf['from'])
-		msg['To'] = self.element.fnr(self.conf['to'])
+		msg = MIMEText(self.content.fnr(self.conf['body']))
+		msg['Subject'] = self.content.fnr(self.conf['subject'])
+		msg['From'] = self.content.fnr(self.conf['from'])
+		msg['To'] = self.content.fnr(self.conf['to'])
 		
 		if 'cc' in self.conf:
-			msg['Cc'] = self.element.fnr(self.conf['cc'])
+			msg['Cc'] = self.content.fnr(self.conf['cc'])
 			
-			rcptos.extend(self.element.fnr(self.conf['cc']).split(','))
+			rcptos.extend(self.content.fnr(self.conf['cc']).split(','))
 
 		if 'bcc' in self.conf:
-			msg['Bcc'] = self.element.fnr(self.conf['bcc'])
+			msg['Bcc'] = self.content.fnr(self.conf['bcc'])
 			
-			rcptos.extend(self.element.fnr(self.conf['bcc']).split(','))
+			rcptos.extend(self.content.fnr(self.conf['bcc']).split(','))
 		
 		msg['Date'] = datetime.datetime.utcnow().strftime( "%a, %d %b %Y %H:%M:%S %z %Z" )
 		
@@ -114,11 +122,11 @@ class Send(classes.processor.Processor):
 
 		if conf['security'] == 'tls':
 			
-			s = smtplib.SMTP_SSL(self.element.fnr(conf['host']),self.element.fnr(conf['port']),socket.gethostname())
+			s = smtplib.SMTP_SSL(self.content.fnr(conf['host']),self.content.fnr(conf['port']),socket.gethostname())
 			
 		else:
 		
-			s = smtplib.SMTP(self.element.fnr(conf['host']),self.element.fnr(conf['port']),socket.gethostname())
+			s = smtplib.SMTP(self.content.fnr(conf['host']),self.content.fnr(conf['port']),socket.gethostname())
 			
 		#s.ehlo()
 		
@@ -126,8 +134,8 @@ class Send(classes.processor.Processor):
 			
 			s.starttls()
 		
-		s.login(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
-		s.sendmail(self.element.fnr(self.conf['from']), rcptos, msg.as_string())
+		s.login(self.content.fnr(conf['user']),self.content.fnr(conf['pass']))
+		s.sendmail(self.content.fnr(self.conf['from']), rcptos, msg.as_string())
 		s.quit()
 		
 		

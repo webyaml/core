@@ -2,6 +2,14 @@
 # filename: rest.py
 # description: WSGI application ReSTful processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -21,6 +29,7 @@
 ''' external imports
 '''
 import requests
+
 '''
 import json
 import xmltodict
@@ -66,15 +75,15 @@ class GET(Rest):
 		
 		# Markup Args
 		for arg in conf['args']:
-			conf['args'][arg] = self.element.fnr(conf['args'][arg])
+			conf['args'][arg] = self.content.fnr(conf['args'][arg])
 		
 		# store args
 		#self.store(conf['args'],name='args')
 		if conf['args']:
-			self.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
+			self.content.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
 		
 		# Markup URL
-		conf['url'] = self.element.fnr(conf['url'])
+		conf['url'] = self.content.fnr(conf['url'])
 
 		# Auth
 		auth = ()
@@ -119,7 +128,7 @@ class GET(Rest):
 			conf['receive']['value'] = r.text
 			
 			# load data
-			if not self.load_data(conf['receive']):
+			if not self.content.load_data(conf['receive']):
 				
 				print('failed to send - data failed to load')
 					
@@ -154,14 +163,14 @@ class POST(Rest):
 		
 		# Markup Args
 		for arg in conf['args']:
-			conf['args'][arg] = self.element.fnr(conf['args'][arg])
+			conf['args'][arg] = self.content.fnr(conf['args'][arg])
 		
 		# store args
 		#self.store(conf['args'],name='args')
-		self.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})
+		self.content.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})
 		
 		# Markup URL
-		conf['url'] = self.element.fnr(conf['url'])
+		conf['url'] = self.content.fnr(conf['url'])
 
 		# Auth
 		auth = ()
@@ -178,7 +187,7 @@ class POST(Rest):
 			# load data and format it for sending
 			
 			# load data
-			if not self.load_data(conf['send']):
+			if not self.content.load_data(conf['send']):
 				
 				print('failed to send - data failed to load')
 					
@@ -236,7 +245,7 @@ class POST(Rest):
 			conf['receive']['value'] = r.text
 			
 			# load data
-			if not self.load_data(conf['receive']):
+			if not self.content.load_data(conf['receive']):
 				
 				print('failed to send - data failed to load')
 					

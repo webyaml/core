@@ -2,6 +2,14 @@
 # filename: field.py
 # description: WSGI application html form fields
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -61,7 +69,7 @@ class Input(classes.element.Element):
 			# debug
 			#print('loading data')
 			
-			if not self.load_data(self.conf['data']):
+			if not self.content.load_data(self.conf['data']):
 				print('data failed to load')
 				
 			else:
@@ -74,8 +82,8 @@ class Input(classes.element.Element):
 					
 				else:
 					self.args.extend(self.data)
-
-		'''	DEPRICATED - Begin
+		
+		'''	Needed by dropdown, hope to find a better solution
 		'''
 		# args (valuesObj)
 		values_obj = self.conf.get('valuesObj')
@@ -85,9 +93,6 @@ class Input(classes.element.Element):
 			except:
 				pass
 
-		'''	DEPRICATED - End
-		'''
-		
 		# validators
 		self.validators = self.conf.get('validators', [])
 		
@@ -117,13 +122,6 @@ class Input(classes.element.Element):
 		
 		if 'class' in self.conf:
 			self.attrs['class_'] = self.conf['class']
-			
-		'''	DEPRICATED - Begin
-		'''			
-		if 'class_' in self.conf:
-			self.attrs['class_'] = self.conf['class_']			
-		'''	DEPRICATED - End
-		'''
 		
 		if not self.attrs.get('class_'):
 			self.attrs['class_']  = ""
@@ -138,15 +136,7 @@ class Input(classes.element.Element):
 
 		# markup value
 		if 'value' in self.attrs:
-			self.attrs['value'] = self.fnr(self.attrs['value'])
-
-		'''
-		# instanciate fieldObj
-		try:
-			self.fieldObj()
-			
-		except: traceback.print_exc()
-		'''
+			self.attrs['value'] = self.content.fnr(self.attrs['value'])
 		
 		return None
 
@@ -177,7 +167,7 @@ class Input(classes.element.Element):
 		''' 	This is an interesting use of fnr_types.  This concept could be used a lot more.
 		'''
 		# add {{field:$attr}} to fnr_types
-		self.content.elementObj.fnr_types.update({'field': 'self.content.fieldObj.attrs'})
+		self.content.fnr_types.update({'field': 'self.fieldObj.attrs'})
 		
 		# is this field in an error state?
 		if self.content.fieldObj.note:
@@ -449,6 +439,9 @@ class File(Input):
 		
 		return None
 
+
+''' this must have been an expirement.  should really go
+'''
 
 class Generic(Input):
 	

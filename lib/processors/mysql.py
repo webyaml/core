@@ -2,6 +2,14 @@
 # filename: db.py
 # description: WSGI application MySQL database processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -52,13 +60,13 @@ class Select(classes.processor.Processor):
 			
 			return False
 				
-		sql = self.element.fnr(conf['sql'])
+		sql = self.content.fnr(conf['sql'])
 
 		# limit
 		if conf.get('limit'):
 			
 			# page
-			conf['page'] = self.element.fnr(conf.get('page',1))
+			conf['page'] = self.content.fnr(conf.get('page',1))
 			if isinstance(conf['page'], str) and not conf['page'].isdigit():
 				conf['page'] = 1
 			
@@ -103,7 +111,7 @@ class Select(classes.processor.Processor):
 				conf['result']['format'] = 'list'
 				
 				# load data
-				if not self.load_data(conf['result']):
+				if not self.content.load_data(conf['result']):
 					
 					print('failed to save - data failed to load')
 						
@@ -140,7 +148,7 @@ class Insert(classes.processor.Processor):
 			
 			return False
 		
-		sql = self.element.fnr(self.element.fnr(self.conf.get('sql','')))
+		sql = self.content.fnr(self.content.fnr(self.conf.get('sql','')))
 		
 		print('sql: '+sql)
 		
@@ -196,7 +204,7 @@ class Select_old(classes.processor.Processor):
 			
 			return False
 		
-		sql = self.element.fnr(self.conf.get('sql',''))
+		sql = self.content.fnr(self.conf.get('sql',''))
 		
 		print('sql: '+sql)
 		

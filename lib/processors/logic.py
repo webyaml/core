@@ -2,6 +2,14 @@
 # filename: logic.py
 # description: WSGI application logic processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -37,7 +45,7 @@ class Evaluate(classes.processor.Processor):
 
 		if expression:
 			
-			expression = self.element.fnr(expression)
+			expression = self.content.fnr(expression)
 			
 			#debug
 			print(expression)

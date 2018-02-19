@@ -2,6 +2,14 @@
 # filename: fiddle.py
 # description: WSGI application fiddle processor
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -52,7 +60,7 @@ class Fiddle(classes.processor.Processor):
 			return False
 		
 		# fnr
-		conf['conf'] = self.element.fnr(conf['conf'])
+		conf['conf'] = self.content.fnr(conf['conf'])
 		
 		# handle includes
 		# unset the includes list

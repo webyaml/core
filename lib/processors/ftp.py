@@ -2,6 +2,14 @@
 # filename: ftp.py
 # description: WSGI application sugar api processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -20,7 +28,6 @@
 
 ''' external imports
 '''
-
 import ftplib
 import os
 
@@ -59,16 +66,16 @@ class Upload(classes.processor.Processor):
 			return False
 			
 		# debug
-		#print(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+		#print(self.content.fnr(conf['user']),self.content.fnr(conf['pass']))
 
-		ftp = ftplib.FTP(self.element.fnr(conf['host'])) #,self.element.fnr(conf['port'])
-		ftp.login(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+		ftp = ftplib.FTP(self.content.fnr(conf['host'])) #,self.content.fnr(conf['port'])
+		ftp.login(self.content.fnr(conf['user']),self.content.fnr(conf['pass']))
 		
 		if 'remotepath' in self.conf:
-			ftp.cwd(self.element.fnr(self.conf['remotepath']))
+			ftp.cwd(self.content.fnr(self.conf['remotepath']))
 		
 		
-		ftp.storbinary("STOR " + self.element.fnr(os.path.split(self.conf['file'])[1]), open(self.element.fnr(self.conf['file']), "rb"), 8192)
+		ftp.storbinary("STOR " + self.content.fnr(os.path.split(self.conf['file'])[1]), open(self.content.fnr(self.conf['file']), "rb"), 8192)
 		
 		
 		return True
@@ -105,17 +112,17 @@ class Download(classes.processor.Processor):
 			return False
 			
 		# debug
-		#print(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+		#print(self.content.fnr(conf['user']),self.content.fnr(conf['pass']))
 
-		ftp = ftplib.FTP(self.element.fnr(conf['host'])) #,self.element.fnr(conf['port'])
-		ftp.login(self.element.fnr(conf['user']),self.element.fnr(conf['pass']))
+		ftp = ftplib.FTP(self.content.fnr(conf['host'])) #,self.content.fnr(conf['port'])
+		ftp.login(self.content.fnr(conf['user']),self.content.fnr(conf['pass']))
 		
 		if 'remotepath' in self.conf:
-			ftp.cwd(self.element.fnr(self.conf['remotepath']))
+			ftp.cwd(self.content.fnr(self.conf['remotepath']))
 
-		localpath = self.element.fnr(self.conf.get('localpath','.'))	
+		localpath = self.content.fnr(self.conf.get('localpath','.'))	
 		
-		ftp.retrbinary("RETR " +  self.element.fnr(self.conf['file']) ,open("%s/%s"%(localpath,self.element.fnr(os.path.split(self.conf['file'])[1])), 'wb').write)
+		ftp.retrbinary("RETR " +  self.content.fnr(self.conf['file']) ,open("%s/%s"%(localpath,self.content.fnr(os.path.split(self.conf['file'])[1])), 'wb').write)
 		
 		return True
 

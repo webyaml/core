@@ -2,6 +2,14 @@
 # filename: cache.py
 # description: WSGI application cache processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -37,7 +45,7 @@ class Cache(classes.processor.Processor):
 
 		for var in cache:
 			
-			markup = self.element.fnr(cache[var])
+			markup = self.content.fnr(cache[var])
 			
 			print(type(markup))
 			

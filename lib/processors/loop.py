@@ -2,6 +2,14 @@
 # filename: loop.py
 # description: WSGI application image file processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -20,7 +28,6 @@
 
 ''' external imports
 '''
-import copy
 
 ''' internal imports
 '''
@@ -64,7 +71,7 @@ class Loop(classes.processor.Processor):
 			return False
 		
 		# load data
-		if not self.load_data(conf['data']):
+		if not self.content.load_data(conf['data']):
 			
 			print('failed to loop - data failed to load')
 				
@@ -103,11 +110,11 @@ class Loop(classes.processor.Processor):
 					break
 					
 				# store count				
-				self.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
+				self.content.load_data({'format': 'raw', 'store': '%s_count' %key, 'value': count})
 				count +=1
 				
 				# store the item to be used by fnr functions
-				self.load_data({'format': 'raw', 'store': key, 'value': item})	
+				self.content.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter
 				if conf.get('filter') and isinstance(conf['filter'],str):
@@ -116,7 +123,7 @@ class Loop(classes.processor.Processor):
 					#print(self.fnr(conf.get('filter')))
 					
 					# filter must be True to show item
-					if not eval(self.element.fnr(conf['filter'])):
+					if not eval(self.content.fnr(conf['filter'])):
 						continue
 				
 				# update attributes to include item
@@ -145,7 +152,7 @@ class Loop(classes.processor.Processor):
 					break
 					
 				# store the item to be used by fnr functions
-				#self.load_data({'format': 'raw', 'store': key, 'value': item})						
+				#self.content.load_data({'format': 'raw', 'store': key, 'value': item})						
 					
 				'''
 				print(conf.get('filter'))
@@ -156,18 +163,18 @@ class Loop(classes.processor.Processor):
 
 					
 					# filter must be True to show item
-					if not eval(self.element.fnr(conf.get('filter'))):
+					if not eval(self.content.fnr(conf.get('filter'))):
 						continue
 				
 						
 				# debug
 				print(conf.get('filter'))
-				print(self.element.fnr(conf.get('filter')))						
+				print(self.content.fnr(conf.get('filter')))						
 
 
 				'''							
 				# filter must be True to show item
-				if conf.get('filter') and not eval(self.element.fnr(conf['filter'])):
+				if conf.get('filter') and not eval(self.content.fnr(conf['filter'])):
 					continue					
 					
 				
@@ -178,7 +185,7 @@ class Loop(classes.processor.Processor):
 				tmp_content[key] = item
 				
 				# store count in tmp_content
-				#self.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
+				#self.content.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
 				tmp_content['%s_count' %key] = count
 				count +=1		
 				

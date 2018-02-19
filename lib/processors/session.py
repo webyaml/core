@@ -2,6 +2,14 @@
 # filename: session.py
 # description: WSGI application session processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -20,7 +28,7 @@
 
 ''' external imports
 '''
-import datetime
+import datetime #needed to put datetime values in sessions?
 
 ''' internal imports
 '''
@@ -38,7 +46,7 @@ class Cache(classes.processor.Processor):
 
 		for var in cache:
 			
-			markup = self.element.fnr(cache[var])
+			markup = self.content.fnr(cache[var])
 			
 			if markup.startswith('|'):
 				

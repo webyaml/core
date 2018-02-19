@@ -2,6 +2,14 @@
 # filename: wifi.py
 # description: WSGI application file processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -66,10 +74,10 @@ class Write(classes.processor.Processor):
 		
 		if isinstance(value,str) and 'nomarkup' not in self.conf:
 		
-			value = self.element.fnr(value)
+			value = self.content.fnr(value)
 		
 		# markup path
-		path = self.element.fnr(path)
+		path = self.content.fnr(path)
 		
 		# backup file if it already exists
 		if os.path.isfile(path) and 'nobackup' not in self.conf:
@@ -104,7 +112,7 @@ class Read(classes.processor.Processor):
 			return False
 		
 		# markup filename	
-		conf["path"] = self.element.fnr(conf["path"])
+		conf["path"] = self.content.fnr(conf["path"])
 		'''
 		if conf["path"].startswith("./"):
 			
@@ -138,7 +146,7 @@ class Read(classes.processor.Processor):
 			conf['data']['value'] = contents
 			
 			# load data
-			if not self.load_data(conf['data']):
+			if not self.content.load_data(conf['data']):
 				
 				print('failed to save - data failed to load')
 					
@@ -163,7 +171,7 @@ class List(classes.processor.Processor):
 			return False
 		
 		# markup filename	
-		conf["path"] = self.element.fnr(conf["path"])
+		conf["path"] = self.content.fnr(conf["path"])
 		
 		# debug
 		#print(conf["path"])
@@ -237,7 +245,7 @@ class List(classes.processor.Processor):
 			conf['result']['format'] = 'raw'
 			
 			# load data
-			if not self.load_data(conf['result']):
+			if not self.content.load_data(conf['result']):
 				
 				print('data failed to save')
 					

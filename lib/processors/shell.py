@@ -2,6 +2,14 @@
 # filename: shell.py
 # description: WSGI application shell processors
 
+# make python2 strings and dictionaries behave like python3
+from __future__ import unicode_literals
+
+try:
+	from builtins import dict, str
+except ImportError:
+	from __builtin__ import dict, str
+	
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -43,7 +51,7 @@ class Shell(classes.processor.Processor):
 			
 			return False
 			
-		cmd = self.element.fnr(cmd)
+		cmd = self.content.fnr(cmd)
 		
 		print('running command: %s' %cmd)
 		
@@ -62,7 +70,7 @@ class Shell(classes.processor.Processor):
 				conf['stdout']['format'] = conf['stdout'].get('format','string')
 				
 				# load data
-				if not self.load_data(conf['stdout']):
+				if not self.content.load_data(conf['stdout']):
 					
 					print('failed to save - data failed to load')
 						
@@ -86,7 +94,7 @@ class Shell(classes.processor.Processor):
 				conf['stderr']['format'] = conf['stderr'].get('format','string')
 				
 				# load data
-				if not self.load_data(conf['stderr']):
+				if not self.content.load_data(conf['stderr']):
 					
 					print('failed to save - data failed to load')
 						
