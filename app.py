@@ -99,7 +99,7 @@ os.chdir(web.framework['cwd'])
 
 ''' internal imports
 '''
-import classes.url
+import classes.view
 
 # webpy vars
 web.config.debug = True
@@ -120,8 +120,8 @@ class favicon:
 # webpy urls to webyaml classes
 urls = (
 		'/favicon.ico','favicon', # pass favicon url to the favicon handler
-		'/(.*)', 'classes.url.URL',
-		'(.*)', 'classes.url.URL',
+		'/(.*)', 'classes.view.View',
+		'(.*)', 'classes.view.View',
 	)
 
 
