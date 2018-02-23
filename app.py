@@ -140,7 +140,7 @@ if __name__ == "__main__":
 	else:
 		session = web.config._session	
 	
-	classes.url.session = session
+	classes.view.session = session
 	
 	# start application
 	app.run()
