@@ -202,7 +202,7 @@ class Loop(classes.processor.Processor):
 				
 				# check for content in tmp_content
 				
-				print(tmp_content)
+				#print(tmp_content)
 				
 				self.content.tree({'content': tmp_content})
 			

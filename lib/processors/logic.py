@@ -39,7 +39,7 @@ class Evaluate(classes.processor.Processor):
 	
 	def run(self):
 		
-		print('lib.processors.logic.Evaluate')
+		#print('lib.processors.logic.Evaluate')
 		
 		expression = self.conf.get('expression')
 
@@ -48,7 +48,7 @@ class Evaluate(classes.processor.Processor):
 			expression = self.content.fnr(expression)
 			
 			#debug
-			print(expression)
+			#print(expression)
 			
 			if eval(expression):
 				

@@ -95,7 +95,7 @@ class Select(classes.processor.Processor):
 			output = select.fetchall()
 			
 			# debug
-			print(output)
+			#print(output)
 			
 			if not output:
 				return False
