@@ -45,7 +45,7 @@ from decimal import Decimal
 '''
 class Content(list):
 
-	def __init__(self,conf,parent=None):
+	def __init__(self,parent,conf):
 		
 		# super list class  - init with empty list
 		super(Content, self).__init__()
@@ -240,7 +240,7 @@ class Content(list):
 			# recurse
 			for item in conf['content']:
 				try:
-					self.append( Content(item,self) )
+					self.append( Content(self,item) )
 				except: traceback.print_exc()
 		
 		
@@ -313,6 +313,7 @@ class Content(list):
 		
 		#vars
 		output = ''
+		
 		
 		# render child elements
 		for item in self:

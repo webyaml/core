@@ -37,6 +37,9 @@ import web
 import os
 import sys
 
+''' iternal imports
+'''
+
 '''	Current Working Directory
 
 	This script can be envoked either directly in the 'core' directory,
@@ -56,6 +59,9 @@ import sys
 	behavior over multiple threads.
 	
 '''
+
+# vars
+first_load = False
 
 if "framework" not in dir(web):
 
@@ -81,6 +87,9 @@ if "framework" not in dir(web):
 		
 		# change directory to the absolute path
 		web.framework['cwd'] = "/".join(web.framework['absolute_path'].split("/"))
+		
+	# mark that this is the first load of the page
+	first_load = True
 
 
 #debug 
@@ -99,11 +108,21 @@ os.chdir(web.framework['cwd'])
 
 ''' internal imports
 '''
+import classes.configuration
 import classes.view
 
 # webpy vars
 web.config.debug = True
 
+
+urls_config_file = 'conf/urls.cfg'
+
+
+# load conf/urls.cfg
+if first_load:
+	web.framework['configuration_object'] = classes.configuration.Configuration()
+	web.framework['urls']  = web.framework['configuration_object'].load_views(urls_config_file)
+	
 # favicon handler
 class favicon:
 	def GET(self):
@@ -116,10 +135,17 @@ class favicon:
 			content = f.read()
 		return content
 
+# Apache Bench handler
+class AB:
+	def GET(self):
+
+		return "Hello World!"
+
 
 # webpy urls to webyaml classes
 urls = (
 		'/favicon.ico','favicon', # pass favicon url to the favicon handler
+		'/__ab__','AB', # pass apache bench test handler		
 		'/(.*)', 'classes.view.View',
 		'(.*)', 'classes.view.View',
 	)
