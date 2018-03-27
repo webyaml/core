@@ -58,6 +58,8 @@ class Content(list):
 			self.parent.top = self.parent
 		self.top = self.parent.top # top object
 		
+		self.view = self.top #migrate to this instead of top
+		
 		self.elementObj = None # placeholder for elementObj
 		self.data = None
 		self.fnr_types = self.top.fnr_types
@@ -114,46 +116,11 @@ class Content(list):
 			m = ".".join(processor_type.split('.')[:-1])
 			c = ".".join(processor_type.split('.')[-1:])
 			
-			# debug
-			#print(m)
-			#print(c)
+			_class = self.loadmodule(m,c)
 			
-			# does the module exist in site directory
-			if os.path.isfile("%s.py" %m.replace('.','/')):
-				
-				print('found a local module - importing')
-				
-				try:
-					_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
-					
-				except: traceback.print_exc()
-				
-			# does the module exist in core directory
-			elif os.path.isfile("core/%s.py" %m.replace('.','/')):
-				
-				try:
-					#_module = imp.load_source(m,"core/%s.py" %m.replace('.','/'))
-					__import__(m)
-					_module = sys.modules[m]  #load module
-					
-				except: traceback.print_exc()
-				
-			else:
-				print("Could not find the the module '%s'." %m)
+			if not _class:
 				
 				return False
-
-			# load class
-			try:
-				_class = getattr(_module,c)  
-				
-			except AttributeError:
-				
-				print("Could not find the class '%s' in the module '%s'." %(c,m))
-				
-				return False
-			
-			except: traceback.print_exc()
 			
 			# instanciate element object
 			self.processorObj = _class(self,item)
@@ -218,6 +185,63 @@ class Content(list):
 		
 		return True
 
+	def loadmodule(self,m,c):
+		
+			# debug
+			#print(m)
+			#print(c)
+			
+			# does the module exist in site directory
+			if os.path.isfile("%s.py" %m.replace('.','/')):
+				
+				print('found a local module - importing')
+				
+				try:
+					_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
+					
+				except: 
+					
+					traceback.print_exc()
+					
+					return False
+				
+			# does the module exist in core directory
+			elif os.path.isfile("core/%s.py" %m.replace('.','/')):
+				
+				try:
+					#_module = imp.load_source(m,"core/%s.py" %m.replace('.','/'))
+					__import__(m)
+					_module = sys.modules[m]  #load module
+					
+				except: 
+					
+					traceback.print_exc()
+					
+					return False
+				
+			else:
+				print("Could not find the the module '%s'." %m)
+				
+				return False
+
+			# load class
+			try:
+				_class = getattr(_module,c)  
+				
+			except AttributeError:
+				
+				print("Could not find the class '%s' in the module '%s'." %(c,m))
+				
+				return False
+			
+			except: 
+				
+				traceback.print_exc()
+				
+				return False
+				
+			return _class
+
 
 	def tree(self,conf):
 		
@@ -255,50 +279,11 @@ class Content(list):
 		m = ".".join(element_type.split('.')[:-1]) # module name and path
 		c = ".".join(element_type.split('.')[-1:]) # class name
 		
-		#debug print('module: %s, class: %s' %(m,c))
+		_class = self.loadmodule(m,c)
 		
-		
-		# import module
-
-		# search for local module 
-		if os.path.isfile("%s.py" %m.replace('.','/')):
+		if not _class:
 			
-			print('found a local module - importing')
-			
-			try:
-				''' This is the new way to load modules.  
-				'''		
-				_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
-				
-			except: traceback.print_exc()
-			
-		# search for core module
-		elif os.path.isfile("core/%s.py" %m.replace('.','/')):
-			
-			try:
-				''' 	This is the traditional way to load modules.
-				'''
-				__import__(m)
-				_module = sys.modules[m]  #load module
-				
-			except: traceback.print_exc()
-			
-		else:
-			print("Could not find the the module '%s'." %m)
-			
-			return None
-
-		# search for class
-		try:
-			_class = getattr(_module,c)  
-			
-		except AttributeError:
-			
-			print("Could not find the class '%s' in the module '%s'." %(c,m))
-			
-			return None
-		
-		except: traceback.print_exc()
+			return False
 		
 		# instanciate Element object
 		self.elementObj = _class(self)
@@ -562,7 +547,7 @@ class Content(list):
 		#print('escape_markers')
 		
 		if isinstance(obj,str):
-			obj = obj.replace("{{",r"\{\{").replace('}}',r'\}\}')
+			obj = str(obj.replace("{{",r"\{\{").replace('}}',r'\}\}'))
 		
 		return obj
 	
@@ -640,36 +625,6 @@ class Content(list):
 		
 		yaml.representer.Representer.add_representer(unicode, my_unicode_repr)
 		
-		'''
-		def walk(subobj):
-			
-			# list
-			if isinstance(subobj,list):
-				for i in range(0,len(subobj)):
-					subobj[i] = walk(subobj[i])
-			
-			# dict
-			if isinstance(subobj,dict):
-				for key in subobj:
-					subobj[key] = walk(subobj[key])
-			
-			# str
-			if isinstance(subobj,str):
-				subobj = self.fnr(subobj)
-			
-			# date
-			if isinstance(subobj,datetime.datetime):
-				subobj = self.date(subobj)
-
-			# Decimal Hack
-			if isinstance(subobj,decimal.Decimal):
-				subobj = str(subobj)
-				
-			return subobj
-		
-		
-		obj = walk(obj)
-		'''
 		obj = json.loads(self._json(obj))
 		
 		return yaml.dump(obj, allow_unicode=True, default_flow_style=False)
@@ -873,10 +828,15 @@ class Content(list):
 	
 	def escape_script(self,obj):
 		
+		#print('escape_script')
+		#print(type(obj))
+		
 		if isinstance(obj,str):
 			
 			return obj.replace('</script>','<\\/script>')
 		
+		#print('return default')
+		#print(obj)
 		return obj
 
 	'''
