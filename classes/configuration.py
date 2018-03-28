@@ -199,6 +199,7 @@ class Configuration(object):
 			#debug
 			#print("looking for file '%s'" % file)			
 			
+			
 			# skip if this file already been included?
 			if file in self.cache['includes']:
 				
@@ -206,13 +207,17 @@ class Configuration(object):
 				#print("file '%s' already included" % file)
 				
 				continue
-				
+			
+			'''
 			# does the file exist in the cache?
 			if file in self.cache:
 				content = self.cache[file]
 			
 			# does configuration file exist in local dir
 			elif os.path.isfile("%s" % file):
+			'''
+			
+			if os.path.isfile("%s" % file):
 
 				#debug
 				#print("found file '%s' in local dir" % file)

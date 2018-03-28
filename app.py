@@ -95,9 +95,7 @@ if "framework" not in dir(web):
 		web.framework['cwd'] = "/".join(web.framework['absolute_path'].split("/"))
 		
 	# mark that this is the first load of the thread
-	#first_load = True
-	first_load = False
-
+	first_load = True
 
 # Append the absolute path to the system path
 sys.path.append(web.framework['absolute_path'])
@@ -114,6 +112,9 @@ os.chdir(web.framework['cwd'])
 '''
 import classes.configuration
 import classes.view
+
+#no cache
+first_load = True
 
 # load view configuration files
 if first_load:

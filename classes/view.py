@@ -382,7 +382,7 @@ class View(object):
 		
 		''' 	The view configuration file may be cached in memory.
 			If the configuration is not found load from file(s).
-		'''
+
 		# search for configuration cache
 		if self.attributes['name'] in web.framework['configuration_object'].cache:
 			
@@ -405,7 +405,12 @@ class View(object):
 			
 			#debug
 			#print("writing configuration for view '%s' to cache"%self.attributes['name'])
+		'''
+		# load core config files
+		content_config_files.insert(0,"conf/processors/core.cfg")
 		
+		# load configuration files		
+		self.conf =  web.framework['configuration_object'].load(*content_config_files)		
 		
 		''' Generate Output	
 		'''
