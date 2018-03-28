@@ -246,13 +246,14 @@ class Configuration(object):
 			
 			# add file to includes list
 			self.cache['includes'].append(file)
-
+			
+			'''
 			# cache file in memory
 			if file not in self.cache:
 				
 				print('caching %s' %str(file))
 				self.cache[file] = content
-			
+			'''
 			output += "%s\n" %content
 			
 		return output

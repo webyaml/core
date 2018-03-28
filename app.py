@@ -10,7 +10,6 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 
-
 ''' 
 	Copyright 2017 Mark Madere
 
@@ -31,14 +30,13 @@ except ImportError:
 
 ''' external imports
 '''
-
-
 import web
 import os
 import sys
 
-''' iternal imports
+''' internal imports
 '''
+# see below
 
 '''	Current Working Directory
 
@@ -61,7 +59,15 @@ import sys
 '''
 
 # vars
+urls_config_file = 'conf/urls.cfg'
+web.config.debug = True
 first_load = False
+urls = (
+		'/favicon.ico','favicon', # pass favicon url to the favicon handler
+		'/__ab__','AB', # pass apache bench test handler		
+		'/(.*)', 'classes.view.View',
+		'(.*)', 'classes.view.View',
+	)
 
 if "framework" not in dir(web):
 
@@ -88,22 +94,20 @@ if "framework" not in dir(web):
 		# change directory to the absolute path
 		web.framework['cwd'] = "/".join(web.framework['absolute_path'].split("/"))
 		
-	# mark that this is the first load of the page
-	first_load = True
+	# mark that this is the first load of the thread
+	#first_load = True
+	first_load = False
 
-
-#debug 
-print('Absolute Path: %s' %web.framework['absolute_path'])	
 
 # Append the absolute path to the system path
-#if web.framework['absolute_path'] not in sys.path:
 sys.path.append(web.framework['absolute_path'])
 
-# debug 
-print('CWD: %s' %web.framework['cwd'])
-
-# change workign directory
+# change working directory
 os.chdir(web.framework['cwd'])
+
+# debug
+#print('Absolute Path: %s' %web.framework['absolute_path'])	
+#print('CWD: %s' %web.framework['cwd'])
 
 
 ''' internal imports
@@ -111,18 +115,18 @@ os.chdir(web.framework['cwd'])
 import classes.configuration
 import classes.view
 
-# webpy vars
-web.config.debug = True
-
-
-urls_config_file = 'conf/urls.cfg'
-
-
-# load conf/urls.cfg
+# load view configuration files
 if first_load:
+	
+	# debug
+	print('starting new thread for application')
+	
 	web.framework['configuration_object'] = classes.configuration.Configuration()
 	web.framework['urls']  = web.framework['configuration_object'].load_views(urls_config_file)
-	
+
+
+''' Classes
+'''
 # favicon handler
 class favicon:
 	def GET(self):
@@ -140,16 +144,6 @@ class AB:
 	def GET(self):
 
 		return "Hello World!"
-
-
-# webpy urls to webyaml classes
-urls = (
-		'/favicon.ico','favicon', # pass favicon url to the favicon handler
-		'/__ab__','AB', # pass apache bench test handler		
-		'/(.*)', 'classes.view.View',
-		'(.*)', 'classes.view.View',
-	)
-
 
 '''	Main
 '''
@@ -199,6 +193,3 @@ elif __name__.startswith('_mod_wsgi_'):
 	application = app.wsgifunc()
 	# End Database sessions
 	'''
-		
-
-

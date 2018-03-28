@@ -48,24 +48,18 @@ class View(object):
 		''' vars
 		'''
 		
-		# timestamp 
+		# timestamp - used by debug
 		self.start_time = datetime.datetime.now()
 		
+		# web.py sessions
 		try:
 			self.session = web.ctx.session #WSGI application
-			
 		except AttributeError:
-			
 			self.session = session #Cherry webserver
 		
-		# debug 
-		#self.session.kill()
+		#self.session.kill() # debug 
 		
-		# session vars
-		if 'vars' not in dir(self.session):
-			self.session.vars= {}
-		
-		# top Vars
+		# top/view Vars
 		self.path_vars = {}
 		self.get_vars = {}
 		self.post_vars = {}
@@ -73,11 +67,14 @@ class View(object):
 		self.fnr_types = {}
 		
 		self.cache = {}
-		#self.cache['includes'] = []
-		self.error = None # is this still used?
-		
 		self.raw = {}
 		self.attributes = {}
+
+		# session vars
+		if 'vars' not in dir(self.session):
+			self.session.vars= {}
+
+		self.error = None # is this still used?
 
 		# marker attributes and functions
 		self.fnr_types = {
@@ -86,6 +83,7 @@ class View(object):
 			'this': 'self.attributes',	
 			'parent': 'self.parent.attributes',
 			'top': 'self.top.attributes',
+			'view': 'self.view.attributes',
 			
 			# Cached markers
 			'cache': 'self.top.cache',
@@ -234,6 +232,8 @@ class View(object):
 	def remove_get_vars_from_post_vars(self):
 		
 		# this fixes both a security vularibility and a functionality problem
+		# but it assumes that get vars come before post vars and has been problematic
+		# this method is not currently being used
 		
 		for key in self.post_vars:
 			
@@ -253,7 +253,7 @@ class View(object):
 		# result of urls conf file
 		available_urls = web.framework['urls']		
 		
-		path_config_files = []
+		content_config_files = []
 		
 		# cache the path for use by fnr
 		self.cache['url'] = '%s/%s' %(web.ctx.home,self.path)
@@ -269,11 +269,10 @@ class View(object):
 		url_list.insert(0,'/')
 
 		# convert the requested url back into a string with leading /
-		url_string = url_list[0]+"/".join(url_list[1:])
+		requested_url = url_list[0]+"/".join(url_list[1:])
+		self.requested_url = requested_url
 		
-		# compare visitor url with urls in url config
-		requested_url = url_string
-		
+		# compare visitor url with urls in url config	
 		for i in range(0,len(available_urls)):
 			
 			# this should return one dict key which is the url segment
@@ -286,177 +285,149 @@ class View(object):
 				r = "%s/"%requested_url.lower()
 				a = "%s/"%available_url.lower()
 				
-				# if the requested url starts with the available url it is a hit
+				# if the requested url starts with the available url then the request is part of a path
 				if r.startswith(a):
+
+					'''	View Confiuration
+					'''
+
+					# view name - used for caching content configuration
+					self.attributes['name'] = a
+
+					# assign/update attributes - supports inheritence /1/2/ inherits from /1
+					self.attributes.update(available_urls[i][available_url])
 					
-					#debug
-					#print("hit")
-					
+
+					'''	This sting to list conversion should happen at another level
+					'''
 					# get a list of configuration files to load for this url
-					path_config_files = available_urls[i][available_url].get('conf',[])
+					content_config_files = self.attributes.get('conf',[])
 					
 					# allow conf to be a string.  convert to list
-					if isinstance(path_config_files,str):
-						path_config_files = [path_config_files]
+					if isinstance(content_config_files,str):
+						content_config_files = [content_config_files]
 					
-					# convert the requested url into a list delmitied by a slash (/)
-					# filter removes and empty items casued by multiple slashes (//)
+					# update conf attribute
+					self.attributes['conf'] = content_config_files
+					
+					
+					'''	PATH vars
+					'''					
+					# filter removes any empty items casued by multiple slashes (//)
 					requested_url_list = list(filter(None, requested_url.split("/")))
-					
-					# convert the available url into a list delmitied by a slash (/)
-					
 					available_url_list = list(filter(None, available_url.split("/")))
 					
 					# remove the available url from the requested url to get the path vars
 					path_vars = requested_url_list[len(available_url_list):]
-					
-					# view name
-					view_name = a
-					
-					''' Need to fid a way to abstract this
-					'''
-					# config hacks
-					page_cache = False
-					if 'cache' in available_urls[i][available_url]:
-						page_cache = True
-						
-					if 'noindent' in available_urls[i][available_url]:
-						self.attributes['noindent'] = True						
+		
+		
+		# Handle 404 errors
+		if not 'conf' in self.attributes or len(self.attributes['conf']) == 0:
 
-					if 'keepmarkers' in available_urls[i][available_url]:
-						self.attributes['keepmarkers'] = True
-
-					if 'header' in available_urls[i][available_url]:
-						self.attributes['header'] = available_urls[i][available_url]['header']
-						
-					if 'debug' in available_urls[i][available_url]:
-						self.attributes['debug'] = True						
-
-					''' Will be resolved in future release
-					'''
-
-
-		# check for configuration files
-		if len(path_config_files) == 0:
+			print("Config Error:  No configuration files were found for the view '%s'." %requested_url)
 			
-			print("Config Error:  No configuration files were found for the url '%s'." %url_string)
+			return self.error404()
 
 
-			gfx_agents = [
-				"Chrome",
-				"MSIE",
-				"Firefox",
-				"Safari",
-				"AppleWebKit",
-				"Gecko",
-				"Dalvik",
-			]
-
-			for item in gfx_agents:
-				if item in web.ctx.env['HTTP_USER_AGENT']:
-			
-					message_404 = '''<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>404 Not Found</title>
-</head><body>
-<h1>Not Found</h1>
-<p>The requested URL %s was not found on this server.</p>
-<hr>
-<address>WebYAML Application Server</address>
-</body></html>''' %requested_url
-			
-					raise web.notfound(message_404)
-					
-			raise web.notfound()
-
-		'''Page Caching - This cache is a copy of final output generated by WebYAML
+		''' Custom Headers
 		'''
-		if page_cache:
+		if 'header' in self.attributes:
+			
+			if not isinstance(self.attributes['header'], list):
+			
+				self.attributes['header'] = [self.attributes['header']]
+		
+			for header in self.attributes['header']:
+					
+				eval('web.header(%s)' %header)
+
+
+		'''Cache Output - READ
+			This cache is used to make static copies of final output generated by WebYAML.
+			If your view requires dynamic processing DO NOT use this type of cache.
+
+		if 'cache' in self.attributes:
+			
+			cache_file = "cache/_:_%s" %requested_url.strip("/").replace("/","_:_")		
 			
 			# is page in cache?
-			cache_file = "cache/_:_%s" %url_string.strip("/").replace("/","_:_")
-			
 			try:
 				f = open(cache_file,'r')
 				output = f.read()
 				f.close()
 				
-				print('found cache file')
+				#debug
+				#print('found cache file')
 				
 				return output
 				
 			except IOError:
 				
+				# warn - the page will still be generated
 				print("cache file '%s' not found" %cache_file)
-				# the page will still be generated and saved.
+		'''				
 		
+		'''	This view is not cached, therefore path vars must be assigned
+		'''
 		# assign path_vars as dict with keys arg0, arg1, etc...
 		for i in range(0, len(path_vars)):
 			self.path_vars['arg'+str(i)] = path_vars[i]
-			
-		# search for configuration cache
-		if view_name in web.framework['configuration_object'].cache:
-			
-			# read configuration from cache
-			self.conf = web.framework['configuration_object'].cache[view_name]
-			
-			#debug
-			print("reading configuration for view '%s' from cache"%view_name)
-			
-		else:
-			
-			# load core config files
-			path_config_files.insert(0,"conf/processors/core.cfg")
-			
-			# load configuration files		
-			self.conf =  web.framework['configuration_object'].load(*path_config_files)
-			
-			# write configuration to cache
-			web.framework['configuration_object'].cache[view_name] = self.conf
-			
-			#debug
-			print("writing configuration for view '%s' to cache"%view_name)
 		
 		# debug
-		print("URL: %s" % url_string)
+		print("URL: %s" % requested_url)
 		print("GET vars: "+str(dict(self.get_vars)))
 		print("POST vars: "+str(self.post_vars))
 		print("PATH vars: "+str(self.path_vars))
 
-
-		'''Pre-processing
-			Create the Content Tree
-		'''
 		
-		# insantiate content tree with the conf and a reference to self
+		''' 	The view configuration file may be cached in memory.
+			If the configuration is not found load from file(s).
+		'''
+		# search for configuration cache
+		if self.attributes['name'] in web.framework['configuration_object'].cache:
+			
+			# read configuration from cache
+			self.conf = web.framework['configuration_object'].cache[self.attributes['name']]
+			
+			#debug
+			#print("reading configuration for view '%s' from cache"%self.attributes['name'])
+			
+		else:
+			
+			# load core config files
+			content_config_files.insert(0,"conf/processors/core.cfg")
+			
+			# load configuration files		
+			self.conf =  web.framework['configuration_object'].load(*content_config_files)
+			
+			# write configuration to cache
+			web.framework['configuration_object'].cache[self.attributes['name']] = self.conf
+			
+			#debug
+			#print("writing configuration for view '%s' to cache"%self.attributes['name'])
+		
+		
+		''' Generate Output	
+		'''
+		#Create the Content Objects and perform Pre-processing
 		c = classes.content.Content(self,self.conf)
-
-		# debug
-		print("Cache:")
-		print(str(self.cache))
-		print("Session:")
-		print(self.session.vars)
 		
-		'''Mid-processing
-			Some content elements may request a function to be executed
-			after the content tree is created.
-		
-		if 'functions' in self.cache:
-			for function in self.cache['functions']:
-				function()
-		'''
-		
-		
-		'''Processing
-			Render all elements in the Content Tree
-		'''
-		# render all elements in the tree
+		#Render all elements of the Content Tree
 		output = c.render()
 		
-		'''Post-Processing
+		
+		# debug
+		print("Cache:")
+		print(self.cache)
+		print("Session:")
+		print(self.session.vars)		
+		
+		
+		'''	Unless otherwise indicated remove any remaining markers
 		'''
-		if not self.attributes.get('keepmarkers'):
-			# cleanup - remove any markers from output before returning
+		# Remove any markers from output before returning
+		if 'keepmarkers' not in self.attributes:
+			
 			pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
 			markers = list(set(pattern.findall(output)))
 
@@ -464,9 +435,9 @@ class View(object):
 				output = output.replace(marker,'')
 
 		
-		'''Debugging
+		'''	Extra Debugging output
 		'''
-		if self.attributes.get('debug'):
+		if 'debug' in self.attributes:
 			
 			# add debugging information
 			length = len(output)
@@ -485,9 +456,13 @@ class View(object):
 
 			output = debug+output
 		
-		'''Page Caching - Cache this page if required
-		'''
-		if page_cache:
+		
+		'''	Cache Output - Write
+			This cache is used to make static copies of final output generated by WebYAML.
+			If your view requires dynamic processing do not use this type of cache.
+
+		if 'cache' in self.attributes:
+			cache_file = "cache/_:_%s" %requested_url.strip("/").replace("/","_:_")
 			
 			try:
 				f = open(cache_file,'w')
@@ -499,24 +474,42 @@ class View(object):
 			except IOError:
 				
 				print("could not write cache file '%s' not found" %cache_file)
+		'''		
 		
-		''' page headers
+		'''	Return Output
 		'''
-		#print(self.attributes)
-		#print(self.conf)
-		if self.attributes.get('header'):
-			
-			if not isinstance(self.attributes['header'], list):
-			
-				self.attributes['header'] = [self.attributes['header']]
-		
-			for header in self.attributes['header']:
-				
-				# debug
-				#print(header)
-				
-				eval('web.header(%s)' %header)
 		
 		return output
 		
+
+
+
+	def error404(self):
 		
+		# vars
+		gfx_agents = [
+			"Chrome",
+			"MSIE",
+			"Firefox",
+			"Safari",
+			"AppleWebKit",
+			"Gecko",
+			"Dalvik",
+		]
+
+		for item in gfx_agents:
+			if 'HTTP_USER_AGENT' in web.ctx.env and item in web.ctx.env['HTTP_USER_AGENT']:
+				message_404 = '''<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL %s was not found on this server.</p>
+<hr>
+<address>WebYAML Application Server</address>
+</body></html>''' %self.requested_url
+		
+				raise web.notfound(message_404)
+				
+		raise web.notfound()
+			
