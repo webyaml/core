@@ -207,16 +207,23 @@ class Configuration(object):
 				#print("file '%s' already included" % file)
 				
 				continue
+
+			# add file to includes list
+			self.cache['includes'].append(file)			
 			
-			'''
-			# does the file exist in the cache?
-			if file in self.cache:
-				content = self.cache[file]
+			# Is there a cache entry for file?
+			if file in self.cache['files']:
+				
+				# has the file been changed since last entry?
+				if self.cache['files'][file].get('site') and os.stat("%s" % file).st_mtime == self.cache['files'][file].get('mtime'):
+					
+					return "%s\n" %self.cache['files'][file]['content']				
+
+				if self.cache['files'][file].get('core') and os.stat("core/%s" % file).st_mtime  == self.cache['files'][file].get('mtime'):
+					
+					return "%s\n" %self.cache['files'][file]['content']
 			
-			# does configuration file exist in local dir
-			elif os.path.isfile("%s" % file):
-			'''
-			
+			# cache needs to be updated for file
 			if os.path.isfile("%s" % file):
 
 				#debug
@@ -227,7 +234,12 @@ class Configuration(object):
 				f = open(file, 'r')
 				content = f.read()+"\n"
 				f.close()
-			
+				
+				self.cache['files'][file] = {}
+				self.cache['files'][file]['site'] = True
+				self.cache['files'][file]['content'] = content
+				self.cache['files'][file]['mtime'] = os.stat("%s" % file).st_mtime 				
+				
 			# does configuration file exist in framework dir
 			elif os.path.isfile("core/%s" % file):
 				
@@ -240,7 +252,12 @@ class Configuration(object):
 				f = open("core/%s" % file, 'r')
 				content = f.read()+"\n"
 				f.close()
-			
+
+				self.cache['files'][file] = {}
+				self.cache['files'][file]['site'] = True
+				self.cache['files'][file]['content'] = content
+				self.cache['files'][file]['mtime'] = os.stat("core/%s" % file).st_mtime 				
+				
 			# configuration not found
 			else:
 				
@@ -249,16 +266,6 @@ class Configuration(object):
 				
 				return False
 			
-			# add file to includes list
-			self.cache['includes'].append(file)
-			
-			'''
-			# cache file in memory
-			if file not in self.cache:
-				
-				print('caching %s' %str(file))
-				self.cache[file] = content
-			'''
 			output += "%s\n" %content
 			
 		return output
