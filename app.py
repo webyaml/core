@@ -114,7 +114,7 @@ import classes.configuration
 import classes.view
 
 #no cache
-first_load = True
+#first_load = True
 
 # load view configuration files
 if first_load:
@@ -123,7 +123,6 @@ if first_load:
 	print('starting new thread for application')
 	
 	web.framework['configuration_object'] = classes.configuration.Configuration()
-	web.framework['urls']  = web.framework['configuration_object'].load_views(urls_config_file)
 
 
 ''' Classes

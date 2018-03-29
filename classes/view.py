@@ -59,6 +59,11 @@ class View(object):
 		
 		#self.session.kill() # debug 
 		
+		
+		# urls.cfg
+		self.urls_config_file = 'conf/urls.cfg'
+		
+		
 		# top/view Vars
 		self.path_vars = {}
 		self.get_vars = {}
@@ -251,6 +256,7 @@ class View(object):
 		# vars
 		
 		# result of urls conf file
+		web.framework['urls']  = web.framework['configuration_object'].load_views(self.urls_config_file)
 		available_urls = web.framework['urls']		
 		
 		content_config_files = []

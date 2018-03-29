@@ -307,7 +307,7 @@ class Content(list):
 		
 		# log entry if requested
 		if 'log' in self.attributes:
-			print(self.elementObj.fnr(self.attributes['log']))
+			print(self.fnr(self.attributes['log']))
 		
 		# render this element
 		output = self.elementObj.render()+output

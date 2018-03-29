@@ -47,6 +47,7 @@ class Configuration(object):
 		
 		self.cache = {}
 		self.cache['files'] = {}
+		
 
 
 	def load_views(self,*files):
@@ -198,6 +199,8 @@ class Configuration(object):
 		
 		for file in files:
 			
+			read_file = True
+			
 			#debug
 			#print("looking for file '%s'" % file)			
 			
@@ -216,57 +219,64 @@ class Configuration(object):
 			# Is there a cache entry for file?
 			if file in self.cache['files']:
 				
+				# debug
+				#print('found cache for file')
+				
 				# has the file been changed since last entry?
 				if self.cache['files'][file].get('site') and os.stat("%s" % file).st_mtime == self.cache['files'][file].get('mtime'):
 					
-					return "%s\n" %self.cache['files'][file]['content']				
+					content = self.cache['files'][file]['content']
+					read_file = False
 
 				if self.cache['files'][file].get('core') and os.stat("core/%s" % file).st_mtime  == self.cache['files'][file].get('mtime'):
 					
-					return "%s\n" %self.cache['files'][file]['content']
+					content = self.cache['files'][file]['content']
+					read_file = False
 			
-			# cache needs to be updated for file
-			if os.path.isfile("%s" % file):
+			if read_file:
+			
+				# cache needs to be updated for file
+				if os.path.isfile("%s" % file):
 
-				#debug
-				#print("found file '%s' in local dir" % file)
-				print("reading '%s'" %file)
+					#debug
+					#print("found file '%s' in local dir" % file)
+					print("reading '%s'" %file)
 
-				# read config file
-				f = open(file, 'r')
-				content = f.read()+"\n"
-				f.close()
-				
-				self.cache['files'][file] = {}
-				self.cache['files'][file]['site'] = True
-				self.cache['files'][file]['content'] = content
-				self.cache['files'][file]['mtime'] = os.stat("%s" % file).st_mtime 				
-				
-			# does configuration file exist in framework dir
-			elif os.path.isfile("core/%s" % file):
-				
-				print("reading '%s'" %file)
-				
-				#debug
-				#print("found file '%s' in core dir" % file)				
-				
-				# read config file
-				f = open("core/%s" % file, 'r')
-				content = f.read()+"\n"
-				f.close()
+					# read config file
+					f = open(file, 'r')
+					content = f.read()+"\n"
+					f.close()
+					
+					self.cache['files'][file] = {}
+					self.cache['files'][file]['site'] = True
+					self.cache['files'][file]['content'] = content
+					self.cache['files'][file]['mtime'] = os.stat("%s" % file).st_mtime 				
+					
+				# does configuration file exist in framework dir
+				elif os.path.isfile("core/%s" % file):
+					
+					print("reading '%s'" %file)
+					
+					#debug
+					#print("found file '%s' in core dir" % file)				
+					
+					# read config file
+					f = open("core/%s" % file, 'r')
+					content = f.read()+"\n"
+					f.close()
 
-				self.cache['files'][file] = {}
-				self.cache['files'][file]['core'] = True
-				self.cache['files'][file]['content'] = content
-				self.cache['files'][file]['mtime'] = os.stat("core/%s" % file).st_mtime 				
-				
-			# configuration not found
-			else:
-				
-				# debug
-				print("Config Error:  The configuration file '%s' was not found." % file)
-				
-				return False
+					self.cache['files'][file] = {}
+					self.cache['files'][file]['core'] = True
+					self.cache['files'][file]['content'] = content
+					self.cache['files'][file]['mtime'] = os.stat("core/%s" % file).st_mtime 				
+					
+				# configuration not found
+				else:
+					
+					# debug
+					print("Config Error:  The configuration file '%s' was not found." % file)
+					
+					return False
 			
 			output += "%s\n" %content
 			
