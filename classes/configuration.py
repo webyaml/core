@@ -46,7 +46,7 @@ class Configuration(object):
 	def __init__(self):
 		
 		self.cache = {}
-		self.cache['files'] = []		
+		self.cache['files'] = {}
 
 
 	def load_views(self,*files):
@@ -256,7 +256,7 @@ class Configuration(object):
 				f.close()
 
 				self.cache['files'][file] = {}
-				self.cache['files'][file]['site'] = True
+				self.cache['files'][file]['core'] = True
 				self.cache['files'][file]['content'] = content
 				self.cache['files'][file]['mtime'] = os.stat("core/%s" % file).st_mtime 				
 				
