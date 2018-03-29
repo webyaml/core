@@ -46,6 +46,7 @@ class Configuration(object):
 	def __init__(self):
 		
 		self.cache = {}
+		self.cache['files'] = []		
 
 
 	def load_views(self,*files):
@@ -108,6 +109,7 @@ class Configuration(object):
 		'''
 		
 		self.cache['includes'] = []
+
 		self.error = None
 		
 		# read urls conf file
