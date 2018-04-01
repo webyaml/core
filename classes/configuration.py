@@ -26,6 +26,7 @@ except ImportError:
 	limitations under the License.
 '''
 
+
 ''' external imports
 '''
 import web
@@ -42,12 +43,17 @@ import classes.content
 ''' classes
 '''
 class Configuration(object):
-	
+
+	'''	This object is instanciated once per application thread.
+		This object contains data that is persistant to child processes.
+		This object may contain cached data used to reduce server loads.
+	'''
+
 	def __init__(self):
 		
 		self.cache = {}
 		self.cache['files'] = {}
-		
+		self.cache['conf'] = {}
 
 
 	def load_views(self,*files):
@@ -216,6 +222,7 @@ class Configuration(object):
 			# add file to includes list
 			self.cache['includes'].append(file)			
 			
+
 			# Is there a cache entry for file?
 			if file in self.cache['files']:
 				
@@ -232,6 +239,7 @@ class Configuration(object):
 					
 					content = self.cache['files'][file]['content']
 					read_file = False
+
 			
 			if read_file:
 			
@@ -293,7 +301,7 @@ class Configuration(object):
 		
 		for line in content.split('\n'):
 			
-			line =  line.replace("\t","    ")
+			line =  str(line.replace("\t","    "))
 			
 			if line.strip().startswith("include "):
 				
@@ -332,7 +340,7 @@ class Configuration(object):
 		for line in input.split('\n'):
 			
 			if line.strip().startswith("**"):
-				line = line.replace("**", "<<: *")
+				line = str(line.replace("**", "<<: *"))
 			
 			output += '%s\n' % line
 
@@ -383,7 +391,7 @@ class Configuration(object):
 		i = 1
 		for line in content.split('\n'):
 			
-			line = line.replace("<","&lt;").replace(">","&gt;")
+			line = str(line.replace("<","&lt;").replace(">","&gt;"))
 			
 			
 			tmp_content += '%d\t%s\n'%(i,line)

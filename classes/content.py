@@ -534,9 +534,40 @@ class Content(list):
 		if isinstance(obj,str):
 			obj = obj.replace("'",r"\'").replace('"',r'\"')
 		
-		return obj
+		return str(obj)
+	
+	
+	def escape_breaks(self,obj):
+		
+		''' escape single and double qoutes in strings.
+		'''
 
+		# debug
+		#print('escape_breaks')
+		
+		if not isinstance(obj,str):
+			
+			return obj
+			
+		return str(obj.replace("\n",r"\\n").replace('\r',r'\\n'))
 
+	
+	def html_breaks(self,obj):
+		
+		''' convert line breaks to html breaks
+		'''
+
+		# debug
+		#print('convert_breaks')
+		#print(type(obj))
+		
+		if not isinstance(obj,str):
+			
+			return obj
+			
+		return str(obj.replace("\n",r"</br>"))
+	
+	
 	def escape_markers(self,obj):
 		
 		''' escape braces in strings.
@@ -1107,7 +1138,7 @@ class Content(list):
 				
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
-					template = template.replace("{{%s}}" %marker,str(markup_value))
+					template = str(template.replace("{{%s}}" %marker,str(markup_value)))
 					
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
@@ -1419,7 +1450,7 @@ class Content(list):
 			# format input into a bracketed format
 			
 			# replace escaped colons
-			input = input.replace("\:","_-_-_-_-_-_")
+			input = str(input.replace("\:","_-_-_-_-_-_"))
 			
 			# split segments on colons
 			segments = input.split(":")
@@ -1439,10 +1470,10 @@ class Content(list):
 					continue
 					
 				# reinstate colons in segments 
-				segment = segment.replace("_-_-_-_-_-_",":")
+				segment = str(segment.replace("_-_-_-_-_-_",":"))
 				
 				# escape quotes
-				segment = segment.replace("'",r"\'").replace('"',r'\"')
+				segment = str(segment.replace("'",r"\'").replace('"',r'\"'))
 				
 				# add segment to entry
 				output += "['%s']" %segment

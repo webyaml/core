@@ -109,6 +109,8 @@ class View(object):
 			
 			# sanitizing
 			'escape': 'self.escape',
+			'escape_breaks': 'self.escape_breaks', #undocumented
+			'html_breaks': 'self.html_breaks', #undocumented
 			'escape_markers': 'self.escape_markers', #undocumented
 			'html_markers': 'self.html_markers', #undocumented
 			'html_escape': 'self.html_escape',
@@ -354,7 +356,7 @@ class View(object):
 		'''
 		if 'cache' in self.attributes and self.attributes['cache'] == 'output':
 			
-			cache_file = "cache/_:_%s" %requested_url.strip("/").replace("/","_:_")		
+			cache_file = "cache/_:_%s" %str(requested_url.strip("/").replace("/","_:_"))
 			
 			# is page in cache?
 			try:
@@ -447,7 +449,7 @@ class View(object):
 			markers = list(set(pattern.findall(output)))
 
 			for marker in markers:
-				output = output.replace(marker,'')
+				output = str(output.replace(marker,''))
 
 		
 		'''	Extra Debugging output
@@ -477,7 +479,7 @@ class View(object):
 			If your view requires dynamic processing do not use this type of cache.
 		'''
 		if 'cache' in self.attributes and self.attributes['cache'] == 'output':
-			cache_file = "cache/_:_%s" %requested_url.strip("/").replace("/","_:_")
+			cache_file = "cache/_:_%s" %str(requested_url.strip("/").replace("/","_:_"))
 			
 			try:
 				f = open(cache_file,'w')
