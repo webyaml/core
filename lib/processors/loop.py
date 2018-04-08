@@ -84,6 +84,7 @@ class Loop(classes.processor.Processor):
 		if not isinstance(self.content.data,list):
 			
 			print('warning - data is not a list')
+			print(type(self.content.data))
 			self.content.data = [self.content.data]
 			print('warning - data was converted to a list')
 		
@@ -129,7 +130,7 @@ class Loop(classes.processor.Processor):
 				# update attributes to include item
 				#self.content.attributes.update(item)
 				
-				if not self.element.process(conf['subprocess']):
+				if not self.content.process(conf['subprocess']):
 					
 					return False
 		
