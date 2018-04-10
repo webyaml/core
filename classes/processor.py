@@ -1,7 +1,7 @@
 # path: classes/
 # filename: processor.py
 # description: WSGI application processor
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,8 +44,9 @@ class Processor(object):
 		self.conf = copy.copy(conf)
 		
 		self.content = content
+		self.view = self.content.view
 		
-		self.element = self.content.elementObj
+		self.element = self.content.elementObj # this is always none
 		
 		self.top = self.content.top
 		self.parent = self.content.parent

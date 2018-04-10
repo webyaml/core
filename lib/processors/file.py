@@ -1,7 +1,7 @@
 # path: lib/processors
 # filename: wifi.py
 # description: WSGI application file processors
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 	
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,7 +71,9 @@ class Write(classes.processor.Processor):
 			print('no path given')
 			
 			return False
+			
 		
+		# markup file
 		if isinstance(value,str) and 'nomarkup' not in self.conf:
 		
 			value = self.content.fnr(value)
@@ -90,7 +92,7 @@ class Write(classes.processor.Processor):
 		
 		# write
 		file_obj = open(path, "w+")
-		file_obj.write(value)
+		file_obj.write(value) #.encode('utf-8')
 		file_obj.close()
 				
 		return True

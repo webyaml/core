@@ -1,7 +1,7 @@
 # path: core/
 # filename: content.py
 # description: WSGI application content tree
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 	
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -931,6 +931,9 @@ class Content(list):
 
 	def fnr(self,template,limit=10):
 
+		#debug
+		#print(type(template))
+
 		count = 0
 		
 		while True:
@@ -1138,8 +1141,22 @@ class Content(list):
 				
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
-					template = str(template.replace("{{%s}}" %marker,str(markup_value)))
 					
+					if type(markup_value) == unicode:
+						
+						#print(markup_value)
+						#print(markup_value.encode('utf8'))
+						
+						#markup_value = str(markup_value.decode('utf-8'))
+						#template = str(template.encode('utf-8'))
+						
+						template = template.replace("{{%s}}" %marker,markup_value)
+						
+						#print('success')
+						
+					else:
+					
+						template = template.replace("{{%s}}" %marker,str(markup_value))
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
 				'''

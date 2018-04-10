@@ -1,7 +1,7 @@
 # path: lib/processors/
 # filename: redirect.py
 # description: WSGI application redirect processors
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 	
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");

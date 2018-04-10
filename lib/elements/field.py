@@ -1,7 +1,7 @@
 # path: lib/elements/
 # filename: field.py
 # description: WSGI application html form fields
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -420,7 +420,7 @@ class File(Input):
 					# store filename and file
 					data = {
 						"name": self.top.post_vars[self.name].filename,
-						"value": self.top.post_vars[self.name].value,
+						"value": str(self.top.post_vars[self.name].value),
 					}
 					
 					# save filename and file in session

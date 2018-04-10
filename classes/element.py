@@ -1,7 +1,7 @@
 # path: classes/
 # filename: element.py
 # description: WSGI application content element
-
+''' 
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -10,7 +10,7 @@ try:
 except ImportError:
 	from __builtin__ import dict, str
 
-''' 
+
 	Copyright 2017 Mark Madere
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,8 +47,9 @@ class Element(object):
 		self.content = content
 		self.parent = self.content.parent
 		self.top = self.content.top
-		self.conf = self.content.attributes
+		self.view = self.content.view
 		
+		self.conf = self.content.attributes
 		self.data = self.content.data
 		
 		return None
@@ -56,7 +57,7 @@ class Element(object):
 	
 	def render(self):
 		
-		return self.content.attributes.get('value',"")
+		return self.conf.get('value',"")
 
 
 

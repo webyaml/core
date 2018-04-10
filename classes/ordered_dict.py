@@ -1,6 +1,6 @@
 # path: classes/
 # filename: ordered_dict.py
-
+'''
 # make python2 strings and dictionaries behave like python3
 from __future__ import unicode_literals
 
@@ -8,7 +8,7 @@ try:
 	from builtins import dict, str
 except ImportError:
 	from __builtin__ import dict, str
-
+'''
 
 # Backport of OrderedDict() class that runs on Python 2.4, 2.5, 2.6, 2.7 and pypy.
 # Passes Python2.7's test suite and incorporates all the latest updates.
