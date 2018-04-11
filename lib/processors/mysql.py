@@ -39,13 +39,17 @@ class Select(classes.processor.Processor):
 
 	
 	def run(self):
-		
-		print('lib.processors.mysql.Select')
-		
+
+		# vars
 		conf = self.conf
+		debug = False		
 		
-		# debug
-		#print(conf)
+		
+		if conf.get('debug'):
+			
+			print('lib.processors.mysql.Select')
+			debug = True		
+		
 		
 		if not conf.get('conf'):
 		
@@ -58,7 +62,7 @@ class Select(classes.processor.Processor):
 			print('SQL statement not found')
 			
 			return False
-				
+
 		sql = self.content.fnr(conf['sql'])
 
 		# limit
@@ -75,7 +79,8 @@ class Select(classes.processor.Processor):
 			sql = "%s LIMIT %d,%d" %(sql, conf['page'] * conf['limit'], int(conf['limit']))
 			
 		# debug
-		print('sql: %s' %sql)	
+		if debug:
+			print('sql: %s' %sql)	
 
 		
 		db_connection = oursql.connect(**conf.get('conf'))
@@ -94,7 +99,8 @@ class Select(classes.processor.Processor):
 			output = select.fetchall()
 			
 			# debug
-			#print(output)
+			if debug:
+				print(output)
 			
 			if not output:
 				return False
@@ -133,14 +139,25 @@ class Insert(classes.processor.Processor):
 
 	def run(self):
 		
-		db_conf = self.conf.get('conf')
+		# vars
+		conf = self.conf
+		debug = False		
+		
+		
+		if conf.get('debug'):
+			
+			print('lib.processors.mysql.Insert')
+			debug = True			
+		
+		
+		db_conf = conf.get('conf')
 		if not db_conf:
 			
 			self.element.messages.append(["danger",'Database conf not found'])
 			
 			return False		
 		
-		sql = self.conf.get('sql')
+		sql = conf.get('sql')
 		if not sql:
 			
 			self.element.messages.append(["danger",'SQL statement not found'])
@@ -149,7 +166,9 @@ class Insert(classes.processor.Processor):
 		
 		sql = self.content.fnr(self.content.fnr(self.conf.get('sql','')))
 		
-		print('sql: '+sql)
+		# debug
+		if debug:
+			print('sql: %s' %sql)
 		
 		db_connection = oursql.connect(**db_conf)
 		insert = db_connection.cursor()
