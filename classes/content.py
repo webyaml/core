@@ -53,6 +53,7 @@ class Content(list):
 		# vars
 		self.attributes = conf # attributes, the 'content block'
 		self.parent = parent # parent object
+		self.attributes['parent'] = self.parent.attributes # this adds support for {{parent[:parent[:parent]etc.]:attribute}}
 		
 		if 'top' not in dir(self.parent):
 			self.parent.top = self.parent
@@ -187,60 +188,60 @@ class Content(list):
 
 	def loadmodule(self,m,c):
 		
-			# debug
-			#print(m)
-			#print(c)
+		# debug
+		#print(m)
+		#print(c)
+		
+		# does the module exist in site directory
+		if os.path.isfile("%s.py" %m.replace('.','/')):
 			
-			# does the module exist in site directory
-			if os.path.isfile("%s.py" %m.replace('.','/')):
-				
-				print('found a local module - importing')
-				
-				try:
-					_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
-					
-				except: 
-					
-					traceback.print_exc()
-					
-					return False
-				
-			# does the module exist in core directory
-			elif os.path.isfile("core/%s.py" %m.replace('.','/')):
-				
-				try:
-					#_module = imp.load_source(m,"core/%s.py" %m.replace('.','/'))
-					__import__(m)
-					_module = sys.modules[m]  #load module
-					
-				except: 
-					
-					traceback.print_exc()
-					
-					return False
-				
-			else:
-				print("Could not find the the module '%s'." %m)
-				
-				return False
-
-			# load class
+			print('found a local module - importing')
+			
 			try:
-				_class = getattr(_module,c)  
+				_module = imp.load_source(m,"%s.py" %m.replace('.','/'))
 				
-			except AttributeError:
-				
-				print("Could not find the class '%s' in the module '%s'." %(c,m))
-				
-				return False
-			
 			except: 
 				
 				traceback.print_exc()
 				
 				return False
+			
+		# does the module exist in core directory
+		elif os.path.isfile("core/%s.py" %m.replace('.','/')):
+			
+			try:
+				#_module = imp.load_source(m,"core/%s.py" %m.replace('.','/'))
+				__import__(m)
+				_module = sys.modules[m]  #load module
 				
-			return _class
+			except: 
+				
+				traceback.print_exc()
+				
+				return False
+			
+		else:
+			print("Could not find the the module '%s'." %m)
+			
+			return False
+
+		# load class
+		try:
+			_class = getattr(_module,c)  
+			
+		except AttributeError:
+			
+			print("Could not find the class '%s' in the module '%s'." %(c,m))
+			
+			return False
+		
+		except: 
+			
+			traceback.print_exc()
+			
+			return False
+			
+		return _class
 
 
 	def tree(self,conf):
@@ -341,7 +342,7 @@ class Content(list):
 		# Indent the output and wrap
 		#print('indent')
 		
-		# double markup with indent
+		# markup with indent
 		return  self.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1])))
 	
 
@@ -360,6 +361,8 @@ class Content(list):
 			output += prefix+str(line)+"\n"		
 		
 		return output.rstrip("\n")	
+
+
 
 
 	''' 	find and replace functions
@@ -505,7 +508,7 @@ class Content(list):
 		
 		char = self.attributes.get('char', "")
 		
-		print(char)
+		#print(char)
 		
 		if isinstance(obj,str):
 			
@@ -1067,10 +1070,16 @@ class Content(list):
 					# debug
 					#print(item)
 					
+					''' begin - i am not sure if this really works any more
+					'''
+					
 					# string literals
 					if item.startswith("|"):
 						markup_value = item.lstrip("|")
 						continue
+						
+					''' end
+					'''
 					
 					# functions
 					if item.endswith("()"):
@@ -1417,29 +1426,48 @@ class Content(list):
 		
 		# store
 		if conf.get('store'):
-
-			if 'merge' in conf and conf['store'] in dir(self.top):				
+			
+			conf['store2']  = conf['store'] 
+			
+			# does conf['store'] have a prefix?
+			
+			#if parent in conf['store'] 
+			
+			
+			
+			if not ":" in conf['store2']:
 				
-				if eval('isinstance(self.top.%s, dict)' %conf['store']):
+				conf['store2'] = "top:%s" %conf['store']
+			
+			# convert colons to dots
+			
+			conf['store2'] = conf['store2'].replace(":",".")
+			
+			print(conf['store2'] )
+			
+
+			if 'merge' in conf and conf['store'] in self.top.fnr_types:
+				
+				if eval('isinstance(self.%s, dict)' %conf['store2']):
 				
 					# merge with top item
-					exec('self.top.%s.update(self.data)' %conf['store'])
+					exec('self.%s.update(self.data)' %conf['store2'])
 					
 					# debug
 					#print('updated top.%s with self.data' %conf['store'])
 
-				if eval('isinstance(self.top.%s, list)' %conf['store']):
+				if eval('isinstance(self.%s, list)' %conf['store2']):
 				
 					# merge with top item
-					exec('self.top.%s.extend(self.data)' %conf['store'])
+					exec('self.%s.extend(self.data)' %conf['store2'])
 					
 					# debug
 					#print('extended top.%s with self.data' %conf['store'])
 
-				if eval('isinstance(self.top.%s, str)' %conf['store']):
+				if eval('isinstance(self.%s, str)' %conf['store2']):
 				
 					# merge with top item
-					exec('self.top.%s += self.data' %conf['store'])
+					exec('self.%s += self.data' %conf['store2'])
 					
 					# debug
 					#print('concatonated top.%s and self.data' %conf['store'])
@@ -1447,10 +1475,10 @@ class Content(list):
 			else:
 			
 				# add to top
-				exec('self.top.%s = self.data' %conf['store'])
+				exec('self.%s = self.data' %conf['store2'])
 
 				# add to top fnr_types
-				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
+				self.top.fnr_types.update({conf['store']: 'self.%s' %conf['store2']})
 
 				#print('stored self.data as top.%s' %conf['store'])
 				
