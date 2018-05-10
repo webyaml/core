@@ -53,7 +53,7 @@ class Content(list):
 		# vars
 		self.attributes = conf # attributes, the 'content block'
 		self.parent = parent # parent object
-		self.attributes['parent'] = self.parent.attributes # this adds support for {{parent[:parent[:parent]etc.]:attribute}}
+		#self.attributes['parent'] = self.parent.attributes # this adds support for {{parent[:parent[:parent]etc.]:attribute}}
 		
 		if 'top' not in dir(self.parent):
 			self.parent.top = self.parent
@@ -1423,7 +1423,52 @@ class Content(list):
 				entry = self.colon_seperated_to_brackets(conf['entry'].lstrip('{{').rstrip('}}'))
 				
 				exec('self.data = self.data%s' %entry)
+
+		# store
+		if conf.get('store'):
+
+			if 'merge' in conf and conf['store'] in dir(self.top):				
+				
+				if eval('isinstance(self.top.%s, dict)' %conf['store']):
+				
+					# merge with top item
+					exec('self.top.%s.update(self.data)' %conf['store'])
+					
+					# debug
+					#print('updated top.%s with self.data' %conf['store'])
+
+				if eval('isinstance(self.top.%s, list)' %conf['store']):
+				
+					# merge with top item
+					exec('self.top.%s.extend(self.data)' %conf['store'])
+					
+					# debug
+					#print('extended top.%s with self.data' %conf['store'])
+
+				if eval('isinstance(self.top.%s, str)' %conf['store']):
+				
+					# merge with top item
+					exec('self.top.%s += self.data' %conf['store'])
+					
+					# debug
+					#print('concatonated top.%s and self.data' %conf['store'])
+				
+			else:
+			
+				# add to top
+				exec('self.top.%s = self.data' %conf['store'])
+
+				# add to top fnr_types
+				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
+
+				#print('stored self.data as top.%s' %conf['store'])
+				
+				
+		#print(self.data)
 		
+		return True
+
+		'''
 		# store
 		if conf.get('store'):
 			
@@ -1433,17 +1478,19 @@ class Content(list):
 			
 			#if parent in conf['store'] 
 			
-			
-			
 			if not ":" in conf['store2']:
 				
 				conf['store2'] = "top:%s" %conf['store']
+			
+			if conf['store2'].startswith('this'):
+				
+				conf['store2'] = conf['store2'].replace("this","attributes")
 			
 			# convert colons to dots
 			
 			conf['store2'] = conf['store2'].replace(":",".")
 			
-			print(conf['store2'] )
+			#print(conf['store2'] )
 			
 
 			if 'merge' in conf and conf['store'] in self.top.fnr_types:
@@ -1486,7 +1533,7 @@ class Content(list):
 		#print(self.data)
 		
 		return True
-
+		'''
 
 	def colon_seperated_to_brackets(self,input):
 
