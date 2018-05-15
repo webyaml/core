@@ -1510,6 +1510,8 @@ class Content(list):
 			else:
 			
 				# add to top
+				print('self.%s = self.data' %conf['store2'])
+				
 				exec('self.%s = self.data' %conf['store2'])
 
 				# add to top fnr_types
