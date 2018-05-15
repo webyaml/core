@@ -1470,9 +1470,9 @@ class Content(list):
 				
 				conf['store2'] = "top:%s" %conf['store']
 			
-			if conf['store2'].startswith('this'):
+			if conf['store2'].startswith('top:this'):
 				
-				conf['store2'] = conf['store2'].replace("this","attributes")
+				conf['store2'] = conf['store2'].replace("top:this","attributes")
 			
 			# convert colons to dots
 			
