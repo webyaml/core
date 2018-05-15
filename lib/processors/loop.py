@@ -201,6 +201,6 @@ class Loop(classes.processor.Processor):
 				
 				#print(tmp_content)
 				
-				self.content.tree(tmp_content)
+				self.content.tree({'content': tmp_content})
 			
 		return True
