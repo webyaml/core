@@ -28,6 +28,7 @@ except ImportError:
 
 ''' external imports
 '''
+import copy
 
 ''' internal imports
 '''
@@ -177,30 +178,50 @@ class Loop(classes.processor.Processor):
 				# filter must be True to show item
 				if conf.get('filter') and not eval(self.content.fnr(conf['filter'])):
 					continue					
-					
+				
+				
+				new_content = {}
+				new_content['content'] = []
+				
+				
 				
 				# make a new empty content element in items
-				tmp_content = {}
+				#tmp_content = {}
 				
 				# add the key with item to the content attributes
-				tmp_content[key] = item
+				#tmp_content[key] = item
 				
 				# store count in tmp_content
 				#self.content.load_data({'format': 'int', 'store': '%s_count' %key, 'value': count})
-				tmp_content['%s_count' %key] = count
-				count +=1		
+				#tmp_content['%s_count' %key] = count
+				
 				
 				
 				# add the content
 				if isinstance(conf['subcontent'],list):
-					tmp_content.update({'content': conf['subcontent']})
+					
+					for item in conf['subcontent']:
+						
+						tmp = copy.copy(conf['subcontent'])
+						tmp[key] = item
+						tmp['%s_count' %key] = count
+					
+						new_content['content'].append(tmp)
+					
 				else:
-					tmp_content.update(conf['subcontent'])
+					
+					tmp = copy.copy(conf['subcontent'])
+					tmp[key] = item
+					tmp['%s_count' %key] = count
+					
+					new_content['content'].append(tmp)
 				
 				# check for content in tmp_content
 				
 				#print(tmp_content)
 				
-				self.content.tree({'content': tmp_content})
+				self.content.tree(new_content)
+				
+				count +=1
 			
 		return True
