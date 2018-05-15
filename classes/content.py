@@ -1101,10 +1101,10 @@ class Content(list):
 						object = items[0]
 						
 						# is this a marker for a local attribute?
-						if items[0] in self.attributes:
+						if object in self.attributes:
 							
 							# yes prepend this: to marker
-							item = "this:%s" %item
+							object = "this:%s" %object
 						
 						# is there a type for this marker
 						if items[0] not in self.fnr_types:
