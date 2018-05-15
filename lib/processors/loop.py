@@ -200,9 +200,9 @@ class Loop(classes.processor.Processor):
 				# add the content
 				if isinstance(conf['subcontent'],list):
 					
-					for item in conf['subcontent']:
+					for element in conf['subcontent']:
 						
-						tmp = copy.copy(conf['subcontent'])
+						tmp = copy.copy(element)
 						tmp[key] = item
 						tmp['%s_count' %key] = count
 					
