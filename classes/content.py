@@ -1086,39 +1086,35 @@ class Content(list):
 						
 						# search for function in fnr_types
 						if item.rstrip("()") not in self.fnr_types:
-							print("Error - '%s' is not a valid fnr function" %item)
-							break
+							print("WARN - '%s' is not a valid fnr function" %item)
+							
+							markup_value = item
+							continue
 						
 						markup_value = eval(self.fnr_types[item.rstrip("()")])(markup_value)
 						continue
 						
 					# attributes
 					if ":"  in item:
+
+						items = item.split(":")
+						object = items[0]
 						
 						# is this a marker for a local attribute?
-						if item.split(":")[0] in self.attributes:
+						if items[0] in self.attributes:
 							
 							# yes prepend this: to marker
 							item = "this:%s" %item
 						
 						# is there a type for this marker
-						if item.split(":")[0] not in self.fnr_types:
-							print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
+						if items[0] not in self.fnr_types:
+							
+							#debug
+							#print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
 							break						
 						
-						# search for interger literals in fnr_types
-						items = item.split(":")
-						object = items[0]
-						keys = ""
-						for part in items[1:]:
-							if part.startswith('|') and part.strip('|').isdigit():
-								
-								# int literal
-								keys += "[%s]"%part.strip('|')
-								continue
-							
-							keys += "['%s']"%part
-						
+						keys = self.colon_seperated_to_brackets(":".join(items[1:]))
+					
 						# debug
 						#print(self.fnr_types[object])
 						#print(keys)
@@ -1126,7 +1122,7 @@ class Content(list):
 						
 						try:
 							markup_value = eval(self.fnr_types[object]+keys)
-							
+
 						except KeyError:
 							pass
 						except TypeError:
@@ -1135,15 +1131,15 @@ class Content(list):
 						except: traceback.print_exc()
 						
 						continue
+
+					# if this attribute is for the local scope (this)
+					if item in eval(self.fnr_types['this']):
+						markup_value = eval(self.fnr_types['this'])[item]
+						continue
 					
 					# attribute object (or raw)
 					if item in self.fnr_types:
 						markup_value = eval(self.fnr_types[item])
-						continue
-					
-					# if this attribute is for the local scope (this)
-					if item in eval(self.fnr_types['this']):
-						markup_value = eval(self.fnr_types['this'])[item]
 						continue
 					
 					# end of loop
@@ -1539,10 +1535,12 @@ class Content(list):
 
 		if input != "":
 		
+			input = str(input)
+		
 			# format input into a bracketed format
 			
 			# replace escaped colons
-			input = str(input.replace("\:","_-_-_-_-_-_"))
+			input = input.replace("\:","_-_-_-_-_-_")
 			
 			# split segments on colons
 			segments = input.split(":")
@@ -1553,6 +1551,10 @@ class Content(list):
 				
 				# debug
 				#print(segment)
+				
+				if segment.startswith('|'):
+					segment = segment.lstrip('|')
+				
 				
 				# record digits as numbers
 				if segment.isdigit():

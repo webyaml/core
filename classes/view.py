@@ -84,24 +84,32 @@ class View(object):
 		# marker attributes and functions
 		self.fnr_types = {
 
+			# Variables
+			
+			# Caches
+			'cache': 'self.top.cache',
+			'session': 'self.top.session.vars',
+			
+			# URI/GET/POST
+			'path': 'self.top.path_vars',
+			'get': 'self.top.get_vars',
+			'post': 'self.top.post_vars',
+			'getpost': 'self.top.getpost_vars',
+			'raw': 'self.top.raw',			
+
+
+			# ATTRIBUTES
+
 			# Configuration markers
 			'this': 'self.attributes',	
 			'parent': 'self.parent.attributes',
 			'top': 'self.top.attributes',
 			'view': 'self.view.attributes',
+			'data': 'self.data',
 			
-			# Cached markers
-			'cache': 'self.top.cache',
-			'session': 'self.top.session.vars',
 			
-			# URI/GET/POST markers
-			'path': 'self.top.path_vars',
-			'get': 'self.top.get_vars',
-			'post': 'self.top.post_vars',
-			'getpost': 'self.top.getpost_vars',
-			'raw': 'self.top.raw',
-	
-			# functions
+			# FUNCTIONS
+			
 			'exists': 'self.exists',
 			#'count': 'self.count',
 			'len': 'self.count',
