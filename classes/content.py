@@ -1100,17 +1100,21 @@ class Content(list):
 						items = item.split(":")
 						object = items[0]
 						
+						print(self.attributes)
+						
 						# is this a marker for a local attribute?
 						if object in self.attributes:
 							
 							# yes prepend this: to marker
-							object = "this:%s" %object
+							items.insert(1,object)
+							
+							object = "this" 
 						
 						# is there a type for this marker
-						if items[0] not in self.fnr_types:
+						if object not in self.fnr_types:
 							
 							#debug
-							#print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
+							print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
 							break						
 						
 						keys = self.colon_seperated_to_brackets(":".join(items[1:]))
@@ -1147,7 +1151,7 @@ class Content(list):
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
 					
-					template = template.replace("{{%s}}" %marker,str(markup_value))
+					template = template.replace("{{%s}}" %marker,unicode(markup_value))
 					
 				
 				'''debug - warning: lots of output, but this is useful if you need to see

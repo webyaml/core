@@ -218,7 +218,7 @@ class Loop(classes.processor.Processor):
 				
 				# check for content in tmp_content
 				
-				#print(tmp_content)
+				#print(new_content)
 				
 				self.content.tree(new_content)
 				
