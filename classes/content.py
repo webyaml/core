@@ -1411,7 +1411,7 @@ class Content(list):
 				entry = self.colon_seperated_to_brackets(conf['entry'].lstrip('{{').rstrip('}}'))
 				
 				exec('self.data = self.data%s' %entry)
-
+		'''
 		# store
 		if conf.get('store'):
 
@@ -1521,7 +1521,7 @@ class Content(list):
 		#print(self.data)
 		
 		return True
-		'''
+
 
 	def colon_seperated_to_brackets(self,input):
 
