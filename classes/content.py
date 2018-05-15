@@ -1147,21 +1147,9 @@ class Content(list):
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
 					
-					if type(markup_value) == unicode:
-						
-						#print(markup_value)
-						#print(markup_value.encode('utf8'))
-						
-						#markup_value = str(markup_value.decode('utf-8'))
-						#template = str(template.encode('utf-8'))
-						
-						template = template.replace("{{%s}}" %marker,markup_value)
-						
-						#print('success')
-						
-					else:
+					template = template.replace("{{%s}}" %marker,markup_value)
 					
-						template = template.replace("{{%s}}" %marker,str(markup_value))
+				
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
 				'''
