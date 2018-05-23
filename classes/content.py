@@ -1100,7 +1100,7 @@ class Content(list):
 						items = item.split(":")
 						object = items[0]
 						
-						print(self.attributes)
+						#print(self.attributes)
 						
 						# is this a marker for a local attribute?
 						if object in self.attributes:
