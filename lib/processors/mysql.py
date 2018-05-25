@@ -137,6 +137,7 @@ class Select(classes.processor.Processor):
 
 class Insert(classes.processor.Processor):
 
+	
 	def run(self):
 		
 		# vars
@@ -147,30 +148,28 @@ class Insert(classes.processor.Processor):
 		if conf.get('debug'):
 			
 			print('lib.processors.mysql.Insert')
-			debug = True			
+			debug = True		
 		
 		
-		db_conf = conf.get('conf')
-		if not db_conf:
-			
-			self.element.messages.append(["danger",'Database conf not found'])
-			
-			return False		
+		if not conf.get('conf'):
 		
-		sql = conf.get('sql')
-		if not sql:
-			
-			self.element.messages.append(["danger",'SQL statement not found'])
+			print('Database conf not found')
 			
 			return False
 		
-		sql = self.content.fnr(self.content.fnr(self.conf.get('sql','')))
+		if not conf.get('sql'):
+			
+			print('SQL statement not found')
+			
+			return False
+
+		sql = self.content.fnr(conf['sql'])
 		
 		# debug
 		if debug:
 			print('sql: %s' %sql)
 		
-		db_connection = oursql.connect(**db_conf)
+		db_connection = oursql.connect(**conf.get('conf'))
 		insert = db_connection.cursor()
 		
 		try:
@@ -198,107 +197,3 @@ class Update(Insert):
 	''' Same as insert.
 	'''
 	pass
-		
-		
-
-
-
-class Select_old(classes.processor.Processor):
-
-	
-	def run(self):
-		
-		db_conf = self.conf.get('conf')
-		if not db_conf:
-			
-			self.element.messages.append(["danger",'Database conf not found'])
-			
-			return False		
-		
-		sql = self.conf.get('sql')
-		if not sql:
-			
-			self.element.messages.append(["danger",'SQL statement not found'])
-			
-			return False
-		
-		sql = self.content.fnr(self.conf.get('sql',''))
-		
-		print('sql: '+sql)
-		
-		
-		
-		db_connection = oursql.connect(**db_conf)
-		
-		format = self.conf.get('format', 'dict')
-		if format == 'list':
-			select = db_connection.cursor()
-		else:
-			select = db_connection.cursor(oursql.DictCursor)
-		
-		
-		try:
-			select.execute(sql)
-			
-			#  store result in element
-			output = select.fetchall()
-			
-			print(output)
-			
-			
-			if not output:
-				return False
-				
-			json_fields = self.conf.get('json')
-			if json_fields:
-				
-				import json
-				
-				for record in output:
-					
-					for field in json_fields:
-						
-						#print(record[field])
-						#record[field] = json.loads(record[field])
-						
-						try:
-							record[field] = json.loads(record[field])
-						except:
-							record[field] = {}
-						
-			
-			# Create Cache
-			cache = self.conf.get('name')
-			if cache:
-				
-				if format == 'record':
-					
-					if cache in dir(self.top):
-						# create top level object to store the output
-						exec('self.top.%s.update(output[0])' %cache)
-						
-					else:
-						# create top level object to store the output
-						exec('self.top.%s = output[0]' %cache)
-						
-						#print('created new object')
-					
-				else:
-					# create top level object to store the output
-					exec('self.top.%s = output' %cache)
-				
-				# add to top fnr_types
-				self.top.fnr_types.update({cache: 'self.top.%s' %cache})
-			
-			return True
-
-		except oursql.Error as e:
-			
-			# we could possibly add content here
-			
-			self.conf['false'] = {'content': {'value': "MySQL error: %s" %str(e[1])}}
-			
-			print(e)
-			
-			return False	
-	
