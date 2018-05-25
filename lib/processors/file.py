@@ -76,7 +76,12 @@ class Write(classes.processor.Processor):
 		# markup file
 		if isinstance(value,str) and 'nomarkup' not in self.conf:
 		
-			value = self.content.fnr(value)
+			if 'singlemarkup' in self.conf:
+		
+				value = self.content.fnr(value,1)
+			else:
+				
+				value = self.content.fnr(value)
 		
 		# markup path
 		path = self.content.fnr(path)

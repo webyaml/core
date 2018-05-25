@@ -39,27 +39,35 @@ class Evaluate(classes.processor.Processor):
 	
 	def run(self):
 		
+		conf = self.conf
+		debug = False		
+		
+		if conf.get('debug'):
+			
+			print('lib.processors.logic.Evaluate')
+			debug = True		
+		
 		#print('lib.processors.logic.Evaluate')
 		
-		expression = self.conf.get('expression')
+		expression = conf.get('expression')
 
 		if expression:
 			
 			expression = self.content.fnr(expression)
 			
-			#debug
-			#print(expression)
+			if debug:
+				print(expression)
 			
 			if eval(expression):
 				
-				#debug
-				#print("True")
+				if debug:
+					print("True")
 				
 				return True
 				
 			else:
 				
-				#debug
-				#print("False")
+				if debug:
+					print("False")
 				
 				return False
