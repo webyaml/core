@@ -713,7 +713,7 @@ class Content(list):
 		import uuid
 		
 		# random uuid
-		return str(uuid.uuid4()) #any obj will be ignored
+		return str(uuid.uuid4().hex) #any obj will be ignored
 	
 	
 	def url_quote(self,obj):
@@ -1151,7 +1151,7 @@ class Content(list):
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
 					
-					template = template.replace("{{%s}}" %marker,str(markup_value))
+					template = template.replace("{{%s}}" %marker, str(markup_value))
 					
 				
 				'''debug - warning: lots of output, but this is useful if you need to see
