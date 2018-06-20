@@ -505,22 +505,26 @@ class Content(list):
 
 		# debug
 		#print('strip')
-		
+
 		char = self.attributes.get('char', "")
-		
+
 		#print(char)
-		
-		if isinstance(obj,str):
-			
-			return obj.strip("\n").strip("\r").strip(char).strip()
-			
-			#return obj.strip(char)
-		
+		#print(type(obj))
+
+		if not isinstance(obj,unicode):
+
+			obj = unicode(obj)
+
+		obj =  obj.strip("\n").strip("\r").strip(char).strip()
+
 		''' #consider adding the following
 		if isinstance(obj,list):
 		'''
-		
+
+		#print(obj)
+
 		return obj
+
 
 
 	def escape(self,obj):
@@ -1151,10 +1155,17 @@ class Content(list):
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
 					
-					#if not isinstance(markup_value,unicode):
-					#	markup_value = unicode(markup_value)
+					if not isinstance(markup_value,unicode):
+						
+						try:
+						
+							markup_value = unicode(markup_value)
+							
+						except UnicodeDecodeError:
+							
+							markup_value = unicode(markup_value.decode('UTF-8'))
 
-					template = template.replace(u"{{%s}}" %marker, unicode(markup_value))
+					template = template.replace(u"{{%s}}" %marker, markup_value)
 				
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
