@@ -212,6 +212,8 @@ class View(object):
 		# POST vars
 		self.post_vars = self.build_post_vars()
 		
+		print("POST vars: "+str(self.post_vars))
+		
 		# GET vars
 		self.get_vars = self.build_get_vars()
 		
@@ -238,7 +240,16 @@ class View(object):
 		#convert to dict
 		tmp_post_vars = {}
 		for key in post_vars:
+			
+			if isinstance(post_vars[key],basestring):
+				
+				print(type(post_vars[key]))
+				
+				tmp_post_vars[key] = u"%s"%post_vars[key]
+				continue
+			
 			tmp_post_vars[key] = post_vars[key]
+			
 		post_vars = tmp_post_vars
 		
 		return post_vars
@@ -457,7 +468,7 @@ class View(object):
 			markers = list(set(pattern.findall(output)))
 
 			for marker in markers:
-				output = str(output.replace(marker,''))
+				output = unicode(output.replace(marker,''))
 
 		
 		'''	Extra Debugging output

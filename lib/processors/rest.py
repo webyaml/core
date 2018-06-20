@@ -252,3 +252,91 @@ class POST(Rest):
 				return False
 
 		return True				
+
+
+class DELETE(Rest):
+	
+	
+	def run(self):
+
+		print('lib.processors.rest.DELETE')
+
+		#vars
+		conf = self.conf
+		cookiejar = requests.cookies.RequestsCookieJar()
+		
+		# Target URL
+		if 'url' not in conf:
+			print("'url' not in conf")
+			return False
+
+		# Headers
+		conf.setdefault('headers',{})
+		
+		# Args (URL Markers)
+		conf.setdefault('args',{})
+		
+		# Markup Args
+		for arg in conf['args']:
+			conf['args'][arg] = self.content.fnr(conf['args'][arg])
+		
+		# store args
+		#self.store(conf['args'],name='args')
+		if conf['args']:
+			self.content.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
+		
+		# Markup URL
+		conf['url'] = self.content.fnr(conf['url'])
+
+		# Auth
+		auth = ()
+		conf.setdefault('auth',())
+		if conf['auth']:
+			try:
+				auth = (conf['auth']['username'],conf['auth']['password'])
+			except:
+				pass
+		
+		# debug
+		print("url is '%s'" %conf['url'])
+		
+		if 'cookie' in conf:
+			
+			# does the cookie exist in the current session?
+			
+			if "cookies" not in self.top.session.vars:
+				self.top.session.vars["cookies"] = {}
+			
+			if conf['cookie'] in self.top.session.vars["cookies"]:
+				cookiejar = self.top.session.vars["cookies"][conf['cookie']]		
+		
+		#make request
+		
+		#debug
+		print('making request')
+		
+		r = requests.delete(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], cookies=cookiejar)
+
+		# debug
+		print('request complete')
+		print(r.text)
+		
+		# store cookies in session
+		if 'cookie' in conf and conf['cookie'] not in self.top.session.vars["cookies"]:
+			self.top.session.vars["cookies"][conf['cookie']] = r.cookies		
+		
+		# handle the returned data
+		if conf.get('receive'):
+			
+			conf['receive']['value'] = r.text
+			
+			# load data
+			if not self.content.load_data(conf['receive']):
+				
+				print('failed to send - data failed to load')
+					
+				return False
+		
+		#print('GET successful')
+		
+		return True
