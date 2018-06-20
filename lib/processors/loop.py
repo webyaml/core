@@ -50,9 +50,13 @@ class Loop(classes.processor.Processor):
 	
 	def run(self):
 		
-		print('lib.processors.loop.Loop')
-		
 		conf = self.conf
+		debug = False		
+
+		if conf.get('debug'):
+			
+			print('lib.processors.loop.Loop')
+			debug = True
 
 		if not conf.get('data'):
 			
