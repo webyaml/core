@@ -132,7 +132,7 @@ class Content(list):
 				
 				# debug
 				#print('Processor Output: - %s' %str(output))
-			
+				
 				if output == True:
 					
 					# convert bool True to string
@@ -358,7 +358,9 @@ class Content(list):
 			return input
 		
 		for line in input.split('\n'):
-			output += prefix+str(line)+"\n"		
+			output += prefix+line+"\n"		
+		
+		#print(type(output))
 		
 		return output.rstrip("\n")	
 
@@ -375,7 +377,7 @@ class Content(list):
 		#debug
 		#print('int')
 		
-		if isinstance(obj, str) and obj.strip().isdigit():
+		if isinstance(obj, basestring) and obj.strip().isdigit():
 			return int(obj)
 			
 		return obj
@@ -475,7 +477,7 @@ class Content(list):
 		#print('exists')
 		#print('obj:'+str(obj))
 		
-		if isinstance(obj, str) and obj != '':
+		if isinstance(obj, basestring) and obj != '':
 			return 'True'
 			
 		if obj:
@@ -538,10 +540,10 @@ class Content(list):
 		if isinstance(obj,list):
 			string = ", ".join(obj)
 		
-		if isinstance(obj,str):
-			obj = obj.replace("'",r"\'").replace('"',r'\"')
+		if isinstance(obj,basestring):
+			obj = obj.replace("'",r"\'").replace('"',r'\"') #.replace(u'\u2019', r"\\u2019")
 		
-		return str(obj)
+		return obj
 	
 	
 	def escape_breaks(self,obj):
@@ -552,11 +554,11 @@ class Content(list):
 		# debug
 		#print('escape_breaks')
 		
-		if not isinstance(obj,str):
+		if not isinstance(obj,basestring):
 			
 			return obj
 			
-		return str(obj.replace("\n",r"\\n").replace('\r',r'\\n'))
+		return obj.replace("\n",r"\\n").replace('\r',r'\\n')
 
 	
 	def html_breaks(self,obj):
@@ -568,11 +570,11 @@ class Content(list):
 		#print('convert_breaks')
 		#print(type(obj))
 		
-		if not isinstance(obj,str):
+		if not isinstance(obj,basestring):
 			
 			return obj
 			
-		return str(obj.replace("\n",r"</br>"))
+		return obj.replace("\n",r"</br>")
 	
 	
 	def escape_markers(self,obj):
@@ -584,8 +586,8 @@ class Content(list):
 		# debug
 		#print('escape_markers')
 		
-		if isinstance(obj,str):
-			obj = str(obj.replace("{{",r"\{\{").replace('}}',r'\}\}'))
+		if isinstance(obj,basestring):
+			obj = obj.replace("{{",r"\{\{").replace('}}',r'\}\}')
 		
 		return obj
 	
@@ -625,7 +627,7 @@ class Content(list):
 					
 					subobj[key] = walk(subobj[key])
 			
-			if isinstance(subobj,str):
+			if isinstance(subobj,basestring):
 				
 				subobj = self.fnr(subobj)
 			
@@ -638,7 +640,7 @@ class Content(list):
 			# Hack
 			if isinstance(subobj,decimal.Decimal):
 				
-				subobj = str(subobj)
+				subobj = unicode(subobj)
 			
 			return subobj
 		
@@ -717,7 +719,7 @@ class Content(list):
 		import uuid
 		
 		# random uuid
-		return str(uuid.uuid4().hex) #any obj will be ignored
+		return unicode(uuid.uuid4().hex) #any obj will be ignored
 	
 	
 	def url_quote(self,obj):
@@ -836,7 +838,7 @@ class Content(list):
 		# debug
 		#print('string')
 		
-		return str(obj)
+		return unicode(obj)
 
 
 	def upper(self,obj):
@@ -844,7 +846,7 @@ class Content(list):
 		# debug
 		#print('string')
 		
-		return str(obj).upper()
+		return unicode(obj).upper()
 
 
 	def lower(self,obj):
@@ -852,7 +854,7 @@ class Content(list):
 		# debug
 		#print('string')
 		
-		return str(obj).lower()
+		return unicode(obj).lower()
 
 
 	def list(self, obj):
@@ -869,7 +871,7 @@ class Content(list):
 		#print('escape_script')
 		#print(type(obj))
 		
-		if isinstance(obj,str):
+		if isinstance(obj,basestring):
 			
 			return obj.replace('</script>','<\\/script>')
 		
@@ -889,9 +891,9 @@ class Content(list):
 	
 	def us_phone(self,obj):
 		
-		if not isinstance(obj,str):
+		if not isinstance(obj,basestring):
 			
-			obj = str(obj)
+			obj = unicode(obj)
 		
 		out = obj
 		if obj != "":
@@ -903,9 +905,9 @@ class Content(list):
 
 	def us_ssn(self,obj):
 		
-		if not isinstance(obj,str):
+		if not isinstance(obj,basestring):
 			
-			obj = str(obj)
+			obj = unicode(obj)
 		
 		out = "%s-%s-%s"%(obj[0:3],obj[3:5],obj[5:9])
 		
@@ -936,11 +938,17 @@ class Content(list):
 	''' 	Find and Replace method.  This the core of the framework
 	'''
 
-	def fnr(self,template,limit=10):
+	def fnr(self,template,limit=10,**kwargs):
+		
+		binary = False
+		if 'binary' in kwargs:
+			print('binary')
+			binary = True
+			
 
 		#debug
 		#print(type(template))
-
+		
 		count = 0
 		
 		while True:
@@ -955,8 +963,8 @@ class Content(list):
 			
 			# does this template include any markers?
 			try:
-				start = str(template_copy).index('{{')
-				end = str(template_copy).index('}}',start)
+				start = unicode(template_copy).index('{{')
+				end = unicode(template_copy).index('}}',start)
 			
 			# no markers found, return input
 			except ValueError:
@@ -1132,8 +1140,14 @@ class Content(list):
 							markup_value = eval(self.fnr_types[object]+keys)
 
 						except KeyError:
+							
+							print('KeyError in Content.fnr()')
+							
 							pass
 						except TypeError:
+							
+							print('TypeError in Content.fnr()')
+							
 							pass
 							
 						except: traceback.print_exc()
@@ -1155,17 +1169,24 @@ class Content(list):
 				# replace marker with markup_value
 				if markup_value or markup_value == '' or markup_value == 0:
 					
-					if not isinstance(markup_value,unicode):
+					if binary:
 						
-						try:
+						template = template.replace("{{%s}}" %marker, str(markup_value))
 						
-							markup_value = unicode(markup_value)
+					else:
+					
+						if not isinstance(markup_value,unicode):
 							
-						except UnicodeDecodeError:
+							try:
 							
-							markup_value = unicode(markup_value.decode('UTF-8'))
+								markup_value = unicode(markup_value)
+								
+							except UnicodeDecodeError:
+								
+								markup_value = unicode(markup_value.decode('UTF-8'))
+								
 
-					template = template.replace(u"{{%s}}" %marker, markup_value)
+						template = template.replace(u"{{%s}}" %marker, markup_value)
 				
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
@@ -1380,7 +1401,7 @@ class Content(list):
 			
 			#print('format is string')
 			
-			self.data = str(data)
+			self.data = unicode(data)
 		
 
 		# yaml
@@ -1413,7 +1434,7 @@ class Content(list):
 			
 			#print('format is default')
 			
-			self.data = str(data)
+			self.data = unicode(data)
 
 
 		# entry point
@@ -1542,7 +1563,7 @@ class Content(list):
 
 		if input != "":
 		
-			input = str(input)
+			input = unicode(input)
 		
 			# format input into a bracketed format
 			
@@ -1571,10 +1592,10 @@ class Content(list):
 					continue
 					
 				# reinstate colons in segments 
-				segment = str(segment.replace("_-_-_-_-_-_",":"))
+				segment = segment.replace("_-_-_-_-_-_",":")
 				
 				# escape quotes
-				segment = str(segment.replace("'",r"\'").replace('"',r'\"'))
+				segment = segment.replace("'",r"\'").replace('"',r'\"')
 				
 				# add segment to entry
 				output += "['%s']" %segment
