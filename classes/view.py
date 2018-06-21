@@ -212,7 +212,7 @@ class View(object):
 		# POST vars
 		self.post_vars = self.build_post_vars()
 		
-		print("POST vars: "+str(self.post_vars))
+		#print("POST vars: "+str(self.post_vars))
 		
 		# GET vars
 		self.get_vars = self.build_get_vars()
@@ -236,24 +236,42 @@ class View(object):
 	def build_post_vars(self):
 		
 		post_vars = web.webapi.rawinput("POST")
+
 		
 		#convert to dict
 		tmp_post_vars = {}
 		for key in post_vars:
+			tmp_post_vars[key] = post_vars[key]
+		post_vars = tmp_post_vars
+		
+		return post_vars
+
+
+		'''
+		#convert to dict
+		tmp_post_vars = {}
+		for key in post_vars:
 			
-			if isinstance(post_vars[key],basestring):
+			if isinstance(post_vars[key],str) or isinstance(post_vars[key],unicode):
 				
 				print(type(post_vars[key]))
 				
-				tmp_post_vars[key] = u"%s"%post_vars[key]
-				continue
+				try:
+				
+					tmp_post_vars[key] = u"%s"%post_vars[key]
+					continue
+					
+				except UnicodeDecodeError:
+					
+					tmp_post_vars[key] = u"%s"%post_vars[key].decode('UTF-8')
+					continue
 			
 			tmp_post_vars[key] = post_vars[key]
 			
 		post_vars = tmp_post_vars
 		
 		return post_vars
-	
+		'''
 	
 	def remove_get_vars_from_post_vars(self):
 		
@@ -367,6 +385,10 @@ class View(object):
 			for header in self.attributes['header']:
 					
 				eval('web.header(%s)' %header)
+				
+		else:
+			web.header('Content-Type','text/html; charset=utf-8')
+			
 
 
 		'''Cache Output - READ
