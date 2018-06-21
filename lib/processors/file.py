@@ -78,10 +78,10 @@ class Write(classes.processor.Processor):
 		
 			if 'singlemarkup' in self.conf:
 		
-				value = self.content.fnr(value,1)
+				value = self.content.fnr(value,1,binary=True)
 			else:
 				
-				value = self.content.fnr(value)
+				value = self.content.fnr(value,binary=True)
 		
 		# markup path
 		path = self.content.fnr(path)

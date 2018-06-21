@@ -411,8 +411,11 @@ class File(Input):
 				self.conf.setdefault('filename','<label>Uploaded Filename:</label> %s'%self.top.post_vars[self.name])
 			
 			else:
+				
+				#print(self.top.post_vars[self.name])
 		
 				if self.top.post_vars[self.name].filename and self.top.post_vars[self.name].value:
+				#if 'filename' in dir(self.top.post_vars[self.name]) and 'value' in dir(self.top.post_vars[self.name]):
 					
 					#debug
 					#print('found filename and value')
