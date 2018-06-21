@@ -52,6 +52,9 @@ class Evaluate(classes.processor.Processor):
 		expression = conf.get('expression')
 
 		if expression:
+
+			if debug:
+				print(expression)
 			
 			expression = self.content.fnr(expression)
 			
