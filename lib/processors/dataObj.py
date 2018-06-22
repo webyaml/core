@@ -39,10 +39,14 @@ class Create(classes.processor.Processor):
 	
 	def run(self):
 		
-		print('lib.processors.dataObj.Create')
-		
 		conf = self.conf
-
+		debug = False
+		
+		if conf.get('debug'):
+		
+			print('lib.processors.dataObj.Create')
+			debug = True
+		
 		if not conf.get('data'):
 			
 			print('data not in conf')
@@ -61,10 +65,15 @@ class Create(classes.processor.Processor):
 class Modify(classes.processor.Processor):
 	
 	def run(self):
-		
-		print('lib.processors.dataObj.Modify')
-		
+
+
 		conf = self.conf
+		debug = False
+		
+		if conf.get('debug'):
+		
+			print('lib.processors.dataObj.Modify')
+			debug = True
 
 		if not conf.get('source'):
 			
@@ -117,7 +126,8 @@ class Modify(classes.processor.Processor):
 		
 		if 'merge' in conf['source']:
 			
-			print('merge')
+			if debug:
+				print('merge')
 			
 			if eval('isinstance(self.content.dataObj%s, dict)' %entry):
 			
