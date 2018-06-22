@@ -246,32 +246,6 @@ class View(object):
 		
 		return post_vars
 
-
-		'''
-		#convert to dict
-		tmp_post_vars = {}
-		for key in post_vars:
-			
-			if isinstance(post_vars[key],str) or isinstance(post_vars[key],unicode):
-				
-				print(type(post_vars[key]))
-				
-				try:
-				
-					tmp_post_vars[key] = u"%s"%post_vars[key]
-					continue
-					
-				except UnicodeDecodeError:
-					
-					tmp_post_vars[key] = u"%s"%post_vars[key].decode('UTF-8')
-					continue
-			
-			tmp_post_vars[key] = post_vars[key]
-			
-		post_vars = tmp_post_vars
-		
-		return post_vars
-		'''
 	
 	def remove_get_vars_from_post_vars(self):
 		
