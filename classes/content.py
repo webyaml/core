@@ -339,9 +339,6 @@ class Content(list):
 			# double markup
 			return  self.fnr(wrap[0]+output+wrap[1])
 		
-		# Indent the output and wrap
-		#print('indent')
-		
 		# markup with indent
 		return  self.fnr(self.indent("%s\n%s\n%s" %(wrap[0],output,wrap[1])))
 	
@@ -388,7 +385,7 @@ class Content(list):
 		#debug
 		#print('split')
 		
-		if isinstance(obj, str):
+		if isinstance(obj, basestring):
 		
 			delimiter = self.attributes.get('delimiter')
 			if delimiter:
@@ -1141,11 +1138,14 @@ class Content(list):
 
 						except KeyError:
 							
-							print('KeyError in Content.fnr()')
+							#debug
+							#print('KeyError in Content.fnr()')
 							
 							pass
+							
 						except TypeError:
 							
+							# debug
 							print('TypeError in Content.fnr()')
 							
 							pass
