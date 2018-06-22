@@ -193,7 +193,7 @@ class Loop(classes.processor.Processor):
 				except AttributeError:
 					
 					print('AttributeError:')
-					print(__repr__(conf))
+					print(conf.__repr__())
 					continue
 				
 				
