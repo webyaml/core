@@ -128,7 +128,7 @@ class Loop(classes.processor.Processor):
 				self.content.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter
-				if conf.get('filter') and isinstance(conf['filter'],str):
+				if conf.get('filter') and isinstance(conf['filter'],basestring):
 					
 					# debug
 					#print(self.fnr(conf.get('filter')))
