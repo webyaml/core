@@ -1374,7 +1374,12 @@ class Content(list):
 					if not isinstance(self.data,list):
 					
 						print('warning - data not a list')
-						
+				except NameError:
+					
+					# Item not in top?
+					pass
+				
+				
 				except: traceback.print_exc()
 		
 		# python
