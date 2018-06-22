@@ -127,23 +127,16 @@ class Loop(classes.processor.Processor):
 				# store the item to be used by fnr functions
 				self.content.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
-				# evaluate filter
-				
-				try:
-				
-					if conf.get('filter') and isinstance(conf['filter'],basestring):
-						
-						# debug
-						#print(self.fnr(conf.get('filter')))
-						
-						# filter must be True to show item
-						if not eval(self.content.fnr(conf['filter'])):
-							continue
-							
-				except AttributeError:
+				# evaluate filter			
+				if conf.get('filter') and isinstance(conf['filter'],basestring):
 					
-					print('AttributeError:')
-					print(__repr__(conf))
+					# debug
+					#print(self.fnr(conf.get('filter')))
+					
+					# filter must be True to show item
+					if not eval(self.content.fnr(conf['filter'])):
+						continue
+					
 				
 				# update attributes to include item
 				#self.content.attributes.update(item)
@@ -194,8 +187,14 @@ class Loop(classes.processor.Processor):
 
 				'''							
 				# filter must be True to show item
-				if conf.get('filter') and not eval(self.content.fnr(conf['filter'])):
-					continue					
+				try:
+					if conf.get('filter') and not eval(self.content.fnr(conf['filter'])):
+						continue
+				except AttributeError:
+					
+					print('AttributeError:')
+					print(__repr__(conf))
+					continue
 				
 				
 				new_content = {}
