@@ -1378,6 +1378,11 @@ class Content(list):
 					
 					# Item not in top?
 					pass
+					
+				except SyntaxError:
+					
+					# missing data obj?
+					pass
 				
 				
 				except: traceback.print_exc()
