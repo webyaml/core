@@ -128,14 +128,22 @@ class Loop(classes.processor.Processor):
 				self.content.load_data({'format': 'raw', 'store': key, 'value': item})	
 				
 				# evaluate filter
-				if conf.get('filter') and isinstance(conf['filter'],basestring):
+				
+				try:
+				
+					if conf.get('filter') and isinstance(conf['filter'],basestring):
+						
+						# debug
+						#print(self.fnr(conf.get('filter')))
+						
+						# filter must be True to show item
+						if not eval(self.content.fnr(conf['filter'])):
+							continue
+							
+				except AttributeError:
 					
-					# debug
-					#print(self.fnr(conf.get('filter')))
-					
-					# filter must be True to show item
-					if not eval(self.content.fnr(conf['filter'])):
-						continue
+					print('AttributeError:')
+					print(__repr__(conf))
 				
 				# update attributes to include item
 				#self.content.attributes.update(item)
