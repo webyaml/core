@@ -88,17 +88,22 @@ class Loop(classes.processor.Processor):
 		# data must be a list to loop
 		if not isinstance(self.content.data,list):
 			
-			print('warning - data is not a list')
-			print(type(self.content.data))
+			if debug:
+				print('warning - data is not a list')
+				print(type(self.content.data))
+				
 			self.content.data = [self.content.data]
-			print('warning - data was converted to a list')
+			
+			if debug:
+				print('warning - data was converted to a list')
 		
-		# debug
-		print('starting loop')
+		if debug:
+			print('starting loop')
 		
 		if conf.get('subprocess'):
 
-			print('calling subprocessors')
+			if debug:
+				print('calling subprocessors')
 			
 			#for each element in data perform a process
 			
@@ -141,7 +146,8 @@ class Loop(classes.processor.Processor):
 		
 		if conf.get('subcontent'):	
 			
-			print('rendering subcontent')
+			if debug:
+				print('rendering subcontent')
 			
 			#for each element in data create an content item
 			
