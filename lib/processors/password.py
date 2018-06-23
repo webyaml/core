@@ -58,7 +58,6 @@ class Hash(classes.processor.Processor):
 		functions = {
 			'sha256': hashlib.sha256,
 			'sha512': hashlib.sha512,
-			'sha1024': hashlib.sha1024,
 			}
 
 		
@@ -90,7 +89,7 @@ class Hash(classes.processor.Processor):
 	
 		# hash algorithm 
 		
-		function = conf.get('function', 'sha256'):
+		function = conf.get('function', 'sha256')
 
 		if function not in functions:
 			
@@ -115,10 +114,9 @@ class Hash(classes.processor.Processor):
 		if debug:
 			
 			print('salt: %s' %str(salt))
-			print('hash: %s' %str(conf['data']['value'] )
-
-		# store the hash
+			print('hash: %s' %str(conf['data']['value']))
 		
+		# store the hash
 		if not self.content.load_data(conf['data']):
 			
 			print('failed to store hash')	
