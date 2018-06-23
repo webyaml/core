@@ -876,15 +876,6 @@ class Content(list):
 		#print(obj)
 		return obj
 
-	'''
-	def cleanup(self,obj):
-		
-		if not isinstance(obj,str):
-			return obj
-		
-		
-		return obj.decode("utf-8").replace(u"\e2u3F3F",'')
-	'''
 	
 	def us_phone(self,obj):
 		
@@ -1171,6 +1162,8 @@ class Content(list):
 					
 					if binary:
 						
+						# the markup_value is a binary object and should be considered to be a string
+						
 						template = template.replace("{{%s}}" %marker, str(markup_value))
 						
 					else:
@@ -1191,7 +1184,7 @@ class Content(list):
 				'''debug - warning: lots of output, but this is useful if you need to see
 					markups at this granular level.
 				'''
-				#print(marker,markup_value)
+				#print(marker,markup_value.__repr__())
 				
 			''' Can we make some sort of check here to see if there are markers that can still be replaced?
 			'''
@@ -1383,6 +1376,7 @@ class Content(list):
 					
 					# missing data obj?
 					pass
+					
 				
 				
 				except: traceback.print_exc()
@@ -1455,52 +1449,7 @@ class Content(list):
 				entry = self.colon_seperated_to_brackets(conf['entry'].lstrip('{{').rstrip('}}'))
 				
 				exec('self.data = self.data%s' %entry)
-		'''
-		# store
-		if conf.get('store'):
-
-			if 'merge' in conf and conf['store'] in dir(self.top):				
-				
-				if eval('isinstance(self.top.%s, dict)' %conf['store']):
-				
-					# merge with top item
-					exec('self.top.%s.update(self.data)' %conf['store'])
-					
-					# debug
-					#print('updated top.%s with self.data' %conf['store'])
-
-				if eval('isinstance(self.top.%s, list)' %conf['store']):
-				
-					# merge with top item
-					exec('self.top.%s.extend(self.data)' %conf['store'])
-					
-					# debug
-					#print('extended top.%s with self.data' %conf['store'])
-
-				if eval('isinstance(self.top.%s, str)' %conf['store']):
-				
-					# merge with top item
-					exec('self.top.%s += self.data' %conf['store'])
-					
-					# debug
-					#print('concatonated top.%s and self.data' %conf['store'])
-				
-			else:
-			
-				# add to top
-				exec('self.top.%s = self.data' %conf['store'])
-
-				# add to top fnr_types
-				self.top.fnr_types.update({conf['store']: 'self.top.%s' %conf['store']})
-
-				#print('stored self.data as top.%s' %conf['store'])
-				
-				
-		#print(self.data)
 		
-		return True
-
-		'''
 		# store
 		if conf.get('store'):
 			
@@ -1590,6 +1539,7 @@ class Content(list):
 				# debug
 				#print(segment)
 				
+				# backwards compatibility
 				if segment.startswith('|'):
 					segment = segment.lstrip('|')
 				
