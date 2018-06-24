@@ -173,22 +173,48 @@ class Configuration(object):
 		
 		#self.fix_redeclared_anchors(content)
 		
-		
 		try:
 			conf = yaml.load(content)
 			
-		except yaml.parser.ParserError as e:
+		except Exception as e:
 			
-			return self.yaml_error_display(e,content)
+			# There was an error loading the configuration
+			# Replace the config with usefull debuggin output
 			
-		except yaml.composer.ComposerError as e:
+			newcontent = '''
+value: |
+	<pre>
+	There is an error in the configuration for this view:
+	
+	Type: {{e:type}}
+	Message: {{e:message}}
+	
+	{{e:code}}
+	</pre>
+		'''
+			conf = yaml.load(newcontent.replace("\t","    "))
+		
+			conf['e'] = {}
+			conf['e']['message'] = e
+			conf['e']['type'] = e.__repr__()
 			
-			return self.yaml_error_display(e,content)
+			content_list = content.split('\n')
 			
-		except yaml.scanner.ScannerError as e:
+			linenumber = int(str(e).split("line ",1)[1].split(",")[0])
+			if linenumber > 3:
+				start = linenumber - 3
+			else:
+				start = 0
 			
-			return self.yaml_error_display(e,content)
-
+			if  len(content_list) - linenumber < 3:
+				end = len(content_list)
+			else:
+				end = linenumber +3
+			
+			conf['e']['code'] = ''
+			for i in range(start, end):
+				conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
+		
 		#debug 
 		#print(conf)
 		

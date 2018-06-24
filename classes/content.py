@@ -266,6 +266,16 @@ class Content(list):
 			for item in conf['content']:
 				try:
 					self.append( Content(self,item) )
+					
+					'''
+					except MyError:
+					
+						item = {errorcontent}
+						self.append(Content(self,item))
+					
+					'''
+					
+					
 				except: traceback.print_exc()
 		
 		
@@ -285,9 +295,24 @@ class Content(list):
 		if not _class:
 			
 			return False
-		
+
+
 		# instanciate Element object
 		self.elementObj = _class(self)
+
+		'''
+		
+		# making an exception for calling processor instead of element
+		
+		try:
+		
+			# instanciate Element object
+			self.elementObj = _class(self)
+			
+		except TypeError as e:
+			print(e)
+			return False	
+		'''	
 		
 		return None
 
