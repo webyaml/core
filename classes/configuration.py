@@ -189,7 +189,7 @@ value: |
 	Type: {{e:type}}
 	Message: {{e:message}}
 	
-	{{e:code}}
+	{{html_escape(e:code)}}
 	</pre>
 		'''
 			conf = yaml.load(newcontent.replace("\t","    "))
@@ -213,7 +213,10 @@ value: |
 			
 			conf['e']['code'] = ''
 			for i in range(start, end):
-				conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
+				if i+1 == linenumber:
+					conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
+				else:
+					conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
 		
 		#debug 
 		#print(conf)

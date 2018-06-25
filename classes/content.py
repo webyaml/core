@@ -298,9 +298,8 @@ class Content(list):
 
 
 		# instanciate Element object
-		self.elementObj = _class(self)
+		#self.elementObj = _class(self)
 
-		'''
 		
 		# making an exception for calling processor instead of element
 		
@@ -309,10 +308,48 @@ class Content(list):
 			# instanciate Element object
 			self.elementObj = _class(self)
 			
-		except TypeError as e:
-			print(e)
-			return False	
-		'''	
+		except Exception as e:
+			
+			# There was an error
+			
+			# copy the content block (conf) for showing in error message
+			import copy
+			orginal_conf = copy.deepcopy(self.attributes)
+			
+			self.attributes = {}
+			self.attributes['noindent'] = True
+			self.attributes['value'] = ''' <pre>
+
+There is an error in this content block:
+
+{{yaml(e:code).html_escape()}}
+
+Type: {{e:type}}
+Message: {{e:message}}
+
+{{e:suggestion}}
+</pre>
+'''
+			self.attributes['e'] = {}
+			self.attributes['e']['message'] = e.message
+			self.attributes['e']['type'] = e.__repr__()			
+			self.attributes['e']['code'] = orginal_conf
+			
+			if e.message == "__init__() takes exactly 3 arguments (2 given)":
+				
+				self.attributes['e']['suggestion'] = '''
+Suggestion: This error usually means that a processor was called as an element.
+
+Try this content block instead:
+
+{{yaml(e:suggestedcode).html_escape()}}
+'''
+
+			self.attributes['e']['suggestedcode'] = {"process": orginal_conf}
+			
+			
+			return self.init_element()
+
 		
 		return None
 
@@ -697,7 +734,7 @@ class Content(list):
 		# debug
 		#print('truncate')	
 		
-		if isinstance(obj, str) or isinstance(obj,list):		
+		if isinstance(obj, basestring) or isinstance(obj,list):		
 		
 			# length attribute
 			length = int(self.attributes.get('length',50))
@@ -714,9 +751,9 @@ class Content(list):
 		
 		import cgi
 		
-		if isinstance(obj, str):
+		if isinstance(obj, basestring):
 			
-			return cgi.escape(obj,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','').replace('/','\/')
+			return cgi.escape(obj,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','') #.replace('/','\/')
 		
 		return obj
 	
@@ -726,7 +763,7 @@ class Content(list):
 		# debug
 		#print('html_markers')
 
-		if isinstance(obj, str):
+		if isinstance(obj, basestring):
 		
 			return obj.replace("{","&#123;").replace("}","&#125;")
 		
@@ -751,7 +788,7 @@ class Content(list):
 		# debug
 		#print('url_quote')	
 			
-		if isinstance(obj,str):
+		if isinstance(obj,basestring):
 		
 			import urllib
 			obj = urllib.quote_plus(obj)
@@ -766,7 +803,7 @@ class Content(list):
 
 		import urllib
 
-		if isinstance(obj,str):
+		if isinstance(obj,basestring):
 
 			return urllib.unquote_plus(obj)
 
