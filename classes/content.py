@@ -318,8 +318,18 @@ class Content(list):
 			
 			self.attributes = {}
 			self.attributes['noindent'] = True
-			self.attributes['value'] = ''' <pre>
-
+			self.attributes['value'] = '''
+<style>
+	.error {
+		border: 2pt solid #ea8a8a;
+		padding-left: 10px;
+		padding-right: 10px;
+		border-radius: 10px;
+		background: #ffefef;
+	}
+</style>
+<pre class="error">
+<h3>Content Error</h3>
 There is an error in this content block:
 
 {{yaml(e:code).html_escape()}}
@@ -1302,9 +1312,10 @@ Try this content block instead:
 		#print(conf)
 		
 		# value
-		if not conf.get('value') and conf['value'] != 0 and conf['value'] != '':
+		if not conf.get('value'):
 			print("error value not given")
 			return False
+		
 		
 		# format
 		conf.setdefault('format','string')
@@ -1554,7 +1565,7 @@ Try this content block instead:
 					# debug
 					#print('extended top.%s with self.data' %conf['store'])
 
-				if eval('isinstance(self.%s, str)' %conf['store2']):
+				if eval('isinstance(self.%s, basestring)' %conf['store2']):
 				
 					# merge with top item
 					exec('self.%s += self.data' %conf['store2'])
