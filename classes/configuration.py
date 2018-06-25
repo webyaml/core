@@ -76,7 +76,7 @@ class Configuration(object):
 				if aliases:
 					
 					# allow aliases to be a string. convert to list
-					if isinstance(aliases,basesting):
+					if isinstance(aliases,basestring):
 						aliases = [aliases]
 					
 					if isinstance(aliases,list):
