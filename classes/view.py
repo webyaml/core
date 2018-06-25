@@ -323,7 +323,7 @@ class View(object):
 					content_config_files = self.attributes.get('conf',[])
 					
 					# allow conf to be a string.  convert to list
-					if isinstance(content_config_files,str):
+					if isinstance(content_config_files,basestring):
 						content_config_files = [content_config_files]
 					
 					# update conf attribute

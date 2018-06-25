@@ -76,7 +76,7 @@ class Configuration(object):
 				if aliases:
 					
 					# allow aliases to be a string. convert to list
-					if isinstance(aliases,str):
+					if isinstance(aliases,basesting):
 						aliases = [aliases]
 					
 					if isinstance(aliases,list):
@@ -182,8 +182,24 @@ class Configuration(object):
 			# Replace the config with usefull debuggin output
 			
 			newcontent = '''
+noindent:
 value: |
-	<pre>
+	<html>
+		<head>
+			<title>Error</title>
+			<style>
+				.error {
+					border: 2pt solid #ea8a8a;
+					padding-left: 10px;
+					padding-right: 10px;
+					border-radius: 10px;
+					background: #ffefef;
+				}
+			</style>
+		</head>
+		<body>
+	<pre class="error">
+	<h3>Configuration Error</h3>
 	There is an error in the configuration for this view:
 	
 	Type: {{e:type}}
@@ -191,6 +207,8 @@ value: |
 	
 	{{html_escape(e:code)}}
 	</pre>
+		</body>
+	</html>
 		'''
 			conf = yaml.load(newcontent.replace("\t","    "))
 		
@@ -217,6 +235,8 @@ value: |
 					conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
 				else:
 					conf['e']['code'] += "%d\t%s\n"%(i+1,content_list[i])
+					
+			conf['e']['code'] = conf['e']['code'].replace('<<: *', '**')
 		
 		#debug 
 		#print(conf)

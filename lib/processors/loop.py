@@ -166,26 +166,7 @@ class Loop(classes.processor.Processor):
 					
 				# store the item to be used by fnr functions
 				#self.content.load_data({'format': 'raw', 'store': key, 'value': item})						
-					
-				'''
-				print(conf.get('filter'))
 				
-				# evaluate filter
-				if conf.get('filter') and isinstance(filter,str):
-					
-
-					
-					# filter must be True to show item
-					if not eval(self.content.fnr(conf.get('filter'))):
-						continue
-				
-						
-				# debug
-				print(conf.get('filter'))
-				print(self.content.fnr(conf.get('filter')))						
-
-
-				'''							
 				# filter must be True to show item
 				try:
 					if conf.get('filter') and not eval(self.content.fnr(conf['filter'])):

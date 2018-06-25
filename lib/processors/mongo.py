@@ -77,7 +77,7 @@ class Find(Mongo):
 		if not filter:
 			filter = {}
 			
-		if isinstance(filter, str):
+		if isinstance(filter, basestring):
 			
 			# remove tabs
 			filter =  filter.replace("\t","     ")
