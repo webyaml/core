@@ -251,7 +251,7 @@ class Content(list):
 		
 		# Vars
 		
-		if isinstance(conf,str) :
+		if isinstance(conf,basestring) :
 			
 			print("Warn: classes.content.tree() performing eval()")
 			conf = eval(conf)
@@ -560,7 +560,7 @@ Try this content block instead:
 		# debug
 		#print('singleline')
 		
-		if not isinstance(obj,str):
+		if not isinstance(obj,basestring):
 			
 			return ''
 			
@@ -844,7 +844,7 @@ Try this content block instead:
 				return obj
 		
 		# unix timestamp
-		if isinstance(obj,str):
+		if isinstance(obj,basestring):
 			
 			if not obj.isdigit():
 				
@@ -864,7 +864,7 @@ Try this content block instead:
 		# debug
 		#print('last4')	
 		
-		if isinstance(obj,str):		
+		if isinstance(obj,basestring):		
 			
 			return "*"*(len(obj)-4)+ obj[-4:]
 		
@@ -876,7 +876,7 @@ Try this content block instead:
 		# debug
 		#print('keyword')	
 		
-		if isinstance(obj,str):		
+		if isinstance(obj,basestring):		
 			
 			return '<mark>%s</mark>'%obj
 		
@@ -888,7 +888,7 @@ Try this content block instead:
 		# debug
 		#print('title_case')	
 		
-		if isinstance(obj,str):
+		if isinstance(obj,basestring):
 		
 			# split the string on spaces
 			parts = obj.split()
@@ -1326,7 +1326,7 @@ Try this content block instead:
 		# data
 		data = conf['value']
 		
-		if isinstance(data,str) and 'nomarkup' not in conf:
+		if isinstance(data,basestring) and 'nomarkup' not in conf:
 			
 			# markup data
 			data = self.fnr(data)
