@@ -123,6 +123,7 @@ class View(object):
 			'html_markers': 'self.html_markers', #undocumented
 			'html_escape': 'self.html_escape',
 			'escape_script': 'self.escape_script',
+			'space2p20': 'self.space2p20',
 
 			# URI
 			'url_quote': 'self.url_quote',
@@ -402,6 +403,8 @@ class View(object):
 		print("POST vars: "+str(self.post_vars))
 		print("PATH vars: "+str(self.path_vars))
 
+		
+		# CACHE INPUT
 		
 		''' 	The view configuration file may be cached in memory.
 			If the configuration is not found load from file(s).

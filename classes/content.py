@@ -307,7 +307,7 @@ class Content(list):
 		
 			# instanciate Element object
 			self.elementObj = _class(self)
-			
+
 		except Exception as e:
 			
 			# There was an error
@@ -338,12 +338,16 @@ Type: {{e:type}}
 Message: {{e:message}}
 
 {{e:suggestion}}
+
+Stacktrace:
+{{yaml(e:stack)}}
 </pre>
 '''
 			self.attributes['e'] = {}
 			self.attributes['e']['message'] = e.message
 			self.attributes['e']['type'] = e.__repr__()			
 			self.attributes['e']['code'] = orginal_conf
+			self.attributes['e']['code'].pop('content', None)
 			
 			if e.message == "__init__() takes exactly 3 arguments (2 given)":
 				
@@ -354,12 +358,12 @@ Try this content block instead:
 
 {{yaml(e:suggestedcode).html_escape()}}
 '''
-
-			self.attributes['e']['suggestedcode'] = {"process": orginal_conf}
 			
+			self.attributes['e']['suggestedcode'] = {"process": orginal_conf}
+			#self.attributes['e']['stack'] = traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback,10)
 			
 			return self.init_element()
-
+		
 		
 		return None
 
@@ -383,7 +387,7 @@ Try this content block instead:
 			print(self.fnr(self.attributes['log']))
 		
 		# render this element
-		output = self.elementObj.render()+output
+		output = unicode(self.elementObj.render())+output
 		
 		# split wrap
 		wrap = self.attributes.get('wrap','|').split("|",1)
@@ -464,6 +468,17 @@ Try this content block instead:
 				return obj.split(delimiter)
 				
 			return obj.split()
+			
+		return obj
+
+	def space2p20(self,obj):
+
+		#debug
+		print('space2p20')
+		
+		if isinstance(obj, basestring):
+		
+			return obj.replace(" ","%20")
 			
 		return obj
 	
