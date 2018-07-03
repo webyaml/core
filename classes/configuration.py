@@ -206,6 +206,9 @@ value: |
 	Message: {{e:message}}
 	
 	{{html_escape(e:code)}}
+	
+	Stacktrace:
+	{{e:stack}}	
 	</pre>
 		</body>
 	</html>
@@ -215,6 +218,7 @@ value: |
 			conf['e'] = {}
 			conf['e']['message'] = e
 			conf['e']['type'] = e.__repr__()
+			#conf['e']['stack'] = traceback.walk_stack()
 			
 			content_list = content.split('\n')
 			

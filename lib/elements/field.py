@@ -167,7 +167,7 @@ class Input(classes.element.Element):
 		''' 	This is an interesting use of fnr_types.  This concept could be used a lot more.
 		'''
 		# add {{field:$attr}} to fnr_types
-		self.content.fnr_types.update({'field': 'self.fieldObj.attrs'})
+		self.view.marker_map.update({'field': 'self.fieldObj.attrs'})
 		
 		# is this field in an error state?
 		if self.content.fieldObj.note:

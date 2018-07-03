@@ -63,7 +63,7 @@ class Content(list):
 		
 		self.elementObj = None # placeholder for elementObj
 		self.data = None
-		self.fnr_types = self.top.fnr_types
+		self.marker_map = self.top.marker_map
 		
 		# main
 
@@ -435,582 +435,10 @@ Try this content block instead:
 		
 		#print(type(output))
 		
-		return output.rstrip("\n")	
+		return output.rstrip("\n")
 
 
-
-
-	''' 	find and replace functions
-		need to find a way to move these
-	
-	'''
-
-	def int(self,obj):
-
-		#debug
-		#print('int')
-		
-		if isinstance(obj, basestring) and obj.strip().isdigit():
-			return int(obj)
-			
-		return obj
-	
-
-	def split(self,obj):
-
-		#debug
-		#print('split')
-		
-		if isinstance(obj, basestring):
-		
-			delimiter = self.attributes.get('delimiter')
-			if delimiter:
-				return obj.split(delimiter)
-				
-			return obj.split()
-			
-		return obj
-
-	def space2p20(self,obj):
-
-		#debug
-		print('space2p20')
-		
-		if isinstance(obj, basestring):
-		
-			return obj.replace(" ","%20")
-			
-		return obj
-	
-
-	def sha256(self,password):
-		
-		if not password:
-			return password
-		
-		#debug
-		#print('sha256')
-		
-		import crypt
-		#import random
-		#import string
-		
-		password = crypt.crypt(password, '$5$')
-		
-		return password
-
-
-	def md5(self,password):
-		
-		if not password:
-			return password		
-		
-		#debug
-		#print('md5')
-		
-		import hashlib
-		password = password.strip()
-		return hashlib.md5(password).hexdigest()
-
-
-	def dollar(self,f):
-		
-		''' Note: Needs to be a number formatter not specifc to USD
-		'''
-
-		#debug
-		#print('dollar')
-		
-		if not isinstance(f,float):
-			
-			return 'fix me - dollar was not float'
-			
-		return "%.2f" %f
-
-
-	def key_val_list(self,d):
-		
-		#debug
-		#print('key_val_list')
-		
-		if not isinstance(d,dict):
-			return d
-		
-		output = []
-		for key in d:
-			
-			output.append({'key': key, 'val': d[key]})
-		
-		return output
-
-
-	def count(self,l):
-		
-		#debug
-		#print('count')
-		
-		if not isinstance(l,list):
-			return l
-		
-		return len(l)
-
-
-	def exists(self,obj):
-		
-		# debug
-		#print('exists')
-		#print('obj:'+str(obj))
-		
-		if isinstance(obj, basestring) and obj != '':
-			return 'True'
-			
-		if obj:
-			return 'True'
-			
-		return 'False'
-	
-	
-	def singleline(self,obj):
-
-		# debug
-		#print('singleline')
-		
-		if not isinstance(obj,basestring):
-			
-			return ''
-			
-		output = []
-		for line in obj.split('\n'):
-			
-			output.append(line.strip())
-		
-		return ' '.join(output)
-	
-	
-	def strip(self,obj):
-
-		# debug
-		#print('strip')
-
-		char = self.attributes.get('char', "")
-
-		#print(char)
-		#print(type(obj))
-
-		if not isinstance(obj,unicode):
-
-			obj = unicode(obj)
-
-		obj =  obj.strip("\n").strip("\r").strip(char).strip()
-
-		''' #consider adding the following
-		if isinstance(obj,list):
-		'''
-
-		#print(obj)
-
-		return obj
-
-
-
-	def escape(self,obj):
-		
-		''' escape single and double qoutes in strings.
-		'''
-
-		# debug
-		#print('escape')
-		
-		if isinstance(obj,list):
-			string = ", ".join(obj)
-		
-		if isinstance(obj,basestring):
-			obj = obj.replace("'",r"\'").replace('"',r'\"') #.replace(u'\u2019', r"\\u2019")
-		
-		return obj
-	
-	
-	def escape_breaks(self,obj):
-		
-		''' escape single and double qoutes in strings.
-		'''
-
-		# debug
-		#print('escape_breaks')
-		
-		if not isinstance(obj,basestring):
-			
-			return obj
-			
-		return obj.replace("\n",r"\\n").replace('\r',r'\\n')
-
-	
-	def html_breaks(self,obj):
-		
-		''' convert line breaks to html breaks
-		'''
-
-		# debug
-		#print('convert_breaks')
-		#print(type(obj))
-		
-		if not isinstance(obj,basestring):
-			
-			return obj
-			
-		return obj.replace("\n",r"</br>")
-	
-	
-	def escape_markers(self,obj):
-		
-		''' escape braces in strings.
-			this was added for dcoumetnation - it may not be needed
-		'''
-
-		# debug
-		#print('escape_markers')
-		
-		if isinstance(obj,basestring):
-			obj = obj.replace("{{",r"\{\{").replace('}}',r'\}\}')
-		
-		return obj
-	
-	
-	def _join(self,obj):
-
-		# debug
-		#print('_join')
-		
-		if isinstance(obj,list):
-			obj = ", ".join(obj)
-		
-		return obj
-	
-
-	def _json(self,obj):
-	
-		# debug
-		#print('_json')	
-		#print(obj)
-		
-		import json
-		import decimal
-		import datetime
-		
-		def walk(subobj):
-			
-			if isinstance(subobj,list):
-				
-				for i in range(0,len(subobj)):
-					
-					subobj[i] = walk(subobj[i])
-			
-			if isinstance(subobj,dict):
-				
-				for key in subobj:
-					
-					subobj[key] = walk(subobj[key])
-			
-			if isinstance(subobj,basestring):
-				
-				subobj = self.fnr(subobj)
-			
-			# Hack
-			if isinstance(subobj,datetime.datetime):
-				
-				# uses the local date function to convert to string
-				subobj = self.date(subobj)
-
-			# Hack
-			if isinstance(subobj,decimal.Decimal):
-				
-				subobj = unicode(subobj)
-			
-			return subobj
-		
-		obj = walk(obj)
-		
-		return  json.dumps(obj)
-
-
-	def _yaml(self,obj):
-		
-		# debug
-		#print('_yaml')	
-		#print(obj)
-		
-		import decimal
-		import json
-		import yaml		
-
-		# tweak for utf-8
-		def my_unicode_repr(self, data):
-			return self.represent_str(data.encode('utf-8'))
-		
-		yaml.representer.Representer.add_representer(unicode, my_unicode_repr)
-		
-		obj = json.loads(self._json(obj))
-		
-		return yaml.dump(obj, allow_unicode=True, default_flow_style=False)
-
-	
-	def truncate(self,obj):
-
-		# debug
-		#print('truncate')	
-		
-		if isinstance(obj, basestring) or isinstance(obj,list):		
-		
-			# length attribute
-			length = int(self.attributes.get('length',50))
-			
-			return obj[:length]
-
-		return obj
-	
-	
-	def html_escape(self,obj):
-
-		# debug
-		#print('html_escape')
-		
-		import cgi
-		
-		if isinstance(obj, basestring):
-			
-			return cgi.escape(obj,quote=True).replace("{","&#123;").replace("}","&#125;").replace('\\','') #.replace('/','\/')
-		
-		return obj
-	
-
-	def html_markers(self,obj):
-
-		# debug
-		#print('html_markers')
-
-		if isinstance(obj, basestring):
-		
-			return obj.replace("{","&#123;").replace("}","&#125;")
-		
-		return obj		
-		
-	
-	def uuid(self,obj):
-
-		# debug
-		#print('uuid')
-		
-		import uuid
-		
-		# random uuid
-		return unicode(uuid.uuid4().hex) #any obj will be ignored
-	
-	
-	def url_quote(self,obj):
-
-		# docs - https://docs.python.org/2/library/urllib.html#urllib.quote_plus
-
-		# debug
-		#print('url_quote')	
-			
-		if isinstance(obj,basestring):
-		
-			import urllib
-			obj = urllib.quote_plus(obj)
-		
-		return obj
-	
-	
-	def url_unquote(self,obj):
-
-		# debug
-		#print('url_unquote')	
-
-		import urllib
-
-		if isinstance(obj,basestring):
-
-			return urllib.unquote_plus(obj)
-
-		return obj	
-
-	
-	def date(self,obj):
-
-		# debug
-		#print('date')	
-		
-		import datetime
-		
-		format = self.attributes.get('format', "%Y-%m-%d")
-		
-		# no object, current time
-		if not obj:
-			
-			obj =  datetime.datetime.now()
-		
-		# datetime object
-		if isinstance(obj,datetime.datetime):
-			
-			try:
-			
-				return datetime.datetime.strftime(obj,format)
-			except:
-				return obj
-		
-		# unix timestamp
-		if isinstance(obj,basestring):
-			
-			if not obj.isdigit():
-				
-				return obj
-				
-			obj = int(obj)
-		
-		if isinstance(obj,int):
-			
-			return datetime.datetime.fromtimestamp(obj).strftime(format)
-	
-		return obj
-
-	
-	def last4(self,obj):
-
-		# debug
-		#print('last4')	
-		
-		if isinstance(obj,basestring):		
-			
-			return "*"*(len(obj)-4)+ obj[-4:]
-		
-		return obj
-
-	
-	def keyword(self,obj):
-
-		# debug
-		#print('keyword')	
-		
-		if isinstance(obj,basestring):		
-			
-			return '<mark>%s</mark>'%obj
-		
-		return obj
-	
-	
-	def title_case(self,obj):
-
-		# debug
-		#print('title_case')	
-		
-		if isinstance(obj,basestring):
-		
-			# split the string on spaces
-			parts = obj.split()
-			
-			obj = []
-			for part in parts:
-				obj.append("%s%s" %(part[0].upper(),part[1:].lower()))
-			
-			return " ".join(obj)
-		
-		return obj
-
-
-	def string(self,obj):
-
-		# debug
-		#print('string')
-		
-		return unicode(obj)
-
-
-	def upper(self,obj):
-
-		# debug
-		#print('string')
-		
-		return unicode(obj).upper()
-
-
-	def lower(self,obj):
-
-		# debug
-		#print('string')
-		
-		return unicode(obj).lower()
-
-
-	def list(self, obj):
-		
-		# if the obj is not a list, make it the first element of a list
-		if not isinstance(obj, list):
-			obj = [obj]
-		
-		return obj
-	
-	
-	def escape_script(self,obj):
-		
-		#print('escape_script')
-		#print(type(obj))
-		
-		if isinstance(obj,basestring):
-			
-			return obj.replace('</script>','<\\/script>')
-		
-		#print('return default')
-		#print(obj)
-		return obj
-
-	
-	def us_phone(self,obj):
-		
-		if not isinstance(obj,basestring):
-			
-			obj = unicode(obj)
-		
-		out = obj
-		if obj != "":
-		
-			out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
-		
-		return out
-
-
-	def us_ssn(self,obj):
-		
-		if not isinstance(obj,basestring):
-			
-			obj = unicode(obj)
-		
-		out = "%s-%s-%s"%(obj[0:3],obj[3:5],obj[5:9])
-		
-		return out
-
-
-	def random_choice(self,obj):
-		
-		if not isinstance(obj,list):
-			return obj
-
-		import random
-		
-		return random.choice(obj)
-	
-
-	# wtf - was this really needed?
-	def tab(self,obj):
-		
-		return '\t'
-
-
-	'''  END FNR FUNCTIONS
-	'''
-
-
-
-	''' 	Find and Replace method.  This the core of the framework
+	''' 	Regenerate  This the core of the framework
 	'''
 
 	def fnr(self,template,limit=10,**kwargs):
@@ -1115,7 +543,7 @@ Try this content block instead:
 						quote_chr = None
 						continue				
 
-					# data inside of functions
+					# data inside of methods
 					if i < len(marker)-1 and not quote_state and marker[i] == "(" and marker[i+1] != ")":
 						if value:
 							stack.append(''.join(value))
@@ -1123,7 +551,7 @@ Try this content block instead:
 						nested_state = True
 						continue
 					
-					# data inside of functions
+					# data inside of methods
 					if nested_state and i < len(marker) and not quote_state and marker[i] == ")":
 						if value:
 							stack.insert(0, ''.join(value))
@@ -1157,28 +585,27 @@ Try this content block instead:
 					# debug
 					#print(item)
 					
-					''' begin - i am not sure if this really works any more
-					'''
 					
+					''' begin - i am not sure if this really needed any more
+					'''
 					# string literals
 					if item.startswith("|"):
 						markup_value = item.lstrip("|")
 						continue
-						
 					''' end
 					'''
 					
-					# functions
+					# methods
 					if item.endswith("()"):
 						
-						# search for function in fnr_types
-						if item.rstrip("()") not in self.fnr_types:
-							print("WARN - '%s' is not a valid fnr function" %item)
+						# search for methods in marker_map
+						if item.rstrip("()") not in self.marker_map:
+							print("WARN - '%s' is not a valid marker methods" %item)
 							
 							markup_value = item
 							continue
 						
-						markup_value = eval(self.fnr_types[item.rstrip("()")])(markup_value)
+						markup_value = eval(self.marker_map[item.rstrip("()")])(self,markup_value)
 						continue
 						
 					# attributes
@@ -1198,7 +625,7 @@ Try this content block instead:
 							object = "this" 
 						
 						# is there a type for this marker
-						if object not in self.fnr_types:
+						if object not in self.marker_map:
 							
 							#debug
 							print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
@@ -1207,12 +634,12 @@ Try this content block instead:
 						keys = self.colon_seperated_to_brackets(":".join(items[1:]))
 					
 						# debug
-						#print(self.fnr_types[object])
+						#print(self.marker_map[object])
 						#print(keys)
 						#print(markup_value)
 						
 						try:
-							markup_value = eval(self.fnr_types[object]+keys)
+							markup_value = eval(self.marker_map[object]+keys)
 
 						except KeyError:
 							
@@ -1233,13 +660,13 @@ Try this content block instead:
 						continue
 
 					# if this attribute is for the local scope (this)
-					if item in eval(self.fnr_types['this']):
-						markup_value = eval(self.fnr_types['this'])[item]
+					if item in eval(self.marker_map['this']):
+						markup_value = eval(self.marker_map['this'])[item]
 						continue
 					
 					# attribute object (or raw)
-					if item in self.fnr_types:
-						markup_value = eval(self.fnr_types[item])
+					if item in self.marker_map:
+						markup_value = eval(self.marker_map[item])
 						continue
 					
 					# end of loop
@@ -1562,7 +989,7 @@ Try this content block instead:
 			#print(conf['store2'] )
 			
 
-			if 'merge' in conf and conf['store'] in self.top.fnr_types:
+			if 'merge' in conf and conf['store'] in self.top.marker_map:
 				
 				if eval('isinstance(self.%s, dict)' %conf['store2']):
 				
@@ -1595,8 +1022,8 @@ Try this content block instead:
 				
 				exec('self.%s = self.data' %conf['store2'])
 
-				# add to top fnr_types
-				self.top.fnr_types.update({conf['store']: 'self.%s' %conf['store2']})
+				# add to top marker_map
+				self.top.marker_map.update({conf['store']: 'self.%s' %conf['store2']})
 
 				#print('stored self.data as top.%s' %conf['store'])
 				
