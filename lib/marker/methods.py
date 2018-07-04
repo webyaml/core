@@ -39,8 +39,8 @@ marker_map = {
 	
 	'exists': 'self.view.mmethods.mm_exists',
 	#'count': 'self.view.mmethods.mm_count',
-	'len': 'self.view.mmethods.mm_count',
-	'random': 'self.view.mmethods.mm_random_choice',
+	'len': 'self.view.mmethods.mm_len',
+	'random': 'self.view.mmethods.mm_random',
 	
 	# sanitizing
 	'escape': 'self.view.mmethods.mm_escape',
@@ -64,11 +64,12 @@ marker_map = {
 	'singleline': 'self.view.mmethods.mm_singleline',
 	#'remove': 'self.view.mmethods.mm_remove', #undocumented
 	'dollar': 'self.view.mmethods.mm_dollar', #undocumented
-	'title_case': 'self.view.mmethods.mm_title_case',
-	'tab': 'self.view.mmethods.mm_tab',
+	
+	#'tab': 'self.view.mmethods.mm_tab',
 	
 	'lower': 'self.view.mmethods.mm_lower',
 	'upper': 'self.view.mmethods.mm_upper',
+	'title_case': 'self.view.mmethods.mm_title_case',
 	
 	'us_phone': 'self.view.mmethods.mm_us_phone',
 	'us_ssn': 'self.view.mmethods.mm_us_ssn',
@@ -88,13 +89,13 @@ marker_map = {
 	# object conversion
 	'json': 'self.view.mmethods.mm_json',
 	'yaml': 'self.view.mmethods.mm_yaml',
-	'csv': 'self.view.mmethods.mm_csv',
+	#'csv': 'self.view.mmethods.mm_csv',
 	
 	# god only knows
 	'join': 'self.view.mmethods.mm__join',
 	'split': 'self.view.mmethods.mm_split',
 	'list': 'self.view.mmethods.mm_list',
-	'cleanup': 'self.view.mmethods.mm_cleanup', # clean chinese crap			
+	#'cleanup': 'self.view.mmethods.mm_cleanup', # clean chinese crap			
 
 }
 
@@ -196,7 +197,7 @@ def mm_key_val_list(self,d):
 	return output
 
 
-def mm_count(self,l):
+def mm_len(self,l):
 	
 	#debug
 	#print('count')
@@ -237,6 +238,21 @@ def mm_singleline(self,obj):
 		output.append(line.strip())
 	
 	return ' '.join(output)
+
+
+def mm_escape_breaks(self,obj):
+	
+	''' needs to be merged with mm_singleline
+	'''
+
+	# debug
+	#print('escape_breaks')
+	
+	if not isinstance(obj,basestring):
+		
+		return obj
+		
+	return obj.replace("\n",r"\\n").replace('\r',r'\\n')
 
 
 def mm_strip(self,obj):
@@ -282,19 +298,7 @@ def mm_escape(self,obj):
 	return obj
 
 
-def mm_escape_breaks(self,obj):
-	
-	''' escape single and double qoutes in strings.
-	'''
 
-	# debug
-	#print('escape_breaks')
-	
-	if not isinstance(obj,basestring):
-		
-		return obj
-		
-	return obj.replace("\n",r"\\n").replace('\r',r'\\n')
 
 
 def mm_html_breaks(self,obj):
@@ -310,20 +314,24 @@ def mm_html_breaks(self,obj):
 		
 		return obj
 		
-	return obj.replace("\n",r"</br>")
+	return obj.replace("\n","</br>")
 
 
 def mm_escape_markers(self,obj):
 	
 	''' escape braces in strings.
 		this was added for dcoumetnation - it may not be needed
+		
+		Also it does not seem to be working.  the slashes are showing 
+		on page.  expected marker without markup and no visible slashes.
+		It does seem to work fine with ace editor
 	'''
 
 	# debug
 	#print('escape_markers')
 	
 	if isinstance(obj,basestring):
-		obj = obj.replace("{{",r"\{\{").replace('}}',r'\}\}')
+		obj = obj.replace("{{","\{\{").replace('}}','\}\}')
 	
 	return obj
 
@@ -334,7 +342,10 @@ def mm__join(self,obj):
 	#print('_join')
 	
 	if isinstance(obj,list):
-		obj = ", ".join(obj)
+		
+		delimiter = self.attributes.get('delimiter', " ")
+		
+		obj = delimiter.join(obj)
 	
 	return obj
 
@@ -401,7 +412,7 @@ def mm_yaml(self,obj):
 	
 	yaml.representer.Representer.add_representer(unicode, my_unicode_repr)
 	
-	obj = json.loads(self._json(obj))
+	obj = json.loads(self.view.mmethods.mm_json(self,obj))
 	
 	return yaml.dump(obj, allow_unicode=True, default_flow_style=False)
 
@@ -531,6 +542,9 @@ def mm_last4(self,obj):
 	# debug
 	#print('last4')	
 	
+	if isinstance(obj,int):
+		obj = str(obj)
+	
 	if isinstance(obj,basestring):		
 		
 		return "*"*(len(obj)-4)+ obj[-4:]
@@ -546,25 +560,6 @@ def mm_keyword(self,obj):
 	if isinstance(obj,basestring):		
 		
 		return '<mark>%s</mark>'%obj
-	
-	return obj
-
-
-def mm_title_case(self,obj):
-
-	# debug
-	#print('title_case')	
-	
-	if isinstance(obj,basestring):
-	
-		# split the string on spaces
-		parts = obj.split()
-		
-		obj = []
-		for part in parts:
-			obj.append("%s%s" %(part[0].upper(),part[1:].lower()))
-		
-		return " ".join(obj)
 	
 	return obj
 
@@ -593,26 +588,31 @@ def mm_lower(self,obj):
 	return unicode(obj).lower()
 
 
+def mm_title_case(self,obj):
+
+	# debug
+	#print('title_case')	
+	
+	if isinstance(obj,basestring):
+	
+		# split the string on spaces
+		parts = obj.split()
+		
+		obj = []
+		for part in parts:
+			obj.append("%s%s" %(part[0].upper(),part[1:].lower()))
+		
+		return " ".join(obj)
+	
+	return obj
+
+
 def mm_list(self, obj):
 	
 	# if the obj is not a list, make it the first element of a list
 	if not isinstance(obj, list):
 		obj = [obj]
 	
-	return obj
-
-
-def mm_escape_script(self,obj):
-	
-	#print('escape_script')
-	#print(type(obj))
-	
-	if isinstance(obj,basestring):
-		
-		return obj.replace('</script>','<\\/script>')
-	
-	#print('return default')
-	#print(obj)
 	return obj
 
 
@@ -641,7 +641,7 @@ def mm_us_ssn(self,obj):
 	return out
 
 
-def mm_random_choice(self,obj):
+def mm_random(self,obj):
 	
 	if not isinstance(obj,list):
 		return obj
@@ -656,3 +656,16 @@ def mm_tab(self,obj):
 	
 	return '\t'
 
+
+def mm_escape_script(self,obj):
+	
+	#print('escape_script')
+	#print(type(obj))
+	
+	if isinstance(obj,basestring):
+		
+		return obj.replace('</script>','<\\/script>')
+	
+	#print('return default')
+	#print(obj)
+	return obj
