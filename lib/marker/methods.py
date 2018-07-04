@@ -118,11 +118,8 @@ def mm_split(self,obj):
 	
 	if isinstance(obj, basestring):
 	
-		delimiter = self.attributes.get('delimiter')
-		if delimiter:
-			return obj.split(delimiter)
-			
-		return obj.split()
+		delimiter = self.attributes.get('delimiter', " ")
+		return obj.split(delimiter)
 		
 	return obj
 
