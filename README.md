@@ -1,5 +1,5 @@
 # WebYAML
-WebYAML is a Rappid Application Development (RAD) tool that allows designers and developers to rapidly build attractive web applications and RESTful APIs for their projects. Applications are authored as simple configuration files in YAML syntax
+WebYAML is a Rapid Application Development (RAD) tool that allows designers and developers to rapidly build attractive web applications and RESTful APIs for their projects. Applications are authored as simple configuration files in YAML syntax
 
 ## Requirements
 - Python
