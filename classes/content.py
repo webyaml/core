@@ -628,7 +628,8 @@ Try this content block instead:
 						if object not in self.marker_map:
 							
 							#debug
-							print("WARN - '%s' is not a valid fnr attribute" %item.split(":")[0])
+							#print("WARN - '%s' is not a valid fnr attribute in %s" %(object,item))
+							#print(template)
 							break						
 						
 						keys = self.colon_seperated_to_brackets(":".join(items[1:]))
