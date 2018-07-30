@@ -295,6 +295,9 @@ class Dropdown(Input):
 		# super class Input
 		super(Dropdown, self).__init__(content,"field_dropdown.Dropdown(name,args,*validators,**attrs)")
 		
+		if 'innerclass' in self.conf:
+			self.attrs['innerclass'] = self.conf['innerclass']			
+		
 		# instanciate fieldObj
 		try:
 			self.fieldObj()
@@ -313,6 +316,27 @@ class Radio(Input):
 		
 		# super class Input
 		super(Radio, self).__init__(content,"field_radio.Radio(name,args,*validators,**attrs)")
+		
+		if 'innerwrap' in self.conf:
+			self.attrs['wrap'] = self.conf['innerwrap']		
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
+		return None
+
+class Radio4(Input):
+	
+	def __init__(self,content):
+		
+		#debug
+		#print('lib.elements.field.Radio')
+		
+		# super class Input
+		super(Radio4, self).__init__(content,"field_radio.Radio4(name,args,*validators,**attrs)")
 		
 		if 'innerwrap' in self.conf:
 			self.attrs['wrap'] = self.conf['innerwrap']		

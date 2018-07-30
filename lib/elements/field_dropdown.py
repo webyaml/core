@@ -36,6 +36,11 @@ class Dropdown(Input):
 		attrs = self.attrs.copy()
 		attrs['name'] = self.name
 		
+		self.innerclass = ''
+		if 'innerclass' in attrs:
+			self.innerclass = attrs['innerclass']
+			del attrs['innerclass']
+		
 		x = '<select %s>\n' % attrs
 		
 		for arg in self.args:
@@ -76,5 +81,5 @@ class Dropdown(Input):
 		else:
 			select_p = ''
 		
-		return indent + '<option%s value="%s" %s>%s</option>\n' % (select_p, net.websafe(value), attrs, net.websafe(desc))
+		return indent + '<option%s value="%s" %s class="%s">%s</option>\n' % (select_p, net.websafe(value), attrs, self.innerclass, net.websafe(desc))
 		
