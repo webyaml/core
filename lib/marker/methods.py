@@ -40,6 +40,7 @@ marker_map = {
 	'exists': 'self.view.mmethods.mm_exists',
 	#'count': 'self.view.mmethods.mm_count',
 	'len': 'self.view.mmethods.mm_len',
+	'sum': 'self.view.mmethods.mm_sum',
 	'random': 'self.view.mmethods.mm_random',
 	
 	# sanitizing
@@ -206,6 +207,16 @@ def mm_len(self,l):
 		return l
 	
 	return len(l)
+
+def mm_sum(self,l):
+	
+	#debug
+	#print('count')
+	
+	if not isinstance(l,list):
+		return l
+	
+	return sum(l)
 
 
 def mm_exists(self,obj):
