@@ -114,7 +114,7 @@ class Modify(classes.processor.Processor):
 		
 			if conf["source"]['entry'].startswith('{{') and conf["source"]['entry'].endswith('}}'):
 				
-				entry = self.element.colon_seperated_to_brackets(conf["source"]['entry'].lstrip('{{').rstrip('}}'))
+				entry = self.content.colon_seperated_to_brackets(conf["source"]['entry'].lstrip('{{').rstrip('}}'))
 			else:
 				print('Error: entry not in the form of a marker')
 				return False
