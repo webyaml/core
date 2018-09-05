@@ -197,7 +197,7 @@ class POST(Rest):
 			self.content.data = self.element.data
 		'''
 		#debug
-		print(self.content.data)
+		print(self.content.data.__repr__())
 		
 		# cookies
 		
@@ -215,7 +215,7 @@ class POST(Rest):
 		try:
 		
 			#make request
-			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data, cookies=cookiejar)
+			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data.encode("utf-8"), cookies=cookiejar)
 				
 			# debug
 			print("POST return")
