@@ -38,4 +38,6 @@ class Markdown(classes.element.Element):
 
 	def render(self):
 		
-		return markdown.markdown(self.conf.get('value',''))
+		extensions = self.conf.get('extensions',[])
+		
+		return markdown.markdown(self.conf.get('value',''), extensions=extensions)
