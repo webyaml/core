@@ -67,6 +67,15 @@ class Configuration(object):
 		tmp_available_urls = []
 		for item in available_urls:
 			
+			
+			# new syntax
+			if 'path' in item:
+				
+				#tmp = {}
+				#tmp[item['path']] = item
+				item = {item['path']: item}
+			
+			# old syntax
 			for path in item:
 				
 				tmp_available_urls.append(item)
@@ -453,6 +462,5 @@ value: |
 		self.error = '''%s
 
 %s''' %(str(e),tmp_content)
-
 
 
