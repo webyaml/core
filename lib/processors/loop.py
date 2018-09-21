@@ -92,6 +92,7 @@ class Loop(classes.processor.Processor):
 				print('warning - data is not a list')
 				print(type(self.content.data))
 				print(self.content.data.__repr__())
+				return False
 				
 			self.content.data = [self.content.data]
 			
