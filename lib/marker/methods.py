@@ -128,7 +128,7 @@ def mm_split(self,obj):
 def mm_space2p20(self,obj):
 
 	#debug
-	print('space2p20')
+	#print('space2p20')
 	
 	if isinstance(obj, basestring):
 	
