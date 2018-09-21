@@ -101,9 +101,6 @@ class Select(classes.processor.Processor):
 			# debug
 			if debug:
 				print(output)
-			
-			if not output:
-				return False
 				
 			# handle the returned data
 			if conf.get('result'):
@@ -120,7 +117,11 @@ class Select(classes.processor.Processor):
 					
 					print('failed to save - data failed to load')
 						
-					return False					
+					return False
+			
+			# return false if output is an empty list
+			if not output:
+				return False					
 		
 		except oursql.Error as e:
 			
