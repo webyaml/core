@@ -96,6 +96,12 @@ class Loop(classes.processor.Processor):
 			
 			if debug:
 				print('warning - data was converted to a list')
+				
+		if not self.content.data:
+			if debug:
+				print('warning - data is an empty list')
+			return False
+			
 		
 		if debug:
 			print('starting loop')
