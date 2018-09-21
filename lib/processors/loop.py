@@ -91,6 +91,7 @@ class Loop(classes.processor.Processor):
 			if debug:
 				print('warning - data is not a list')
 				print(type(self.content.data))
+				print(self.content.data.__repr__())
 				
 			self.content.data = [self.content.data]
 			
@@ -101,7 +102,6 @@ class Loop(classes.processor.Processor):
 			if debug:
 				print('warning - data is an empty list')
 			return False
-			
 		
 		if debug:
 			print('starting loop')
