@@ -579,7 +579,8 @@ Try this content block instead:
 				if value:
 					stack.append(''.join(value))
 				
-				# perform markup on input using markers
+				'''	Perform markup on input using markers
+				'''
 				for item in stack:
 					
 					# debug
@@ -673,7 +674,7 @@ Try this content block instead:
 					# end of loop
 				
 				# replace marker with markup_value
-				if markup_value or markup_value == '' or markup_value == 0:
+				if markup_value or markup_value == '' or markup_value == 0 or markup_value == []:
 					
 					if binary:
 						
@@ -755,9 +756,11 @@ Try this content block instead:
 		#print(conf)
 		
 		# value
-		if not conf.get('value'):
-			print("error value not given")
-			return False
+		'''	This needs to be fixed to allow empty objects
+		'''
+		#if not conf.get('value'):
+		#	print("error value not given")
+		#	return False
 		
 		
 		# format
