@@ -1028,7 +1028,7 @@ Try this content block instead:
 			else:
 			
 				# add to top
-				print('self.%s = self.data' %conf['store2'])
+				#print('self.%s = self.data' %conf['store2'])
 				
 				exec('self.%s = self.data' %conf['store2'])
 
