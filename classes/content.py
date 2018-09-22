@@ -748,7 +748,7 @@ Try this content block instead:
 		'''
 		
 		# debug
-		#print('clases.element.Element.load_data')	
+		#print('clases.content.Content.load_data')	
 		
 		# conf check
 		
@@ -756,8 +756,14 @@ Try this content block instead:
 		#print(conf)
 		
 		# value
-		'''	This needs to be fixed to allow empty objects
+		'''	Value can be any python object including None or an empty object
 		'''
+		if 'value' not in conf:
+			print("error value not in configuration")
+			return False			
+		
+		#'''	This needs to be fixed to allow empty objects
+		#'''
 		#if not conf.get('value'):
 		#	print("error value not given")
 		#	return False
