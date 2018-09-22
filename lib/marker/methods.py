@@ -201,18 +201,19 @@ def mm_key_val_list(self,d):
 def mm_len(self,l):
 	
 	#debug
-	print('marker:method:len')
+	#print('marker:method:len')
 	
 	if not isinstance(l,list):
 		
 		#debug
-		print('not a list')
+		#print('not a list')
 		
 		
 		# goad into list
 		l = eval(l)
 		if not isinstance(l,list):
-			print("could not gaod into list")
+			#debug
+			#print("could not gaod into list")
 			return l
 	
 	return len(l)
