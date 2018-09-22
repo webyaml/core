@@ -98,6 +98,9 @@ class Loop(classes.processor.Processor):
 			
 			if debug:
 				print('warning - data was converted to a list')
+		
+		if debug:
+			print(self.content.data.__repr__())
 				
 		if not self.content.data:
 			if debug:
