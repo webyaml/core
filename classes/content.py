@@ -653,7 +653,7 @@ Try this content block instead:
 						except TypeError:
 							
 							# debug
-							print('TypeError in Content.fnr()')
+							#print('TypeError in Content.fnr()')
 							
 							pass
 							
