@@ -214,8 +214,14 @@ class POST(Rest):
 		
 		try:
 		
-			#make request
-			r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data.encode("utf-8"), cookies=cookiejar)
+			if isinstance(self.content.data, basestring):
+		
+				#make request
+				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data.encode("utf-8"), cookies=cookiejar)
+			
+			else:
+				#make request
+				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data, cookies=cookiejar)
 				
 			# debug
 			print("POST return")
