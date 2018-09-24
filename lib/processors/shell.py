@@ -43,6 +43,7 @@ class Shell(classes.processor.Processor):
 		
 		#vars
 		conf = self.conf
+		debug = False
 
 		if conf.get('debug'):
 			
