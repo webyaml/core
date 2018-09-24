@@ -42,25 +42,33 @@ class Shell(classes.processor.Processor):
 	def run(self):
 		
 		#vars
-		conf = self.conf		
+		conf = self.conf
+
+		if conf.get('debug'):
+			
+			print('lib.processors.shell.Shell')
+			debug = True		
 		
 		# config checks
 		cmd = conf.get('cmd')
 		if not cmd:
-			print('no cmd given')
+			print('Shell command not found')
 			
 			return False
 			
 		cmd = self.content.fnr(cmd)
 		
-		print('running command: %s' %cmd)
+		if debug:
+			print('running command: %s' %cmd)
+		
 		
 		try:	
 			result = subprocess.check_output(cmd, shell=True)
 			
 			# debug
-			print('stdout')
-			print(result)
+			if debug:
+				print('stdout')
+				print(result)
 			
 			# handle the stdout
 			if conf.get('stdout'):
@@ -82,9 +90,9 @@ class Shell(classes.processor.Processor):
 
 			self.top.cache['stdout'] = e
 			
-			# debug
-			print('stderr')
-			print(e)
+			if debug:
+				print('stderr')
+				print(e)
 		
 			# handle the stdout
 			if conf.get('stderr'):

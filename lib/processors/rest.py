@@ -56,11 +56,14 @@ class GET(Rest):
 	
 	def run(self):
 
-		print('lib.processors.rest.GET')
-
 		#vars
 		conf = self.conf
 		cookiejar = requests.cookies.RequestsCookieJar()
+		
+		if conf.get('debug'):
+			
+			print('ib.processors.rest.GET')
+			debug = True			
 		
 		# Target URL
 		if 'url' not in conf:
@@ -94,8 +97,8 @@ class GET(Rest):
 			except:
 				pass
 		
-		# debug
-		print("url is '%s'" %conf['url'])
+		if debug:
+			print("url is '%s'" %conf['url'])
 		
 		if 'cookie' in conf:
 			
@@ -109,15 +112,15 @@ class GET(Rest):
 		
 		#make request
 		
-		#debug
-		print('making request')
+		if debug:
+			print('making request')
 		
 		r = requests.get(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], cookies=cookiejar)
 
-		# debug
-		print('request complete')
-		print(r.text)
-		
+		if debug:
+			print('request complete')
+			print(r.text)
+			
 		# store cookies in session
 		if 'cookie' in conf and conf['cookie'] not in self.top.session.vars["cookies"]:
 			self.top.session.vars["cookies"][conf['cookie']] = r.cookies		
@@ -143,12 +146,16 @@ class POST(Rest):
 	
 	
 	def run(self):
-
-		print('lib.processors.rest.POST')
-
+		
 		#vars
 		conf = self.conf
 		cookiejar = requests.cookies.RequestsCookieJar()
+
+		if conf.get('debug'):
+			
+			print('ib.processors.rest.POST')
+			debug = True			
+
 		
 		# Target URL
 		if 'url' not in conf:
@@ -196,8 +203,8 @@ class POST(Rest):
 		''' If this is not working add 
 			self.content.data = self.element.data
 		'''
-		#debug
-		print(self.content.data.__repr__())
+		if debug:
+			print(self.content.data.__repr__())
 		
 		# cookies
 		
@@ -223,21 +230,17 @@ class POST(Rest):
 				#make request
 				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data, cookies=cookiejar)
 				
-			# debug
-			print("POST return")
-			print(r.text)
-			'''
-			Is this even relevant?  dont we consume errors in url.py?
-			'''
+			if debug:
+				print("POST return")
+				print(r.text)
 		
 		except Exception as e:
 			
-			print(e)
+			if debug:
+				print(e)
 			
 			return False
 				
-			''' end relevant
-			'''
 		
 		# store cookies in session
 		if 'cookie' in conf and r.cookies:
@@ -270,6 +273,12 @@ class DELETE(Rest):
 		#vars
 		conf = self.conf
 		cookiejar = requests.cookies.RequestsCookieJar()
+
+
+		if conf.get('debug'):
+			
+			print('ib.processors.rest.DELETE')
+			debug = True
 		
 		# Target URL
 		if 'url' not in conf:
@@ -303,8 +312,8 @@ class DELETE(Rest):
 			except:
 				pass
 		
-		# debug
-		print("url is '%s'" %conf['url'])
+		if debug:
+			print("url is '%s'" %conf['url'])
 		
 		if 'cookie' in conf:
 			
@@ -318,15 +327,15 @@ class DELETE(Rest):
 		
 		#make request
 		
-		#debug
-		print('making request')
+		if debug:
+			print('making request')
 		
 		r = requests.delete(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], cookies=cookiejar)
 
-		# debug
-		print('request complete')
-		print(r.text)
-		
+		if debug:
+			print('request complete')
+			print(r.text)
+			
 		# store cookies in session
 		if 'cookie' in conf and conf['cookie'] not in self.top.session.vars["cookies"]:
 			self.top.session.vars["cookies"][conf['cookie']] = r.cookies		
@@ -342,7 +351,5 @@ class DELETE(Rest):
 				print('failed to send - data failed to load')
 					
 				return False
-		
-		#print('GET successful')
 		
 		return True
