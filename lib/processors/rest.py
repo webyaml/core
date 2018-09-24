@@ -58,6 +58,7 @@ class GET(Rest):
 
 		#vars
 		conf = self.conf
+		debug = False
 		cookiejar = requests.cookies.RequestsCookieJar()
 		
 		if conf.get('debug'):
@@ -149,6 +150,7 @@ class POST(Rest):
 		
 		#vars
 		conf = self.conf
+		debug = False
 		cookiejar = requests.cookies.RequestsCookieJar()
 
 		if conf.get('debug'):
@@ -272,6 +274,7 @@ class DELETE(Rest):
 
 		#vars
 		conf = self.conf
+		debug = False
 		cookiejar = requests.cookies.RequestsCookieJar()
 
 
