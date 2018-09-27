@@ -39,40 +39,48 @@ import classes.processor
 class Insert(classes.processor.Processor):
 	
 	def run(self):
+
+		# vars
+		conf = self.conf
+		debug = False	
 		
+		
+
+		if conf.get('debug'):
+			
+			print('lib.processors.sqlite.Insert')
+			debug = True
+		
+		if not conf.get('db'):
+		
+			print('db not found in conf')
+			
+			return False
+			
+		db = self.content.fnr(conf['db'])			
+
+		if not conf.get('sql'):
+			
+			print('SQL statement not found')
+			
+			return False
+
+		sql = self.content.fnr(conf['sql'])		
+
 		con = None
 		
-		db = self.conf.get('db')
-		
-		if not db:
-			
-			print('no db was given')
-			return False
-		
-
-		sql = self.conf.get('sql')
-		
-		if not sql:
-			
-			print('no sql was given')
-			return False
-
-		cache = self.conf.get('cache',{})
-			
-		db = self.content.fnr(db)
-		sql = self.content.fnr(sql)
-
 		try:
 			con = sqlite3.connect(db)
 
 			cur = con.cursor()    
 			cur.execute(sql)
 			
-			print(cur.lastrowid)
+			#print(cur.lastrowid)
 			
-			if cache:
-				if 'id' in cache:
-					self.top.cache[cache['id']] = cur.lastrowid
+			if self.conf.get('cache_id'):
+				self.top.cache[self.conf['cache_id']] = cur.lastrowid
+			
+			return True
 
 		except sqlite3.Error, e:
 
@@ -94,25 +102,32 @@ class Delete(classes.processor.Processor):
 	
 	def run(self):
 		
-		con = None
-		
-		db = self.conf.get('db')
-		
-		if not db:
-			
-			print('no db was given')
-			return False
-		
+		# vars
+		conf = self.conf
+		debug = False
 
-		sql = self.conf.get('sql')
-		
-		if not sql:
+		if conf.get('debug'):
 			
-			print('no sql was given')
-			return False
+			print('lib.processors.sqlite.Delete')
+			debug = True
 		
-		db = self.content.fnr(db)
-		sql = self.content.fnr(sql)
+		if not conf.get('db'):
+		
+			print('db not found in conf')
+			
+			return False
+			
+		db = self.content.fnr(conf['db'])			
+
+		if not conf.get('sql'):
+			
+			print('SQL statement not found')
+			
+			return False
+
+		sql = self.content.fnr(conf['sql'])		
+
+		con = None
 
 		try:
 			con = sqlite3.connect(db)
@@ -140,26 +155,33 @@ class Update(classes.processor.Processor):
 	
 	def run(self):
 		
+		# vars
+		conf = self.conf
+		debug = False
+
+		if conf.get('debug'):
+			
+			print('lib.processors.sqlite.Update')
+			debug = True
+		
+		if not conf.get('db'):
+		
+			print('db not found in conf')
+			
+			return False
+			
+		db = self.content.fnr(conf['db'])			
+
+		if not conf.get('sql'):
+			
+			print('SQL statement not found')
+			
+			return False
+
+		sql = self.content.fnr(conf['sql'])		
+
 		con = None
 		
-		db = self.conf.get('db')
-		
-		if not db:
-			
-			print('no db was given')
-			return False
-		
-
-		sql = self.conf.get('sql')
-		
-		if not sql:
-			
-			print('no sql was given')
-			return False
-		
-		db = self.content.fnr(db)
-		sql = self.content.fnr(sql)
-
 		try:
 			con = sqlite3.connect(db)
 
@@ -184,29 +206,35 @@ class Update(classes.processor.Processor):
 class Select(classes.processor.Processor):
 	
 	def run(self):
+
+		# vars
+		conf = self.conf
+		debug = False
+
+		if conf.get('debug'):
+			
+			print('lib.processors.sqlite.Select')
+			debug = True
 		
-		self.element.data = []
+		if not conf.get('db'):
+		
+			print('db not found in conf')
+			
+			return False
+			
+		db = self.content.fnr(conf['db'])			
+
+		if not conf.get('sql'):
+			
+			print('SQL statement not found')
+			
+			return False
+
+		sql = self.content.fnr(conf['sql'])		
+
 		con = None
-		
-		db = self.conf.get('db')
-		
-		if not db:
-			
-			print('no db was given')
-			return False
-		
-
-		sql = self.conf.get('sql')
-		
-		if not sql:
-			
-			print('no sql was given')
-			return False
-
-		cache = self.conf.get('cache',{})
-			
-		db = self.content.fnr(db)
-		sql = self.content.fnr(sql)
+	
+		conf.setdefault('reader','dict')
 
 		try:
 			con = sqlite3.connect(db)
@@ -215,19 +243,56 @@ class Select(classes.processor.Processor):
 			cur = con.cursor()    
 			cur.execute(sql)
 			
-			for row in cur:
-				
-				record = {}
-				for key in row.keys():
-					
-					record[key] = row[key]
-
-				self.element.data.append(record)	
 			
-			if self.element.data:
-				self.element.record = self.element.data[0]
+			output = []
+			
+			if conf['reader'] == 'list':
+				
+				# list
+				for row in cur:
+					
+					record = []
+					for key in row.keys():
+						
+						record.append(row[key])
+
+					output.append(record)
+				
 			else:
-				self.element.record = {}
+				# dict
+				for row in cur:
+					
+					record = {}
+					for key in row.keys():
+						
+						record[key] = row[key]
+
+					output.append(record)
+			
+			# debug
+			if debug:
+				print(output)
+			
+			# handle the returned data
+			if conf.get('result'):
+				
+				conf['result']['value'] = output
+				
+				if conf['reader'] == 'record':
+					conf['result']['entry'] = '{{0}}'
+				
+				conf['result']['format'] = 'list'
+				
+				# load data
+				if not self.content.load_data(conf['result']):
+					
+					print('failed to save - data failed to load')
+						
+					return False
+			
+			# return false if output is an empty list
+			if not output:
+				return False
 			
 		except sqlite3.Error, e:
 
