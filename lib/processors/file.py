@@ -92,12 +92,17 @@ class Write(classes.processor.Processor):
 		
 		# create directories if they do not exist
 		directory = "/".join(path.split('/')[:-1])
-		if not os.path.isdir(directory):
-			os.makedirs(directory, 0775)	
+		
+		if directory:
+		
+			if not os.path.isdir(directory):
+				os.makedirs(directory, 0775)
+		else:
+			path = "./%s"%path
 		
 		# write
 		file_obj = open(path, "w+")
-		file_obj.write(value) #.encode('utf-8')
+		file_obj.write(value.strip()) #.encode('utf-8')
 		file_obj.close()
 				
 		return True
@@ -161,6 +166,52 @@ class Read(classes.processor.Processor):
 
 		return True
 
+
+class Delete(classes.processor.Processor):
+	
+	def run(self):
+		
+		# debug
+		print("lib.processrs.file.Delete")
+		
+		# vars
+		conf = self.conf
+		
+		if not conf.get('path'):
+			
+			print('path not in conf')
+			return False
+		
+		# markup filename	
+		conf["path"] = self.content.fnr(conf["path"])
+		'''
+		if conf["path"].startswith("./"):
+			
+			print("found ./")
+			
+			conf["path"] = conf["path"].replace("./","")
+		'''
+		# debug
+		#print(conf["path"])
+		
+		if not os.path.isfile(conf["path"]):
+			
+			# debug
+			print("file not found '%s'." %conf["path"])
+			
+			return False
+			
+		# debug
+		print("found file '%s'." %conf["path"])
+		
+		# backup file if it already exists
+		if 'nobackup' not in self.conf:
+			shutil.move(conf["path"],conf["path"]+"."+str(int(time.time()))+".bak")		
+		
+		os.remove(conf["path"])
+		
+		return True
+		
 
 class List(classes.processor.Processor):
 	
@@ -258,4 +309,46 @@ class List(classes.processor.Processor):
 					
 				return False
 
+		return True
+
+
+class Mkdir(classes.processor.Processor):
+
+	'''
+	Description:
+		
+		Create a new directory
+	
+	Usage:
+	
+		type: lib.processors.file.Mkdir
+		path: '/some/path/'
+		
+	'''
+	
+	def run(self):
+		
+		print('lib.processrs.file.Mkdir')
+	
+		# config checks
+		
+		path = self.conf.get('path')
+		if not path:
+			print('no path given')
+			
+			return False
+		
+		# markup path
+		path = self.content.fnr(path)
+		
+		print(path)
+		
+		# create directories if they do not exist
+		directory = "/".join(path.split('/'))
+		
+		if directory:
+		
+			if not os.path.isdir(directory):
+				os.makedirs(directory, 0775)
+				
 		return True

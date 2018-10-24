@@ -281,7 +281,7 @@ def mm_strip(self,obj):
 	# debug
 	#print('strip')
 
-	char = self.attributes.get('char', "")
+	char = self.attributes.get('char', " ")
 
 	#print(char)
 	#print(type(obj))
@@ -290,7 +290,8 @@ def mm_strip(self,obj):
 
 		obj = unicode(obj)
 
-	obj =  obj.strip("\n").strip("\r").strip(char).strip()
+	#obj =  obj.strip("\n").strip("\r").strip(char).strip()
+	obj =  obj.strip("\n\r%s"%char)
 
 	''' #consider adding the following
 	if isinstance(obj,list):
