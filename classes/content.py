@@ -448,6 +448,11 @@ Try this content block instead:
 			print('binary')
 			binary = True
 			
+		raw = False
+		if 'raw' in kwargs:
+			print('raw')
+			raw = True
+
 
 		#debug
 		#print(type(template))
@@ -496,6 +501,18 @@ Try this content block instead:
 			
 			# debug
 			#print('markers: %s' %str(markers))
+			
+			
+			''' Is this marker for a data object?
+				If there is only one marker
+				and the marker is the only item in the template
+				and there are no functions
+				then it is a request for a data object
+			
+			''' 
+			if len(markers) == 1 and "(" not in markers[0] and ")" not in markers[0] and "{{%s}}"%markers[0] == template:
+				
+				raw = True
 
 			'''	Parse each marker into a stack.
 			'''
@@ -681,6 +698,10 @@ Try this content block instead:
 						# the markup_value is a binary object and should be considered to be a string
 						
 						template = template.replace("{{%s}}" %marker, str(markup_value))
+						
+					elif raw:
+						
+						return markup_value
 						
 					else:
 					
