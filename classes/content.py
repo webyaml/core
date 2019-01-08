@@ -701,6 +701,8 @@ Try this content block instead:
 						
 					elif raw:
 						
+						print("raw")
+						
 						return markup_value
 						
 					else:
@@ -1032,11 +1034,18 @@ Try this content block instead:
 
 				if eval('isinstance(self.%s, list)' %conf['store2']):
 				
-					# merge with top item
-					exec('self.%s.extend(self.data)' %conf['store2'])
-					
-					# debug
-					#print('extended top.%s with self.data' %conf['store'])
+					if conf['merge'] == 'append':
+
+						# merge with top item
+						exec('self.%s.append(self.data)' %conf['store2'])
+						
+					else:
+				
+						# merge with top item
+						exec('self.%s.extend(self.data)' %conf['store2'])
+						
+						# debug
+						#print('extended top.%s with self.data' %conf['store'])
 
 				if eval('isinstance(self.%s, basestring)' %conf['store2']):
 				
