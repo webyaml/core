@@ -36,6 +36,7 @@ import traceback
 import classes.element
 import field_dropdown
 import field_radio
+import field_number
 
 ''' Base Form Field Class
 '''
@@ -246,6 +247,23 @@ class Textbox(Input):
 		
 		return None
 
+class Number(Input):
+	
+	def __init__(self,content):
+		
+		#debug
+		#print('lib.elements.field.Number')
+		
+		# super class Input
+		super(Number, self).__init__(content,"field_number.Number(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
+		return None
 
 class Textarea(Input):
 	
