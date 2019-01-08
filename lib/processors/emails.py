@@ -98,8 +98,10 @@ class Send(classes.processor.Processor):
 			
 			
 		rcptos = self.content.fnr(self.conf['to']).split(',')
-			
-		msg = MIMEText(self.content.fnr(self.conf['body']), "plain", "utf-8")
+		body = self.content.fnr(self.conf['body'])
+		print(body)
+		
+		msg = MIMEText(body, "plain", "utf-8")
 		msg['Subject'] = self.content.fnr(self.conf['subject'])
 		msg['From'] = self.content.fnr(self.conf['from'])
 		msg['To'] = self.content.fnr(self.conf['to'])
