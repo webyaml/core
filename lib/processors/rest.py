@@ -63,7 +63,7 @@ class GET(Rest):
 		
 		if conf.get('debug'):
 			
-			print('ib.processors.rest.GET')
+			print('lib.processors.rest.GET')
 			debug = True			
 		
 		# Target URL
