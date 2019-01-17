@@ -36,7 +36,7 @@ import traceback
 import classes.element
 import field_dropdown
 import field_radio
-import field_number
+import field_html5
 
 ''' Base Form Field Class
 '''
@@ -238,24 +238,6 @@ class Textbox(Input):
 		
 		# super class Input
 		super(Textbox, self).__init__(content,"web.form.Textbox(name,*validators,**attrs)")
-		
-		# instanciate fieldObj
-		try:
-			self.fieldObj()
-			
-		except: traceback.print_exc()		
-		
-		return None
-
-class Number(Input):
-	
-	def __init__(self,content):
-		
-		#debug
-		#print('lib.elements.field.Number')
-		
-		# super class Input
-		super(Number, self).__init__(content,"field_number.Number(name,*validators,**attrs)")
 		
 		# instanciate fieldObj
 		try:
@@ -483,6 +465,128 @@ class File(Input):
 				'''
 		
 		return None
+
+
+
+''' HTML5 types
+'''
+
+class Number(Input):
+	
+	def __init__(self,content):
+		
+		#debug
+		#print('lib.elements.field.Number')
+		
+		# super class Input
+		super(Number, self).__init__(content,"field_html5.Number(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
+		return None
+		
+class Range(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Range, self).__init__(content,"field_html5.Range(name,*validators,**attrs)")
+		
+		# instanciate fieldObj
+		try:
+			self.fieldObj()
+			
+		except: traceback.print_exc()		
+		
+		return None
+
+class Color(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Color, self).__init__(content,"field_html5.Color(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Date(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Date, self).__init__(content,"field_html5.Date(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class DateLocal(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(DateLocal, self).__init__(content,"field_html5.DateLocal(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Time(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Time, self).__init__(content,"field_html5.Time(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Week(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Week, self).__init__(content,"field_html5.Week(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Month(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Month, self).__init__(content,"field_html5.Month(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Email(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Email, self).__init__(content,"field_html5.Email(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Url(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Url, self).__init__(content,"field_html5.Url(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+class Search(Input):
+	
+	def __init__(self,content):
+		
+		# super class
+		super(Search, self).__init__(content,"field_html5.Search(name,*validators,**attrs)")
+		
+		self.fieldObj()
+
+
+
 
 
 ''' this must have been an expirement.  should really go
