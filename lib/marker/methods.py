@@ -42,6 +42,7 @@ marker_map = {
 	'len': 'self.view.mmethods.mm_len',
 	'sum': 'self.view.mmethods.mm_sum',
 	'random': 'self.view.mmethods.mm_random',
+	'gettype': 'self.view.mmethods.mm_type',
 	
 	# sanitizing
 	'escape': 'self.view.mmethods.mm_escape',
@@ -90,7 +91,7 @@ marker_map = {
 	# object conversion
 	'json': 'self.view.mmethods.mm_json',
 	'yaml': 'self.view.mmethods.mm_yaml',
-	#'csv': 'self.view.mmethods.mm_csv',
+	'csv': 'self.view.mmethods.mm_csv',
 	
 	# god only knows
 	'join': 'self.view.mmethods.mm__join',
@@ -100,6 +101,10 @@ marker_map = {
 
 }
 
+
+def mm_type(self,obj):
+
+	return str(type(obj))
 
 
 def mm_int(self,obj):
@@ -315,7 +320,7 @@ def mm_escape(self,obj):
 		string = ", ".join(obj)
 	
 	if isinstance(obj,basestring):
-		obj = obj.replace("'",r"\'").replace('"',r'\"') #.replace(u'\u2019', r"\\u2019")
+		obj = obj.replace("'",r"\'").replace('"',r'\"').replace("#",r"\#") #.replace(u'\u2019', r"\\u2019")
 	
 	return obj
 
@@ -438,6 +443,23 @@ def mm_yaml(self,obj):
 	
 	return yaml.dump(obj, allow_unicode=True, default_flow_style=False)
 
+
+def mm_csv(self,obj):
+	
+	if not isinstance(obj,list):
+	
+		return  obj
+	
+	output = ""
+	for row in obj:
+		for col in row:
+			col = str(col).replace("'",r"\'").replace('"',r'\"')
+			#output += '"%s",'%str(col).replace("'",r"\'").replace('"',r'\"')
+		
+		output +='"%s"\n'%'","'.join(row)
+	
+	return output
+	
 
 def mm_truncate(self,obj):
 
