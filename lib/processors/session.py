@@ -46,18 +46,8 @@ class Cache(classes.processor.Processor):
 
 		for var in cache:
 			
-			markup = self.content.fnr(cache[var])
+			self.top.session.vars[var] = self.content.fnr(cache[var])
 			
-			if markup.startswith('|'):
-				
-				try:
-					markup = eval(markup.strip('|'))
-				except Exception as e:
-					print(e)
-					markup = cache[var]
-			
-			self.top.session.vars[var] = markup
-	
 		return True
 
 
