@@ -66,7 +66,10 @@ class Form(classes.element.Element):
 		# evaluate validators
 		validators = []
 		for validator in self.conf.get('validators', []):
-			validators.append(eval(validator))
+			#validators.append(eval(validator))
+			validators.append(eval(self.content.fnr(validator)))
+	
+		print(validators)
 	
 		# instanciate form object with validators
 		self.formObj = web.form.Form(*self.fields, validators=validators)	

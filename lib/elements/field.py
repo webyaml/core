@@ -109,7 +109,8 @@ class Input(classes.element.Element):
 		validators = []
 		
 		for validator in self.validators:
-			validators.append(eval(validator))
+			validators.append(eval(self.content.fnr(validator)))
+			#validators.append(eval(validator))
 		
 		self.validators = validators
 		
