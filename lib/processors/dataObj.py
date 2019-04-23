@@ -149,3 +149,40 @@ class Modify(classes.processor.Processor):
 		
 		
 		return True
+
+
+class Delete(classes.processor.Processor):
+	
+	def run(self):
+
+
+		conf = self.conf
+		debug = False
+		
+		if conf.get('debug'):
+		
+			print('lib.processors.dataObj.Delete')
+			debug = True
+
+		if not conf.get('data'):
+			
+			print('data not in conf')
+			return False
+			
+		if not conf['data'].get('store'):
+			
+			print('data:store not in conf')
+			return False
+			
+		
+		# load dataObj into self.content.data
+		try:
+			exec('self.top.%s = None'%conf["data"]["store"])
+		
+		except:
+			
+			print('Error: dataObj %s not found'%conf["data"]["store"])
+			
+			return False
+		
+		return True
