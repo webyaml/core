@@ -1100,7 +1100,7 @@ Try this content block instead:
 				
 				
 				# record digits as numbers
-				if segment.isdigit():
+				if segment.lstrip('-').isdigit():
 					
 					# add segment to entry
 					output += "[%s]" %segment
