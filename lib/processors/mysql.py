@@ -166,6 +166,15 @@ class Insert(classes.processor.Processor):
 
 		sql = self.content.fnr(conf['sql'])
 		
+		# clean remaining markers in sql
+		if not conf.get('keepmarkers'):
+			pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
+			markers = list(set(pattern.findall(sql)))
+
+			for marker in markers:
+				output = unicode(output.replace(marker,''))			
+			
+		
 		# debug
 		if debug:
 			print('sql: %s' %sql)
