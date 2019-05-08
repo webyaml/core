@@ -172,7 +172,7 @@ class Insert(classes.processor.Processor):
 			markers = list(set(pattern.findall(sql)))
 
 			for marker in markers:
-				output = unicode(output.replace(marker,''))			
+				sql = unicode(sql.replace(marker,''))			
 			
 		
 		# debug
