@@ -28,6 +28,7 @@ except ImportError:
 ''' external imports
 '''
 import oursql
+import re
 
 ''' internal imports
 '''
