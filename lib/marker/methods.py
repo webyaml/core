@@ -179,7 +179,7 @@ def mm_dollar(self,obj):
 
 	#debug
 	#print('dollar')
-	if isinstance(obj,str):
+	if isinstance(obj,basestring):
 		
 		obj = obj.strip()
 		
