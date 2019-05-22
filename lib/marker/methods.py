@@ -172,19 +172,28 @@ def mm_md5(self,password):
 	return hashlib.md5(password).hexdigest()
 
 
-def mm_dollar(self,f):
+def mm_dollar(self,obj):
 	
 	''' Note: Needs to be a number formatter not specifc to USD
 	'''
 
 	#debug
 	#print('dollar')
+	if isinstance(obj,str):
+		
+		obj = obj.strip()
+		
+		# does the string begin and end with ()
+		if obj.startswith('(') and obj.endswith(')'):
+			
+			return "-"+obj.strip("()").lstrip("$")
+		else:
+			return obj.lstrip("$")
 	
-	if not isinstance(f,float):
+	if isinstance(obj,float):
+		return "%.2f" %obj
 		
-		return 'fix me - dollar was not float'
-		
-	return "%.2f" %f
+	
 
 
 def mm_key_val_list(self,d):
