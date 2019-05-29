@@ -85,6 +85,11 @@ class GET(Rest):
 		#self.store(conf['args'],name='args')
 		if conf['args']:
 			self.content.load_data({'format': 'raw', 'store': 'args', 'value': conf['args']})	
+			
+
+		''' Need an improved way of making processor attributes available when performing markups.
+		'''
+		self.content.load_data({'format': 'raw', 'store': 'processor', 'value': conf})			
 		
 		# Markup URL
 		conf['url'] = self.content.fnr(conf['url'])
