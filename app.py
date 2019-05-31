@@ -24,6 +24,20 @@ except ImportError:
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 	See the License for the specific language governing permissions and
 	limitations under the License.
+
+
+	WebYAML Application Script
+
+	This script starts the web application.  It can be directly run
+	in a shell or can be loaded via WSGI and a webserver.
+	
+	This script is typically located in the webyaml core and
+	symlinked into your application directory.
+	
+	The application will fail to start if no core is found.
+	Please refer to the documentation here:
+	http://webyaml.com/docs/gettingstarted/filestructure
+	
 '''
 
 # Main Application Script
@@ -33,30 +47,6 @@ except ImportError:
 import web
 import os
 import sys
-
-''' internal imports
-'''
-# see below
-
-'''	Current Working Directory
-
-	This script can be envoked either directly in the 'core' directory,
-	or through a symlink from within the sites directory.  The current
-	working directory needs to set differnetly for each case
-	
-	The first issue is the python system path.  This is important 
-	because python needs to know how to find modules and classes
-	which need to be imported.
-	
-	The second issue is to make sure that these modules can locate
-	configurations and additional modules that will be imported at
-	run-time (or one-the-fly).
-	
-	After we determine where the scipt should be running we save the
-	current working directory in the web object.  this maintains the correct
-	behavior over multiple threads.
-	
-'''
 
 # vars
 urls_config_file = 'conf/urls.cfg'
@@ -74,26 +64,21 @@ if "framework" not in dir(web):
 	# create a data object that is common across all threads
 	web.framework = {}
 
-	# Absolute path of this script
+	# absolute path of this script
 	web.framework['absolute_path'] = os.path.dirname(os.path.abspath(__file__))
 	
-	# use core as absolute path if available
-	if not web.framework['absolute_path'].endswith('core') and os.path.exists("%s/core" %web.framework['absolute_path']):
-		
-		web.framework['absolute_path'] = "%s/core" %web.framework['absolute_path']
 	
-	# symlinked path: /{path-to-framework}/sites/{site}/core
-	if web.framework['absolute_path'].split("/")[-3] == "sites":
+	# does this directory contain a core?  core can be a symlink or directory
+	if not os.path.exists("%s/core" %web.framework['absolute_path']):
 		
-		# change directory to one directory above absolute path
-		web.framework['cwd'] = "/".join(web.framework['absolute_path'].split("/")[:-1])
-		
-	# non-symlinked path: /{path-to-framework}/core
-	else:
-		
-		# change directory to the absolute path
-		web.framework['cwd'] = "/".join(web.framework['absolute_path'].split("/"))
-		
+		print("The application directory does not contain a symlink to 'core'")
+		sys.exit(1)
+	
+	# set cwd and absolute_path
+	web.framework['cwd'] = web.framework['absolute_path']
+	web.framework['absolute_path'] = "%s/core" %web.framework['absolute_path']
+	
+	
 	# mark that this is the first load of the thread
 	first_load = True
 
