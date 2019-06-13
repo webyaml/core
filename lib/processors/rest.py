@@ -73,6 +73,11 @@ class GET(Rest):
 
 		# Headers
 		conf.setdefault('headers',{})
+
+		# Markup Headers
+		for arg in conf['headers']:
+			conf['headers'][arg] = self.content.fnr(conf['headers'][arg])
+
 		
 		# Args (URL Markers)
 		conf.setdefault('args',{})
@@ -171,6 +176,10 @@ class POST(Rest):
 
 		# Headers
 		conf.setdefault('headers',{})
+		
+		# Markup Headers
+		for arg in conf['headers']:
+			conf['headers'][arg] = self.content.fnr(conf['headers'][arg])		
 		
 		# Args (URL Markers)
 		conf.setdefault('args',{})
