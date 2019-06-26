@@ -1012,23 +1012,23 @@ Try this content block instead:
 				# covert colons to brackets
 				brackets = self.colon_seperated_to_brackets(":".join(conf['store2'].split(":")[1:]))
 				
-				conf['store2'] = "self.attributes%s" %brackets
+				conf['store2'] = "attributes%s" %brackets
 				
 				if 'merge' not in conf:
 					
-					exec('%s = self.data' %conf['store2'])
+					exec('self.%s = self.data' %conf['store2'])
 					
 					return True
 					
 				# figure out if attribute already exists
 				try:
 					
-					exec('x = %s' %conf['store2'])
+					exec('x = self.%s' %conf['store2'])
 					
 				except KeyError:
 					
 					# It does not exist treat as normal
-					exec('%s = self.data' %conf['store2'])
+					exec('self.%s = self.data' %conf['store2'])
 					
 					return True
 					
