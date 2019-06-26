@@ -1014,6 +1014,18 @@ Try this content block instead:
 			if conf['store2'].startswith('top:this'):
 				
 				conf['store2'] = conf['store2'].replace("top:this","attributes")
+				
+			if conf['store2'].startswith('this'):
+				
+				conf['store2'] = conf['store2'].replace("this","attributes")
+				
+			if conf['store2'].startswith('attributes'):	
+				
+				# covert colons to brackets
+				brackets = self.colon_seperated_to_brackets(":".join(conf['store2'].split(":")[1:]))
+				
+				conf['store2'] = "%s%s" %(conf['store2'].split(":")[0], brackets)
+
 			
 			# convert colons to dots
 			
