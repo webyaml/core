@@ -452,6 +452,25 @@ class View(object):
 				
 				print("could not write cache file '%s' not found" %cache_file)
 		
+		''' Debug - Write final configuration to a file
+		This is usefull for debugging generated attributes in content blocks
+		'''
+		if 'debug' in self.attributes and self.attributes['debug'] == 'conf':
+			cache_file = "debug/_:_%s" %str(requested_url.strip("/").replace("/","_:_"))
+			
+			debug_output = yaml.dump(self.conf, allow_unicode=True, default_flow_style=False)
+
+			try:
+				f = open(cache_file,'w')
+				f.write(debug_output)
+				f.close()
+				
+				print("wrote debug file '%s'." %cache_file)
+				
+			except IOError:
+				
+				print("could not write debug file '%s' does the debug folder exist?" %cache_file)		
+		
 		
 		'''	Return Output
 		'''
