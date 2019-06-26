@@ -1003,37 +1003,72 @@ Try this content block instead:
 			
 			conf['store2']  = conf['store'] 
 			
-			# does conf['store'] have a prefix?
+			# is this store request for top (global) or this (local)
 			
-			#if parent in conf['store'] 
-			
-			if not ":" in conf['store2']:
-				
-				conf['store2'] = "top:%s" %conf['store']
-			
-			if conf['store2'].startswith('top:this'):
-				
-				conf['store2'] = conf['store2'].replace("top:this","attributes")
-				
 			if conf['store2'].startswith('this'):
 				
 				conf['store2'] = conf['store2'].replace("this","attributes")
 				
-			if conf['store2'].startswith('attributes'):	
-				
 				# covert colons to brackets
 				brackets = self.colon_seperated_to_brackets(":".join(conf['store2'].split(":")[1:]))
 				
-				conf['store2'] = "%s%s" %(conf['store2'].split(":")[0], brackets)
+				conf['store2'] = "self.attributes%s" %brackets
+				
+				if 'merge' not in conf:
+					
+					exec('%s = self.data' %conf['store2'])
+					
+					return True
+					
+				# figure out if attribute already exists
+				try:
+					
+					exec('x = %s' %conf['store2'])
+					
+				except KeyError:
+					
+					# It does not exist treat as normal
+					exec('%s = self.data' %conf['store2'])
+					
+					return True
+					
+				# now that we know it exists try to merge
+				
+				if eval('isinstance(self.%s, dict)' %conf['store2']):
+				
+					# update dict
+					exec('self.%s.update(self.data)' %conf['store2'])
 
+				if eval('isinstance(self.%s, list)' %conf['store2']):
+				
+					if conf['merge'] == 'append':
+
+						# append item to list
+						exec('self.%s.append(self.data)' %conf['store2'])
+						
+					else:
+				
+						# extend list with items
+						exec('self.%s.extend(self.data)' %conf['store2'])
+
+				if eval('isinstance(self.%s, basestring)' %conf['store2']):
+				
+					# append item to string
+					exec('self.%s += self.data' %conf['store2'])
+
+				return True
+
+
+			# top (global) storage
+			
+			# does conf['store'] have a prefix?
+			if not ":" in conf['store2']:
+				
+				conf['store2'] = "top:%s" %conf['store']
 			
 			# convert colons to dots
-			
 			conf['store2'] = conf['store2'].replace(":",".")
 			
-			#print(conf['store2'] )
-			
-
 			if 'merge' in conf and conf['store'] in self.top.marker_map:
 				
 				if eval('isinstance(self.%s, dict)' %conf['store2']):
