@@ -186,9 +186,9 @@ def mm_dollar(self,obj):
 		# does the string begin and end with ()
 		if obj.startswith('(') and obj.endswith(')'):
 			
-			return "-"+obj.strip("()").lstrip("$")
+			return "-"+obj.strip("()").lstrip("$").replace(",","")
 		else:
-			return obj.lstrip("$")
+			return obj.lstrip("$").replace(",","")
 	
 	if isinstance(obj,float):
 		return "%.2f" %obj
