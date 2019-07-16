@@ -66,6 +66,8 @@ marker_map = {
 	'singleline': 'self.view.mmethods.mm_singleline',
 	#'remove': 'self.view.mmethods.mm_remove', #undocumented
 	'dollar': 'self.view.mmethods.mm_dollar', #undocumented
+	'strip_dollar': 'self.view.mmethods.mm_dollar', #undocumented
+	
 	
 	#'tab': 'self.view.mmethods.mm_tab',
 	
@@ -74,6 +76,9 @@ marker_map = {
 	'title_case': 'self.view.mmethods.mm_title_case',
 	
 	'us_phone': 'self.view.mmethods.mm_us_phone',
+	'strip_us_phone': 'self.view.mmethods.mm_strip_us_phone',
+	
+	
 	'us_ssn': 'self.view.mmethods.mm_us_ssn',
 	
 	# object formating
@@ -194,6 +199,14 @@ def mm_dollar(self,obj):
 		return "%.2f" %obj
 		
 	
+def mm_strip_us_phone(self,obj):
+	
+	if not isinstance(obj,basestring):
+		
+		obj = unicode(obj)
+	
+	return obj.replace("(","").replace(")","").replace("-","").replace(" ","")
+
 
 
 def mm_key_val_list(self,d):
@@ -681,6 +694,8 @@ def mm_us_phone(self,obj):
 		out = "(%s) %s-%s"%(obj[0:3],obj[3:6],obj[6:10])
 	
 	return out
+
+
 
 
 def mm_us_ssn(self,obj):
