@@ -379,6 +379,7 @@ class View(object):
 		else:
 			# load core config files
 			content_config_files.insert(0,"conf/processors/core.cfg")
+			content_config_files.insert(0,"conf/elements/core.cfg")
 			
 			# load configuration files		
 			self.conf =  web.framework['configuration_object'].load(*content_config_files)
