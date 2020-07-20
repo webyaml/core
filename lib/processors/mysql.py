@@ -81,7 +81,7 @@ class Select(classes.processor.Processor):
 			
 		# debug
 		if debug:
-			print('sql: %s' %sql)	
+			print('sql: %s' %sql.__repr__())
 
 		
 		db_connection = oursql.connect(**conf.get('conf'))
@@ -178,7 +178,7 @@ class Insert(classes.processor.Processor):
 		
 		# debug
 		if debug:
-			print('sql: %s' %sql)
+			print('sql: %s' %sql.__repr__())
 		
 		db_connection = oursql.connect(**conf.get('conf'))
 		insert = db_connection.cursor()
