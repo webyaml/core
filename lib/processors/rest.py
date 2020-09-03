@@ -127,7 +127,7 @@ class GET(Rest):
 		if debug:
 			print('making request')
 		
-		r = requests.get(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], cookies=cookiejar)
+		r = requests.get(conf['url'], verify=False, headers=conf['headers'], auth=auth, cookies=cookiejar)
 
 		if debug:
 			print('request complete')
@@ -250,11 +250,11 @@ class POST(Rest):
 			if isinstance(self.content.data, basestring):
 		
 				#make request
-				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data.encode("utf-8"), cookies=cookiejar)
+				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=auth, data=self.content.data.encode("utf-8"), cookies=cookiejar)
 			
 			else:
 				#make request
-				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=conf['auth'], data=self.content.data, cookies=cookiejar)
+				r = requests.post(conf['url'], verify=False, headers=conf['headers'], auth=auth, data=self.content.data, cookies=cookiejar)
 				
 			if debug:
 				print("POST return")
