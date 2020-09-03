@@ -209,6 +209,10 @@ class POST(Rest):
 				auth = (conf['auth']['username'],conf['auth']['password'])
 			except:
 				pass
+				
+		if debug:
+			
+			print(auth.__repr__())
 		
 		# is data being loaded to send?
 		if conf.get('send'):
