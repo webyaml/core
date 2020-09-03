@@ -29,6 +29,7 @@ except ImportError:
 ''' external imports
 '''
 import requests
+import traceback
 
 '''
 import json
@@ -165,7 +166,7 @@ class POST(Rest):
 
 		if conf.get('debug'):
 			
-			print('ib.processors.rest.POST')
+			print('lib.processors.rest.POST')
 			debug = True			
 
 		
@@ -255,10 +256,10 @@ class POST(Rest):
 				print("POST return")
 				print(r.text)
 		
-		except Exception as e:
+		except:
 			
 			if debug:
-				print(e)
+				traceback.print_exc()
 			
 			return False
 				
