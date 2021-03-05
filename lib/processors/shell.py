@@ -63,52 +63,86 @@ class Shell(classes.processor.Processor):
 			print('running command: %s' %cmd)
 		
 		
-		try:	
-			result = subprocess.check_output(cmd, shell=True)
+		if conf.get('background'):
 			
-			# debug
-			if debug:
-				print('stdout')
-				print(result)
-			
-			# handle the stdout
-			if conf.get('stdout'):
+			try:
 				
-				conf['stdout']['value'] = result
+				subprocess.Popen(cmd, shell=True)
 				
-				conf['stdout']['format'] = conf['stdout'].get('format','string')
+				return True
 				
-				# load data
-				if not self.content.load_data(conf['stdout']):
-					
-					print('failed to save - data failed to load')
-						
-					return False
 			
-			return True
-			
-		except subprocess.CalledProcessError as e:
+			except subprocess.CalledProcessError as e:
 
-			self.top.cache['stdout'] = e
+				self.top.cache['stdout'] = e
+				
+				if debug:
+					print('stderr')
+					print(e)
 			
-			if debug:
-				print('stderr')
-				print(e)
+				# handle the stdout
+				if conf.get('stderr'):
+					
+					conf['stderr']['value'] = e
+					
+					conf['stderr']['format'] = conf['stderr'].get('format','string')
+					
+					# load data
+					if not self.content.load_data(conf['stderr']):
+						
+						print('failed to save - data failed to load')
+							
+						return False
+
+				return False			
+			
+		else: 
+			try:	
+				result = subprocess.check_output(cmd, shell=True)
+				
+				# debug
+				if debug:
+					print('stdout')
+					print(result)
+				
+				# handle the stdout
+				if conf.get('stdout'):
+					
+					conf['stdout']['value'] = result
+					
+					conf['stdout']['format'] = conf['stdout'].get('format','string')
+					
+					# load data
+					if not self.content.load_data(conf['stdout']):
+						
+						print('failed to save - data failed to load')
+							
+						return False
+				
+				return True
+				
+			except subprocess.CalledProcessError as e:
+
+				self.top.cache['stdout'] = e
+				
+				if debug:
+					print('stderr')
+					print(e)
+			
+				# handle the stdout
+				if conf.get('stderr'):
+					
+					conf['stderr']['value'] = e
+					
+					conf['stderr']['format'] = conf['stderr'].get('format','string')
+					
+					# load data
+					if not self.content.load_data(conf['stderr']):
+						
+						print('failed to save - data failed to load')
+							
+						return False
+
+				return False
 		
-			# handle the stdout
-			if conf.get('stderr'):
-				
-				conf['stderr']['value'] = e
-				
-				conf['stderr']['format'] = conf['stderr'].get('format','string')
-				
-				# load data
-				if not self.content.load_data(conf['stderr']):
-					
-					print('failed to save - data failed to load')
-						
-					return False
-
-			return False
-			
 		return False
