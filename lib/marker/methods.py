@@ -67,6 +67,7 @@ marker_map = {
 	#'remove': 'self.view.mmethods.mm_remove', #undocumented
 	'dollar': 'self.view.mmethods.mm_dollar', #undocumented
 	'strip_dollar': 'self.view.mmethods.mm_dollar', #undocumented
+	'escape_backtick': 'self.view.mmethods.mm_escape_backtick',
 	
 	
 	#'tab': 'self.view.mmethods.mm_tab',
@@ -737,3 +738,13 @@ def mm_escape_script(self,obj):
 	#print('return default')
 	#print(obj)
 	return obj
+	
+	
+def mm_escape_backtick(self,obj):
+	if isinstance(obj,basestring):
+		
+		return obj.replace('`','\\`')
+	
+	#print('return default')
+	#print(obj)
+	return obj	
