@@ -743,8 +743,10 @@ def mm_escape_script(self,obj):
 def mm_escape_backtick(self,obj):
 	if isinstance(obj,basestring):
 		
+		print('yes')
 		return obj.replace('`','\`')
 	
 	#print('return default')
 	#print(obj)
 	return obj	
+	
