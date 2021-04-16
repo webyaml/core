@@ -390,7 +390,7 @@ Try this content block instead:
 		output = unicode(self.elementObj.render())+output
 		
 		# split wrap
-		wrap = self.attributes.get('wrap','|').split("|",1)
+		wrap = self.fnr(self.attributes.get('wrap','|')).split("|",1)
 		if len(wrap) == 1:
 			wrap.append('')
 		
@@ -442,6 +442,9 @@ Try this content block instead:
 	'''
 
 	def fnr(self,template,limit=10,**kwargs):
+		
+		#debug
+		#print(self.marker_map)
 		
 		binary = False
 		if 'binary' in kwargs:
