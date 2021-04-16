@@ -390,7 +390,9 @@ Try this content block instead:
 		output = unicode(self.elementObj.render())+output
 		
 		# split wrap
-		wrap = self.fnr(self.attributes.get('wrap','|')).split("|",1)
+		wrap_delimter = self.attributes.get('wrap_delimter','|')
+		
+		wrap = self.fnr(self.attributes.get('wrap',wrap_delimter)).split(wrap_delimter,1)
 		if len(wrap) == 1:
 			wrap.append('')
 		
