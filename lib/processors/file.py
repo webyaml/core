@@ -149,9 +149,8 @@ class Read(classes.processor.Processor):
 		if conf.get('backup'):
 		
 			# keep a copy of opened file with timestamp.
-			shutil.move(conf["path"],conf["path"]+"."+str(int(time.time()))+".bak")		
-		
-		
+			shutil.copy(conf["path"],conf["path"]+"."+str(int(time.time()))+".bak")
+			
 		f = open(conf["path"], 'r')
 		contents = f.read()
 		f.close()
