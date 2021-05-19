@@ -144,6 +144,13 @@ class Read(classes.processor.Processor):
 			
 		# debug
 		print("found file '%s'." %conf["path"])
+
+
+		if conf.get('backup'):
+		
+			# keep a copy of opened file with timestamp.
+			shutil.move(conf["path"],conf["path"]+"."+str(int(time.time()))+".bak")		
+		
 		
 		f = open(conf["path"], 'r')
 		contents = f.read()
