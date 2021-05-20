@@ -130,15 +130,26 @@ class Modify(classes.processor.Processor):
 				print('merge')
 			
 			if eval('isinstance(self.content.dataObj%s, dict)' %entry):
+				
+				if debug:
+					print('source is a dict')				
 			
 				# merge with top item
 				exec('self.content.dataObj%s.update(self.content.data)' %entry)
 				
 			if eval('isinstance(self.content.dataObj%s, list)' %entry):
+				
+				if debug:
+					print('source is a list')
+				
 				# merge with top item
 				exec('self.content.dataObj%s.extend(self.content.data)' %entry)
 				
 			if eval('isinstance(self.content.dataObj%s, str)' %entry):
+				
+				if debug:
+					print('source is a str')				
+				
 				# merge with top item
 				exec('self.content.dataObj%s += self.content.data' %entry)
 			
