@@ -50,6 +50,8 @@ class Evaluate(classes.processor.Processor):
 		#print('lib.processors.logic.Evaluate')
 		
 		expression = conf.get('expression')
+		log_error = conf.get('log_error', True)
+
 
 		if expression:
 
@@ -60,17 +62,43 @@ class Evaluate(classes.processor.Processor):
 			
 			if debug:
 				print(expression)
+				
+			if log_error:
+								
+				if eval(expression):
+					
+					if debug:
+						print("True")
+					
+					return True
+					
+				else:
+					
+					if debug:
+						print("False")
+					
+					return False
 			
-			if eval(expression):
-				
-				if debug:
-					print("True")
-				
-				return True
-				
 			else:
 				
-				if debug:
-					print("False")
+				try:
+					if eval(expression):
+						
+						if debug:
+							print("True")
+						
+						return True
+						
+					else:
+						
+						if debug:
+							print("False")
+						
+						return False					
 				
-				return False
+				except SyntaxError:
+					return False
+					
+				
+				
+				
