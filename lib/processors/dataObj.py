@@ -142,7 +142,7 @@ class Modify(classes.processor.Processor):
 				if debug:
 					print('source is a list')
 					
-				if conf['source']['merge'] = 'append':
+				if conf['source']['merge'] == 'append':
 					exec('self.content.dataObj%s.append(self.content.data)' %entry)
 					
 				else:
