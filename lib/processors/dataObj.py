@@ -141,9 +141,13 @@ class Modify(classes.processor.Processor):
 				
 				if debug:
 					print('source is a list')
-				
-				# merge with top item
-				exec('self.content.dataObj%s.extend(self.content.data)' %entry)
+					
+				if conf['source']['merge'] = 'append':
+					exec('self.content.dataObj%s.append(self.content.data)' %entry)
+					
+				else:
+					# merge with top item
+					exec('self.content.dataObj%s.extend(self.content.data)' %entry)
 				
 			if eval('isinstance(self.content.dataObj%s, str)' %entry):
 				
