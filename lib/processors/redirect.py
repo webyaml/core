@@ -56,10 +56,10 @@ class Redirect(classes.processor.Processor):
 		if 'keepmarkers' not in conf:
 			
 			pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
-			markers = list(set(pattern.findall(output)))
+			markers = list(set(pattern.findall(conf['url'])))
 
 			for marker in markers:
-				output = unicode(output.replace(marker,''))		
+				conf['url'] = unicode(conf['url'].replace(marker,''))		
 		
 		raise web.seeother(conf['url'])
 		
