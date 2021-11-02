@@ -29,6 +29,7 @@ except ImportError:
 ''' external imports
 '''
 import web
+import re
 
 ''' internal imports
 '''
@@ -50,6 +51,15 @@ class Redirect(classes.processor.Processor):
 			return False
 		
 		conf['url'] = self.content.fnr(conf['url'])
+		
+		# Remove any markers from output before returning
+		if 'keepmarkers' not in conf:
+			
+			pattern = re.compile(r'({{[\w|\(|\)|\.|\:|\-]+}})')
+			markers = list(set(pattern.findall(output)))
+
+			for marker in markers:
+				output = unicode(output.replace(marker,''))		
 		
 		raise web.seeother(conf['url'])
 		
