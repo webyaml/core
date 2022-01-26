@@ -98,7 +98,8 @@ class View(object):
 			'get': 'self.top.get_vars',
 			'post': 'self.top.post_vars',
 			'getpost': 'self.top.getpost_vars',
-			'raw': 'self.top.raw',			
+			'raw': 'self.top.raw',		
+			'header': 'self.top.header',
 
 			# ATTRIBUTES
 			'this': 'self.attributes',	
@@ -221,6 +222,7 @@ class View(object):
 		self.cache['url'] = '%s/%s' %(web.ctx.home,self.path)
 		self.cache['path'] = '/%s' %self.path
 		self.cache['rurl'] = web.ctx.env.get('HTTP_REFERER')
+		self.header = web.ctx.env
 		
 		# convert the requested url into a  "/" delimited list
 		url_list = self.path.split('/')
